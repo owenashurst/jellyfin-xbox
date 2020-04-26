@@ -1,6 +1,7 @@
 ﻿using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media.Animation;
 using Jellyfin.Services.Interfaces;
 
 namespace Jellyfin.Services
@@ -10,13 +11,13 @@ namespace Jellyfin.Services
         public void Navigate(Type sourcePage)
         {
             Frame frame = (Frame)Window.Current.Content;
-            frame.Navigate(sourcePage);
+            frame.Navigate(sourcePage, null, new DrillInNavigationTransitionInfo());
         }
 
         public void Navigate(Type sourcePage, object parameter)
         {
             Frame frame = (Frame)Window.Current.Content;
-            frame.Navigate(sourcePage, parameter);
+            frame.Navigate(sourcePage, parameter, new DrillInNavigationTransitionInfo());
         }
 
         public void Navigate(string sourcePage)

@@ -132,9 +132,11 @@
     <Compile Include="Controls\DeviceFamilyStateTrigger.cs" />
     <Compile Include="Converters\ByteArrayToImageConverter.cs" />
     <Compile Include="Converters\ParametrizedBooleanToVisibilityConverter.cs" />
+    <Compile Include="Converters\TimeSpanConverter.cs" />
     <Compile Include="Core\Globals.cs" />
     <Compile Include="Core\TaskQueue.cs" />
     <Compile Include="Models\Adapters\MovieDetailAdapter.cs" />
+    <Compile Include="Models\ControllerButtonHandledResult.cs" />
     <Compile Include="Models\ModelBase.cs" />
     <Compile Include="Models\MovieDetail.cs" />
     <Compile Include="Models\MovieDetailsResult.cs" />
@@ -159,8 +161,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Interfaces\IJellyfinNavigationService.cs" />
     <Compile Include="Services\JellyfinNavigationService.cs" />
-    <Compile Include="UserControls\PlaybackMenu.xaml.cs">
-      <DependentUpon>PlaybackMenu.xaml</DependentUpon>
+    <Compile Include="UserControls\PlaybackMenuView.xaml.cs">
+      <DependentUpon>PlaybackMenuView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\AppUtils.cs" />
     <Compile Include="Utils\DeviceFormFactorType.cs" />
@@ -267,7 +269,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UserControls\PlaybackMenu.xaml">
+    <Page Include="UserControls\PlaybackMenuView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -17,6 +17,7 @@
     <SolidColorBrush x:Key="SecondaryBackgroundColor" Color="#552F56" />
 
     <converters:ByteArrayToImageConverter x:Key="ByteArrayToImageConverter" />
+    <converters:TimeSpanConverter x:Key="TimeSpanConverter" />
     <converters:ParametrizedBooleanToVisibilityConverter x:Key="ParametrizedBooleanToVisibilityConverter"/>
 
     <x:Double x:Key="FontS">24</x:Double>

@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using Windows.Media.Core;
 using Windows.Media.Playback;
+using Windows.System;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using Jellyfin.Core;
@@ -18,6 +20,7 @@ namespace Jellyfin.Views
         public MediaPlaybackView()
         {
             InitializeComponent();
+            (DataContext as MediaPlaybackViewModel).MediaPlayer = mediaPlayerElement;
         }
 
         /// <summary>
@@ -35,21 +38,51 @@ namespace Jellyfin.Views
             mediaPlayerElement.SetMediaPlayer(new MediaPlayer());
             mediaPlayerElement.MediaPlayer.Source = MediaSource.CreateFromUri(uri);
             mediaPlayerElement.MediaPlayer.Play();
+            OpenOsd();
         }
-        
+
         /// <summary>
         /// Handles that if the controller B is pressed, stops the playback.
-        /// TODO add OSD and everything
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void MediaPlaybackView_OnPreviewKeyDown(object sender, KeyRoutedEventArgs e)
         {
-            if ((DataContext as MediaPlaybackViewModel).HandleKeyPressed(e.Key))
+            if (e.Key == VirtualKey.Space && playbackMenuView.Visibility == Visibility.Collapsed)
             {
-                mediaPlayerElement.MediaPlayer.Pause();
+                OpenOsd();
                 e.Handled = true;
             }
+            else if (e.Key == VirtualKey.Escape && playbackMenuView.Visibility == Visibility.Visible)
+            {
+                playbackMenuView.Visibility = Visibility.Collapsed;
+                e.Handled = true;
+            }
+
+            ControllerButtonHandledResult actionResult = (DataContext as MediaPlaybackViewModel).HandleKeyPressed(e.Key);
+
+            if (actionResult == null)
+            {
+                return;
+            }
+
+            e.Handled = true;
+            if (actionResult.ShouldOsdOpen)
+            {
+                OpenOsd(7000);
+            }
+        }
+        
+        /// <summary>
+        /// Opens the OSD, then triggers a countdown to
+        /// hide it automatically after a certain period of time.
+        /// </summary>
+        /// <param name="interval">The interval to hide it if the user did no interaction to restart the timer.</param>
+        private void OpenOsd(int interval = 3500)
+        {
+            playbackMenuView.Visibility = Visibility.Visible;
+            playbackMenuView.playButton.Focus(FocusState.Programmatic);
+            playbackMenuView.VisibilityChanged(interval);
         }
 
         /// <summary>
@@ -60,18 +93,6 @@ namespace Jellyfin.Views
         {
             Movie movie = e.Parameter as Movie;
             Start(movie.Id);
-        }
-
-        /// <summary>
-        /// Handles that if the controller B is pressed, stops the playback.
-        /// TODO add OSD and everything
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MediaPlayerElement_OnKeyDown(object sender, KeyRoutedEventArgs e)
-        {
-            (DataContext as MediaPlaybackViewModel).HandleKeyPressed(e.Key);
-            e.Handled = true;
         }
     }
 }

@@ -13,10 +13,10 @@
         <MediaPlayerElement AreTransportControlsEnabled="False"
             x:Name="mediaPlayerElement" AutoPlay="True" Stretch="Uniform"
             PreviewKeyDown="MediaPlaybackView_OnPreviewKeyDown"
-                            KeyDown="MediaPlayerElement_OnKeyDown"
             IsFocusEngagementEnabled="True"
         />
         
-        <userControls:PlaybackMenu HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
+        <userControls:PlaybackMenuView x:Name="playbackMenuView"
+            HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
     </Grid>
 </Page>
