@@ -47,6 +47,8 @@ namespace Jellyfin.ViewModels
         /// </summary>
         public async Task Load()
         {
+            Movies.Clear();
+
             IList<Movie> movies = (await _movieService.GetMovies()).ToList();
             foreach (Movie movie in movies.OrderBy(q => q.Name))
             {

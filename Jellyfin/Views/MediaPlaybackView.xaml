@@ -18,5 +18,7 @@
         
         <userControls:PlaybackMenuView x:Name="playbackMenuView"
             HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
+        
+        <userControls:LoadingControl HorizontalAlignment="Center" VerticalAlignment="Center"></userControls:LoadingControl>
     </Grid>
 </Page>

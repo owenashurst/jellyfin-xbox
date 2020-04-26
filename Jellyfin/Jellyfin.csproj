@@ -161,6 +161,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Interfaces\IJellyfinNavigationService.cs" />
     <Compile Include="Services\JellyfinNavigationService.cs" />
+    <Compile Include="UserControls\LoadingControl.xaml.cs">
+      <DependentUpon>LoadingControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\PlaybackMenuView.xaml.cs">
       <DependentUpon>PlaybackMenuView.xaml</DependentUpon>
     </Compile>
@@ -186,8 +189,8 @@
     <Compile Include="UserControls\MenuView.xaml.cs">
       <DependentUpon>MenuView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\MovieView.xaml.cs">
-      <DependentUpon>MovieView.xaml</DependentUpon>
+    <Compile Include="UserControls\MovieListView.xaml.cs">
+      <DependentUpon>MovieListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LoginView.xaml.cs">
       <DependentUpon>LoginView.xaml</DependentUpon>
@@ -269,6 +272,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="UserControls\LoadingControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UserControls\PlaybackMenuView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -289,7 +296,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControls\MovieView.xaml">
+    <Page Include="UserControls\MovieListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
