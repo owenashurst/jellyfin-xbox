@@ -8,7 +8,7 @@ using Windows.UI.Xaml.Media;
 
 namespace Jellyfin.Extensions
 {
-    public class XamlExtensions
+    public static class XamlExtensions
     {
         /// <summary>
         /// Finds visual child for a parent.
@@ -16,7 +16,7 @@ namespace Jellyfin.Extensions
         /// <typeparam name="T">The child type.</typeparam>
         /// <param name="parent">The parent reference.</param>
         /// <returns></returns>
-        private static T FindVisualChild<T>(DependencyObject parent) where T : DependencyObject
+        public static T FindVisualChild<T>(this DependencyObject parent) where T : DependencyObject
         {
             if (parent != null)
             {

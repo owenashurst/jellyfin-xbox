@@ -1,30 +1,35 @@
 ﻿<UserControl
     x:Class="Jellyfin.UserControls.MovieItemUserControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <StackPanel Orientation="Vertical" Margin="11, 0, 11, 25" Height="400" Width="250">
-        <Image Source="{Binding ImageData, Converter={StaticResource ByteArrayToImageConverter}}" Height="300" Width="250" />
-        <Canvas Width="250" Height="40" 
-                DataContextChanged="FrameworkElement_OnDataContextChanged" 
-                Loaded="FrameworkElement_OnLoaded">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:Jellyfin.Models"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance models:Movie}">
+    <StackPanel Orientation="Vertical" Margin="11, 0, 11, 25" Width="250">
+        <Border CornerRadius="5" Width="192" Padding="4" x:Name="ImageBorder">
+            <Image Source="{Binding ImageData, Converter={StaticResource ByteArrayToImageConverter}}" Height="280" />
+        </Border>
+
+        <Canvas HorizontalAlignment="Stretch" Height="40" x:Name="containerCanvas" Visibility="Collapsed">
             <Canvas.Resources>
+                <!-- ReSharper disable once NotAccessedField.Local -->
                 <Storyboard x:Name="Storyboard1">
                     <DoubleAnimation
-                        Storyboard.TargetName="Txtblock"
+                        Storyboard.TargetName="movingTextBlock"
                         Storyboard.TargetProperty="(Canvas.Left)"
                         Duration="0:0:10" From="250"
-                        To="-300"
                         RepeatBehavior="Forever" />
                 </Storyboard>
             </Canvas.Resources>
             <Canvas.Clip>
                 <RectangleGeometry Rect="0, 0, 250, 40" />
             </Canvas.Clip>
-            <TextBlock x:Name="Txtblock"
+            <TextBlock x:Name="movingTextBlock"
                        Text="{Binding Name}" FontSize="30" Foreground="White" HorizontalAlignment="Center" TextAlignment="Center" />
         </Canvas>
-        <TextBlock 
-            Text="{Binding Name}" FontSize="30" Foreground="White" HorizontalAlignment="Center" />
+        <TextBlock Text="{Binding Name}" FontSize="30" x:Name="notMovingTextBlock"
+                   Foreground="White" HorizontalAlignment="Center" />
 
         <TextBlock Text="{Binding Year}" FontSize="30" Foreground="White" HorizontalAlignment="Center"/>
     </StackPanel>

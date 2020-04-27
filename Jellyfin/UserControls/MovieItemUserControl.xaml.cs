@@ -1,69 +1,78 @@
 ﻿using Windows.Foundation;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 
 namespace Jellyfin.UserControls
 {
-    public sealed partial class MovieItemUserControl
+    public partial class MovieItemUserControl
     {
+        #region Properties
+
+        private Storyboard animateStoryboard
+        {
+            get => containerCanvas.Resources["Storyboard1"] as Storyboard;
+        }
+
+        #endregion
+
+        #region ctor
+
         public MovieItemUserControl()
         {
             InitializeComponent();
         }
 
-        private void FrameworkElement_OnLoaded(object sender, RoutedEventArgs e)
+        #endregion
+
+        #region Additional methods
+
+        public void StartAnimation()
         {
-            Canvas c = sender as Canvas;
-            Animate(c);
+            Animate(containerCanvas);
+            ImageBorder.Background = new SolidColorBrush(Color.FromArgb(255, 0, 164, 220));
         }
 
-        private void FrameworkElement_OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
+        public void EndAnimation()
         {
-            Canvas c = (sender as Canvas);
-            Animate(c);
-        }
+            animateStoryboard.Stop();
+            ImageBorder.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
 
+            containerCanvas.Visibility = Visibility.Collapsed;
+            notMovingTextBlock.Visibility = Visibility.Visible;
+        }
+        
         private void Animate(Canvas c)
         {
             if (c.DataContext == null)
             {
                 return;
             }
-
-            TextBlock textInside = c.Children[0] as TextBlock;
-
-            textInside.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-            textInside.Arrange(new Rect(new Point(0, 0), textInside.DesiredSize));
-
-            StackPanel parent = (c.Parent as StackPanel);
-            TextBlock followingTextBox = parent?.Children[2] as TextBlock;
-
+            
+            movingTextBlock.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+            movingTextBlock.Arrange(new Rect(new Point(0, 0), movingTextBlock.DesiredSize));
+            
             // So the text is longer than the canvas width
-            if (textInside.ActualWidth > 230)
+            // c.Width = NaN sometimes
+            if (movingTextBlock.ActualWidth > 230)
             {
-                Storyboard storyboard = c.Resources["Storyboard1"] as Storyboard;
-                DoubleAnimation doubleAnimation = (storyboard.Children[0] as DoubleAnimation);
-                doubleAnimation.To = -1 * textInside.ActualWidth;
+                DoubleAnimation doubleAnimation = animateStoryboard.Children[0] as DoubleAnimation;
+                doubleAnimation.To = -1 * movingTextBlock.ActualWidth;
 
-                storyboard.Begin();
+                animateStoryboard.Begin();
 
                 c.Visibility = Visibility.Visible;
-
-                if (followingTextBox != null)
-                {
-                    followingTextBox.Visibility = Visibility.Collapsed;
-                }
+                notMovingTextBlock.Visibility = Visibility.Collapsed;
             }
             else
             {
                 c.Visibility = Visibility.Collapsed;
-
-                if (followingTextBox != null)
-                {
-                    followingTextBox.Visibility = Visibility.Visible;
-                }
+                notMovingTextBlock.Visibility = Visibility.Visible;
             }
         }
+
+        #endregion
     }
 }

@@ -162,8 +162,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Interfaces\IJellyfinNavigationService.cs" />
     <Compile Include="Services\JellyfinNavigationService.cs" />
-    <Compile Include="UserControls\LoadingControl.xaml.cs">
-      <DependentUpon>LoadingControl.xaml</DependentUpon>
+    <Compile Include="UserControls\LoadingUserControl.xaml.cs">
+      <DependentUpon>LoadingUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\MovieItemUserControl.xaml.cs">
       <DependentUpon>MovieItemUserControl.xaml</DependentUpon>
@@ -276,7 +276,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UserControls\LoadingControl.xaml">
+    <Page Include="UserControls\LoadingUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

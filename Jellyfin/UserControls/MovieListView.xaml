@@ -16,7 +16,8 @@
     </Frame.Background>
     <Grid HorizontalAlignment="Stretch">
         <GridView ItemsSource="{Binding Movies}"
-                  Margin="0, 30, 0, 0" IsItemClickEnabled="True" 
+                  Margin="0, 30, 0, 0" IsItemClickEnabled="True"
+                  SelectionChanged="Selector_OnSelectionChanged"
                   ItemClick="MovieGridView_OnItemClick">
             <GridView.ItemTemplate>
                 <DataTemplate>
@@ -25,33 +26,14 @@
             </GridView.ItemTemplate>
             <GridView.ItemContainerStyle>
                 <Style TargetType="GridViewItem">
+                    <Setter Property="FocusVisualPrimaryThickness" Value="0"/>
+                    <Setter Property="FocusVisualSecondaryThickness" Value="0"/>
+                    <Setter Property="IsHoldingEnabled" Value="True"/>
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="GridViewItem">
                                 <ListViewItemPresenter
-                                    ContentTransitions="{TemplateBinding ContentTransitions}"
-                                    SelectionCheckMarkVisualEnabled="True"
-                                    CheckBrush="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
-                                    CheckBoxBrush="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
-                                    DragBackground="{ThemeResource ListViewItemDragBackgroundThemeBrush}"
-                                    DragForeground="{ThemeResource ListViewItemDragForegroundThemeBrush}"
-                                    FocusBorderBrush="{ThemeResource SystemControlForegroundAltHighBrush}"
-                                    FocusSecondaryBorderBrush="{ThemeResource SystemControlForegroundBaseHighBrush}"
-                                    PlaceholderBackground="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}"
-                                    PointerOverBackground="{ThemeResource SystemControlHighlightListLowBrush}"
-                                    PointerOverForeground="{ThemeResource SystemControlHighlightAltBaseHighBrush}"
-                                    SelectedBackground="{ThemeResource SystemControlHighlightListAccentLowBrush}"
-                                    SelectedForeground="{ThemeResource SystemControlHighlightAltBaseHighBrush}"
-                                    SelectedPointerOverBackground="{ThemeResource SystemControlHighlightListAccentMediumBrush}"
-                                    PressedBackground="{ThemeResource SystemControlHighlightListMediumBrush}"
-                                    SelectedPressedBackground="{ThemeResource SystemControlHighlightListAccentHighBrush}"
-                                    DisabledOpacity="{ThemeResource ListViewItemDisabledThemeOpacity}"
-                                    DragOpacity="{ThemeResource ListViewItemDragThemeOpacity}"
-                                    ReorderHintOffset="{ThemeResource ListViewItemReorderHintThemeOffset}"
-                                    HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                    VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                    ContentMargin="{TemplateBinding Padding}"
-                                    CheckMode="Inline"/>
+                                    SelectedBackground="Transparent"/>
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
