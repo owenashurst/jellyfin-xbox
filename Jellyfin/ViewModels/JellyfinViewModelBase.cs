@@ -72,7 +72,7 @@ namespace Jellyfin.ViewModels
 
         protected virtual void Execute(string commandParameter)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         protected bool CanExecute(string commandParameter)

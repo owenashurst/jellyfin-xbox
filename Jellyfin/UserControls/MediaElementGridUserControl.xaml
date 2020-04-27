@@ -7,9 +7,30 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     d:DesignHeight="300"
-    d:DesignWidth="400">
-
-    <Grid>
-
-    </Grid>
+    d:DesignWidth="400" x:Name="UI">
+    <GridView x:Name="itemsContainer" GotFocus="ItemsContainer_OnGotFocus" ItemsSource="{Binding ElementName=UI, Path=MediaSource, UpdateSourceTrigger=PropertyChanged}"
+            Margin="0, 30, 0, 0" IsItemClickEnabled="True"
+            SelectionChanged="Selector_OnSelectionChanged"
+            ItemClick="MovieGridView_OnItemClick">
+    <GridView.ItemTemplate>
+        <DataTemplate>
+            <local:MovieItemUserControl DataContext="{Binding}" />
+        </DataTemplate>
+    </GridView.ItemTemplate>
+    <GridView.ItemContainerStyle>
+        <Style TargetType="GridViewItem">
+            <Setter Property="FocusVisualPrimaryThickness" Value="0"/>
+            <Setter Property="FocusVisualSecondaryThickness" Value="0"/>
+            <Setter Property="IsHoldingEnabled" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="GridViewItem">
+                        <ListViewItemPresenter
+                            SelectedBackground="Transparent"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </GridView.ItemContainerStyle>
+</GridView>
 </UserControl>
