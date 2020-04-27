@@ -33,6 +33,22 @@ namespace Jellyfin.ViewModels
 
         #endregion
 
+        #region SelectedMediaElement
+
+        private Movie _selectedMediaElement;
+
+        public Movie SelectedMediaElement
+        {
+            get { return _selectedMediaElement; }
+            set
+            {
+                _selectedMediaElement = value;
+                RaisePropertyChanged(nameof(SelectedMediaElement));
+            }
+        }
+
+        #endregion
+
         private Timer SeekRequestTimer;
 
         /// <summary>
@@ -132,6 +148,9 @@ namespace Jellyfin.ViewModels
                 case "Pause":
                     Pause();
                     break;
+                case "Return":
+                    Return();
+                    break;
                 case "SeekForward":
                     SeekRequest(30);
                     break;
@@ -142,6 +161,12 @@ namespace Jellyfin.ViewModels
                     base.Execute(commandParameter);
                     break;
             }
+        }
+
+        public void Return()
+        {
+            Pause();
+            NavigationService.GoBack();
         }
 
         public void SeekRequest(int seconds)
@@ -207,8 +232,7 @@ namespace Jellyfin.ViewModels
             switch (key)
             {
                 case VirtualKey.Escape:
-                    Pause();
-                    NavigationService.GoBack();
+                    Return();
                     return new ControllerButtonHandledResult();
                 case VirtualKey.GamepadRightTrigger:
                     Execute("SeekForward");

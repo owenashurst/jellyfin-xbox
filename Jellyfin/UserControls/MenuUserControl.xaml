@@ -21,22 +21,25 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Margin="30 30 30 150" HorizontalAlignment="Right">
-            <TextBlock Text="Jellyfin" FontSize="60"  FontFamily="{StaticResource JellyfinFamilyFont}" TextAlignment="Right" />
-            <TextBlock Text="{Binding AppGlobals.SessionInfo.UserName}" FontSize="30"  FontFamily="{StaticResource JellyfinFamilyFont}" TextAlignment="Right" />
+            <StackPanel Orientation="Horizontal" Margin="0, 0, 0, -20">
+                <Image Source="../Assets/SmallTile.scale-200.png" Height="120" Width="120" />
+                <TextBlock Text="Jellyfin" FontSize="60" VerticalAlignment="Center"
+                           Margin="0, 0, 0, 10"
+                           FontFamily="{StaticResource JellyfinFamilyFont}" TextAlignment="Right" />
+            </StackPanel>
+            
+            <TextBlock Text="{Binding AppGlobals.SessionInfo.UserName}" FontSize="30"
+                       FontFamily="{StaticResource JellyfinFamilyFont}" TextAlignment="Right" />
         </StackPanel>
 
         <StackPanel Grid.Row="1">
-            <Button Command="{Binding ToolCommand}"
-                    Padding="35"
-                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"
+            <Button Command="{Binding ToolCommand}" Style="{StaticResource MenuButton}"
                     CommandParameter="Movies">
                 <Button.Content>
                     <TextBlock Text="Movies" FontSize="{StaticResource FontL}" />
                 </Button.Content>
             </Button>
-            <Button Command="{Binding ToolCommand}"
-                    Padding="35"
-                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"
+            <Button Command="{Binding ToolCommand}" Style="{StaticResource MenuButton}"
                     CommandParameter="Logout">
                 <Button.Content>
                     <TextBlock Text="Logout" FontSize="{StaticResource FontL}" />

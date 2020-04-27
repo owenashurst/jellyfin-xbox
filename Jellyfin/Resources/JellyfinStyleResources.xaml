@@ -149,6 +149,25 @@
         <Setter Property="Background" Value="#00A4DC" />
     </Style>
 
+    <Style x:Key="OsdButton" TargetType="Button">
+        <Setter Property="Margin" Value="10, 0"/>
+        <Setter Property="Padding" Value="25, 5"/>
+        <Setter Property="CornerRadius" Value="2"/>
+        <Setter Property="Height" Value="45"/>
+        <Setter Property="Width" Value="80"/>
+        <Setter Property="Background" Value="{StaticResource Color10}" />
+        <Setter Property="FocusVisualPrimaryBrush" Value="{StaticResource PrimaryColor}" />
+        <Setter Property="FocusVisualSecondaryBrush" Value="{StaticResource PrimaryColor}" />
+    </Style>
+
+    <Style x:Key="MenuButton" TargetType="Button">
+        <Setter Property="Padding" Value="35" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Right" />
+        <Setter Property="FocusVisualPrimaryBrush" Value="{StaticResource PrimaryColor}" />
+        <Setter Property="FocusVisualSecondaryBrush" Value="{StaticResource PrimaryColor}" />
+    </Style>
+
     <Style x:Key="SimpleTextBlock" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="{StaticResource JellyfinFamilyFont}"/>
         <Setter Property="Margin" Value="0, 25, 0, 0"/>

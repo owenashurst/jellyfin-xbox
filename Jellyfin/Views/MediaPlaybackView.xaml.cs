@@ -17,11 +17,15 @@ namespace Jellyfin.Views
     /// </summary>
     public sealed partial class MediaPlaybackView
     {
+        #region ctor
+
         public MediaPlaybackView()
         {
             InitializeComponent();
             (DataContext as MediaPlaybackViewModel).MediaPlayer = mediaPlayerElement;
         }
+
+        #endregion
 
         /// <summary>
         /// Starts playing back the video with the provided id.
@@ -81,7 +85,7 @@ namespace Jellyfin.Views
         private void OpenOsd(int interval = 3500)
         {
             playbackMenuView.Visibility = Visibility.Visible;
-            playbackMenuView.playButton.Focus(FocusState.Programmatic);
+            playbackMenuView.pauseButton.Focus(FocusState.Programmatic);
             playbackMenuView.VisibilityChanged(interval);
         }
 
@@ -92,6 +96,7 @@ namespace Jellyfin.Views
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             Movie movie = e.Parameter as Movie;
+            (DataContext as MediaPlaybackViewModel).SelectedMediaElement = movie;
             Start(movie.Id);
         }
     }

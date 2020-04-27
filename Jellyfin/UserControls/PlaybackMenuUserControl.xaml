@@ -5,118 +5,79 @@
     xmlns:uwp="using:FontAwesome.UWP" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="using:Jellyfin.ViewModels"
-    xmlns:controls="using:Jellyfin.Controls"
     mc:Ignorable="d"
     HorizontalAlignment="Stretch"
-    Margin="100, 0, 100, 100"
     d:DataContext="{d:DesignInstance viewModels:MediaPlaybackViewModel}">
-    <Grid Background="#80000000" CornerRadius="5"
-          BorderThickness="2" Padding="30">
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup x:Name="State">
-                <VisualState x:Name="Visible">
-                    <Storyboard>
-                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="Grid">
-                            <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
-                            <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
-                            <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
-                        </DoubleAnimationUsingKeyFrames>
-                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)" Storyboard.TargetName="Grid">
-                            <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
-                            <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
-                        </DoubleAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Grid">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <Visibility>Collapsed</Visibility>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                            <DiscreteObjectKeyFrame KeyTime="0:0:0.1">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <Visibility>Visible</Visibility>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                    </Storyboard>
-                </VisualState>
-
-                <VisualState x:Name="Collapsed">
-                    <Storyboard>
-                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="Grid">
-                            <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
-                            <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0"/>
-                        </DoubleAnimationUsingKeyFrames>
-                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)" Storyboard.TargetName="Grid">
-                            <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
-                            <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
-                        </DoubleAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Grid">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <Visibility>Visible</Visibility>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                            <DiscreteObjectKeyFrame KeyTime="0:0:0.2">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <Visibility>Collapsed</Visibility>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                    </Storyboard>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
-        <Grid.RenderTransform>
-            <CompositeTransform/>
-        </Grid.RenderTransform>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
+    <Grid Background="#80000000">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        
-        <ProgressBar Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
-                     Height="5" Minimum="0" Maximum="{Binding MediaPlayer.MediaPlayer.NaturalDuration.Ticks}" Value="{Binding MediaPlayer.MediaPlayer.Position.Ticks}"
-                     Margin="10, 20, 10, 50">
-            <ProgressBar.Foreground>
-                <LinearGradientBrush>
-                    <GradientStop Color="#00A4DC" Offset="0"/>
-                    <GradientStop Color="#0CB0E8" Offset="1"/>
-                </LinearGradientBrush>
-            </ProgressBar.Foreground>
-        </ProgressBar>
 
-        <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal">
-            <TextBlock FontSize="{StaticResource FontM}" Text="{Binding MediaPlayer.MediaPlayer.PlaybackSession.Position, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource TimeSpanConverter}}">
-            </TextBlock>
-            <TextBlock FontSize="{StaticResource FontM}" Text="{Binding FormattedSeekRequestedSeconds}">
-            </TextBlock>
-        </StackPanel>
-        
-
-        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
-            <Button x:Name="playButton" x:FieldModifier="public" Command="{Binding ToolCommand}" CommandParameter="Play">
-                <Button.Content>
-                    <Image Grid.Row="3" Source="../Assets/Images/play-button.png" Width="30" Height="30" />
-                </Button.Content>
-            </Button>
-            <Button Command="{Binding ToolCommand}" CommandParameter="Pause">
-                <Button.Content>
-                    <uwp:FontAwesome Icon="Pause" />
-                </Button.Content>
-            </Button>
+        <StackPanel Grid.Row="0" Padding="20">
+            <TextBlock Text="{Binding SelectedMediaElement.Name}"
+                       FontSize="{StaticResource FontL}" />                                                                            
+            <TextBlock Text="{Binding SelectedMediaElement.Year}"
+                       FontSize="{StaticResource FontL}" Opacity=".7" />
         </StackPanel>
 
-        <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
-            <TextBlock FontSize="{StaticResource FontM}" Text="-" />
-            <TextBlock FontSize="{StaticResource FontM}" Text="{Binding RemainingTimeLeft, Converter={StaticResource TimeSpanConverter}}" />
-        </StackPanel>
+        <Grid Grid.Row="1" Background="#80000000" CornerRadius="5"
+          BorderThickness="2" Padding="30" Margin="70, 0, 70, 70">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="250" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
         
-        <TextBlock Grid.Row="2" Grid.Column="2" FontSize="{StaticResource FontM}" Text="{Binding MediaPlayer.MediaPlayer.NaturalDuration, Converter={StaticResource TimeSpanConverter}}" HorizontalAlignment="Right" Opacity=".7" />
+            <ProgressBar Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
+                         Height="5" Minimum="0" Maximum="{Binding MediaPlayer.MediaPlayer.NaturalDuration.Ticks}" Value="{Binding MediaPlayer.MediaPlayer.Position.Ticks}"
+                         Margin="10, 20, 10, 50">
+                <ProgressBar.Foreground>
+                    <LinearGradientBrush>
+                        <GradientStop Color="#00A4DC" Offset="0"/>
+                        <GradientStop Color="#0CB0E8" Offset="1"/>
+                    </LinearGradientBrush>
+                </ProgressBar.Foreground>
+            </ProgressBar>
+
+            <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal">
+                <TextBlock FontSize="{StaticResource FontM}" Text="{Binding MediaPlayer.MediaPlayer.PlaybackSession.Position, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource TimeSpanConverter}}">
+                </TextBlock>
+                <TextBlock FontSize="{StaticResource FontM}" Text="{Binding FormattedSeekRequestedSeconds}">
+                </TextBlock>
+            </StackPanel>
+        
+
+            <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
+                <!--<Button Command="{Binding ToolCommand}" CommandParameter="Play" Style="{StaticResource OsdButton}">
+                    <Button.Content>
+                        <Image Grid.Row="3" Source="../Assets/Images/play-button.png" Width="30" Height="30" />
+                    </Button.Content>
+                </Button>-->
+                <Button x:Name="pauseButton" x:FieldModifier="public" 
+                        Command="{Binding ToolCommand}" CommandParameter="Pause" Style="{StaticResource OsdButton}">
+                    <Button.Content>
+                        <uwp:FontAwesome Icon="Pause" FontSize="25" />
+                    </Button.Content>
+                </Button>
+                <Button Command="{Binding ToolCommand}" CommandParameter="Return" Style="{StaticResource OsdButton}">
+                    <Button.Content>
+                        <uwp:FontAwesome Icon="Close" FontSize="25" />
+                    </Button.Content>
+                </Button>
+            </StackPanel>
+
+            <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                <TextBlock FontSize="{StaticResource FontM}" Text="-" />
+                <TextBlock FontSize="{StaticResource FontM}" Text="{Binding RemainingTimeLeft, Converter={StaticResource TimeSpanConverter}}" />
+            </StackPanel>
+        
+            <TextBlock Grid.Row="2" Grid.Column="2" FontSize="{StaticResource FontM}" Text="{Binding MediaPlayer.MediaPlayer.NaturalDuration, Converter={StaticResource TimeSpanConverter}}" HorizontalAlignment="Right" Opacity=".7" />
+        </Grid>
     </Grid>
 </UserControl>
