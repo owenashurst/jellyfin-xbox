@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:models="using:Jellyfin.Models"
+    xmlns:userControls="using:Jellyfin.UserControls"
     mc:Ignorable="d"
     Loaded="MovieView_OnLoaded"
     DataContext="{Binding MovieListPage, Source={StaticResource ViewModelLocator}}">
@@ -14,29 +14,49 @@
             <GradientStop Color="#FF1f4f5f" Offset="1"/>
         </LinearGradientBrush>
     </Frame.Background>
-    <Frame.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../Resources/JellyfinStyleResources.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Frame.Resources>
     <Grid HorizontalAlignment="Stretch">
-        <GridView x:Name="movieGridView" ItemsSource="{Binding Movies}" Margin="0, 30, 0, 0" IsItemClickEnabled="True" ItemClick="MovieGridView_OnItemClick">
+        <GridView ItemsSource="{Binding Movies}"
+                  Margin="0, 30, 0, 0" IsItemClickEnabled="True" 
+                  ItemClick="MovieGridView_OnItemClick">
             <GridView.ItemTemplate>
-                <DataTemplate x:Name="MovieDataTemplate" x:DataType="models:Movie">
-                    <StackPanel Orientation="Vertical" Margin="11, 0, 11, 25" Height="400" Width="250">
-                        <Image Source="{Binding ImageData, Converter={StaticResource ByteArrayToImageConverter}}" Height="300" Width="250" />
-                        <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Hidden"
-                                      VerticalScrollMode="Disabled" HorizontalScrollMode="Enabled" Loaded="scrollViewer_Loaded"
-                                      Unloaded="scrollviewer_Unloaded">
-                            <TextBlock Text="{x:Bind Name}" FontSize="30" Margin="20, 0" Foreground="White" HorizontalAlignment="Center"/>
-                        </ScrollViewer>
-                        
-                        <TextBlock Text="{x:Bind Year}" FontSize="30" Foreground="White" HorizontalAlignment="Center"/>
-                    </StackPanel>
+                <DataTemplate>
+                    <userControls:MovieItemUserControl DataContext="{Binding}" />
                 </DataTemplate>
             </GridView.ItemTemplate>
+            <GridView.ItemContainerStyle>
+                <Style TargetType="GridViewItem">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="GridViewItem">
+                                <ListViewItemPresenter
+                                    ContentTransitions="{TemplateBinding ContentTransitions}"
+                                    SelectionCheckMarkVisualEnabled="True"
+                                    CheckBrush="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
+                                    CheckBoxBrush="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
+                                    DragBackground="{ThemeResource ListViewItemDragBackgroundThemeBrush}"
+                                    DragForeground="{ThemeResource ListViewItemDragForegroundThemeBrush}"
+                                    FocusBorderBrush="{ThemeResource SystemControlForegroundAltHighBrush}"
+                                    FocusSecondaryBorderBrush="{ThemeResource SystemControlForegroundBaseHighBrush}"
+                                    PlaceholderBackground="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}"
+                                    PointerOverBackground="{ThemeResource SystemControlHighlightListLowBrush}"
+                                    PointerOverForeground="{ThemeResource SystemControlHighlightAltBaseHighBrush}"
+                                    SelectedBackground="{ThemeResource SystemControlHighlightListAccentLowBrush}"
+                                    SelectedForeground="{ThemeResource SystemControlHighlightAltBaseHighBrush}"
+                                    SelectedPointerOverBackground="{ThemeResource SystemControlHighlightListAccentMediumBrush}"
+                                    PressedBackground="{ThemeResource SystemControlHighlightListMediumBrush}"
+                                    SelectedPressedBackground="{ThemeResource SystemControlHighlightListAccentHighBrush}"
+                                    DisabledOpacity="{ThemeResource ListViewItemDisabledThemeOpacity}"
+                                    DragOpacity="{ThemeResource ListViewItemDragThemeOpacity}"
+                                    ReorderHintOffset="{ThemeResource ListViewItemReorderHintThemeOffset}"
+                                    HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                    VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                    ContentMargin="{TemplateBinding Padding}"
+                                    CheckMode="Inline"/>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </GridView.ItemContainerStyle>
         </GridView>
     </Grid>
 </Frame>

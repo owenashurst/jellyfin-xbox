@@ -17,6 +17,6 @@
         
         <TextBlock Grid.Row="0" Text="Loading..." FontSize="{StaticResource FontL}" HorizontalAlignment="Center" VerticalAlignment="Bottom" />
         
-        <ProgressRing Grid.Row="1" IsActive="true" Height="80" Width="80" Foreground="LightSkyBlue"></ProgressRing>
+        <ProgressRing Grid.Row="1" IsActive="true" Height="80" Width="80" Foreground="{StaticResource PrimaryColor}"></ProgressRing>
     </Grid>
 </UserControl>

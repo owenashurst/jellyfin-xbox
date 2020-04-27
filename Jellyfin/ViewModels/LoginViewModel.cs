@@ -23,8 +23,14 @@ namespace Jellyfin.ViewModels
             get { return _host; }
             set
             {
-                _host = value;
-                RaisePropertyChanged(nameof(Host));
+                if (_host != value)
+                {
+                    _host = value;
+                    RaisePropertyChanged(nameof(Host));
+
+                    LoginFailureReason = string.Empty;
+                    IsLoginFailed = false;
+                }
             }
         }
 
@@ -42,8 +48,14 @@ namespace Jellyfin.ViewModels
             get { return _username; }
             set
             {
-                _username = value;
-                RaisePropertyChanged(nameof(Username));
+                if (_username != value)
+                {
+                    _username = value;
+                    RaisePropertyChanged(nameof(Username));
+
+                    LoginFailureReason = string.Empty;
+                    IsLoginFailed = false;
+                }
             }
         }
 
@@ -61,8 +73,14 @@ namespace Jellyfin.ViewModels
             get { return _password; }
             set
             {
-                _password = value;
-                RaisePropertyChanged(nameof(Password));
+                if (_password != value)
+                {
+                    _password = value;
+                    RaisePropertyChanged(nameof(Password));
+
+                    LoginFailureReason = string.Empty;
+                    IsLoginFailed = false;
+                }
             }
         }
 
@@ -164,6 +182,7 @@ namespace Jellyfin.ViewModels
             {
                 IsLoginFailed = true;
                 LoginFailureReason = "Error: the host should not be empty.";
+
                 return;
             }
 
@@ -180,15 +199,25 @@ namespace Jellyfin.ViewModels
                 LoginFailureReason = "Error: the password should not be empty.";
                 return;
             }
-            
+
+            IsLoading = true;
+
             if (!await CheckUrlValid())
             {
                 IsLoginFailed = true;
+                IsLoading = false;
                 LoginFailureReason = "Error: the provided host is invalid.";
                 return;
             }
+            
+            bool loginResult = await _loginService.Login(Host, 
+                new LoginModel
+                {
+                    Username = Username,
+                    Pw = Password
+                });
 
-            bool loginResult = await _loginService.Login(Host, new LoginModel {Username = Username, Pw = Password});
+            IsLoading = false;
 
             if (!loginResult)
             {

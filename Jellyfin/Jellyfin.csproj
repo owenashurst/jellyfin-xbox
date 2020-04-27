@@ -132,6 +132,7 @@
     <Compile Include="Controls\DeviceFamilyStateTrigger.cs" />
     <Compile Include="Converters\ByteArrayToImageConverter.cs" />
     <Compile Include="Converters\ParametrizedBooleanToVisibilityConverter.cs" />
+    <Compile Include="Converters\BooleanInverterConverter.cs" />
     <Compile Include="Converters\TimeSpanConverter.cs" />
     <Compile Include="Core\Globals.cs" />
     <Compile Include="Core\TaskQueue.cs" />
@@ -163,6 +164,9 @@
     <Compile Include="Services\JellyfinNavigationService.cs" />
     <Compile Include="UserControls\LoadingControl.xaml.cs">
       <DependentUpon>LoadingControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\MovieItemUserControl.xaml.cs">
+      <DependentUpon>MovieItemUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\PlaybackMenuView.xaml.cs">
       <DependentUpon>PlaybackMenuView.xaml</DependentUpon>
@@ -273,6 +277,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="UserControls\LoadingControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\MovieItemUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
