@@ -1,4 +1,5 @@
 ﻿using System;
+using Jellyfin.Models.ServiceReturnModels.Movie;
 using Jellyfin.Services.Interfaces;
 
 namespace Jellyfin.Models.Adapters

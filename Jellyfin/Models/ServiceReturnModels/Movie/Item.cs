@@ -1,20 +1,8 @@
-﻿using System;
+using System;
 using Newtonsoft.Json;
 
-namespace Jellyfin.Models
+namespace Jellyfin.Models.ServiceReturnModels.Movie
 {
-    public class JellyfinMovieResult
-    {
-        [JsonProperty("Items")]
-        public Item[] Items { get; set; }
-
-        [JsonProperty("TotalRecordCount")]
-        public long TotalRecordCount { get; set; }
-
-        [JsonProperty("StartIndex")]
-        public long StartIndex { get; set; }
-    }
-
     public class Item
     {
         [JsonProperty("Name")]
@@ -57,7 +45,7 @@ namespace Jellyfin.Models
         public string Type { get; set; }
 
         [JsonProperty("UserData")]
-        public UserData UserData { get; set; }
+        public Userdata UserData { get; set; }
 
         [JsonProperty("PrimaryImageAspectRatio")]
         public double PrimaryImageAspectRatio { get; set; }
@@ -66,7 +54,7 @@ namespace Jellyfin.Models
         public string VideoType { get; set; }
 
         [JsonProperty("ImageTags")]
-        public ImageTags ImageTags { get; set; }
+        public Imagetags ImageTags { get; set; }
 
         [JsonProperty("BackdropImageTags")]
         public string[] BackdropImageTags { get; set; }
@@ -76,35 +64,5 @@ namespace Jellyfin.Models
 
         [JsonProperty("MediaType")]
         public string MediaType { get; set; }
-    }
-
-    public class ImageTags
-    {
-        [JsonProperty("Primary")]
-        public string Primary { get; set; }
-    }
-
-    public class UserData
-    {
-        [JsonProperty("PlaybackPositionTicks")]
-        public long PlaybackPositionTicks { get; set; }
-
-        [JsonProperty("PlayCount")]
-        public long PlayCount { get; set; }
-
-        [JsonProperty("IsFavorite")]
-        public bool IsFavorite { get; set; }
-
-        [JsonProperty("Played")]
-        public bool Played { get; set; }
-
-        [JsonProperty("Key")]
-        public long Key { get; set; }
-
-        [JsonProperty("LastPlayedDate", NullValueHandling = NullValueHandling.Ignore)]
-        public DateTimeOffset? LastPlayedDate { get; set; }
-
-        [JsonProperty("PlayedPercentage", NullValueHandling = NullValueHandling.Ignore)]
-        public double? PlayedPercentage { get; set; }
     }
 }

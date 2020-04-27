@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Jellyfin.Models.ServiceReturnModels.Movie;
 using Jellyfin.Services.Interfaces;
 
 namespace Jellyfin.Models.Adapters

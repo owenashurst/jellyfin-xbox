@@ -14,9 +14,9 @@ namespace Jellyfin.ViewModels
 
         #region SelectedMovie
 
-        private MovieDetail _selectedMovie;
+        private Movie _selectedMovie;
 
-        public MovieDetail SelectedMovie
+        public Movie SelectedMovie
         {
             get { return _selectedMovie; }
             set
@@ -49,14 +49,22 @@ namespace Jellyfin.ViewModels
         /// </summary>
         private readonly IMovieService _movieService;
 
+        /// <summary>
+        /// Reference for the playback info service.
+        /// </summary>
+        private readonly IPlaybackInfoService _playbackInfoService;
+
         #endregion
 
         #region ctor
 
-        public MovieDetailViewModel(IMovieService movieService)
+        public MovieDetailViewModel(IMovieService movieService, IPlaybackInfoService playbackInfoService)
         {
             _movieService = movieService ??
                     throw new ArgumentNullException(nameof(movieService));
+
+            _playbackInfoService = playbackInfoService ??
+                            throw new ArgumentNullException(nameof(movieService));
         }
 
         #endregion
@@ -84,6 +92,11 @@ namespace Jellyfin.ViewModels
             foreach (Movie relatedMovie in await _movieService.GetRelatedMovies(movie.Id))
             {
                 RelatedMovies.Add(relatedMovie);
+            }
+
+            if (SelectedMovie.PlaybackInformation == null)
+            {
+                SelectedMovie.PlaybackInformation = await _playbackInfoService.GetPlaybackInformation(movie.Id);
             }
         }
 

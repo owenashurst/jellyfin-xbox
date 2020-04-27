@@ -89,12 +89,7 @@ namespace Jellyfin.ViewModels
                 {
                     return string.Empty;
                 }
-
-                if (SeekRequestedSeconds < 0)
-                {
-                    return $" (-{SeekRequestedSeconds}s)";
-                }
-
+                
                 return $" (+{SeekRequestedSeconds}s)";
             }
         }

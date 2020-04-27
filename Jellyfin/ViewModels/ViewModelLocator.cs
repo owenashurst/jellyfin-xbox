@@ -31,12 +31,13 @@ namespace Jellyfin.ViewModels
             _container = Globals.Instance.Container;
 
             IMovieService movieService = _container.Resolve<IMovieService>();
+            IPlaybackInfoService playbackInfoService = _container.Resolve<IPlaybackInfoService>();
             ILoginService loginService = _container.Resolve<ILoginService>();
             ISettingsService settingsService = _container.Resolve<ISettingsService>();
             IJellyfinNavigationService navigationService = _container.Resolve<IJellyfinNavigationService>();
 
             _container.RegisterInstance(new MainViewModel());
-            _container.RegisterInstance(new MovieDetailViewModel(movieService));
+            _container.RegisterInstance(new MovieDetailViewModel(movieService, playbackInfoService));
             _container.RegisterInstance(new MovieListViewModel(movieService));
             _container.RegisterInstance(new MediaPlaybackViewModel());
             _container.RegisterInstance(new LoginViewModel(loginService, settingsService));

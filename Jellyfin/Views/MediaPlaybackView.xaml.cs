@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Media.Core;
 using Windows.Media.Playback;
@@ -27,23 +28,7 @@ namespace Jellyfin.Views
 
         #endregion
 
-        /// <summary>
-        /// Starts playing back the video with the provided id.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public async Task Start(string id)
-        {
-            string videoUrl =
-                Globals.Instance.Host + "/Videos/" + id + "/stream.mov?Static=true&mediaSourceId=" + id + "&deviceId=" + Globals.Instance.SessionInfo.DeviceId + "&api_key=" + Globals.Instance.AccessToken + "&Tag=beb6ef9128431e67c421e4cb890cf84f";
-
-            Uri uri = new Uri(videoUrl);
-
-            mediaPlayerElement.SetMediaPlayer(new MediaPlayer());
-            mediaPlayerElement.MediaPlayer.Source = MediaSource.CreateFromUri(uri);
-            mediaPlayerElement.MediaPlayer.Play();
-            OpenOsd();
-        }
+        #region Additional methods
 
         /// <summary>
         /// Handles that if the controller B is pressed, stops the playback.
@@ -97,7 +82,65 @@ namespace Jellyfin.Views
         {
             Movie movie = e.Parameter as Movie;
             (DataContext as MediaPlaybackViewModel).SelectedMediaElement = movie;
-            Start(movie.Id);
+            StartPrelude(movie);
         }
+
+        public async Task StartPrelude(Movie movie)
+        {
+            if (movie.PlaybackInformation == null || !movie.PlaybackInformation.Any())
+            {
+                return;
+            }
+
+            var container = movie.PlaybackInformation.ToList()[0].Container.ToLower();
+            if (container.Contains("mkv"))
+            {
+                // adaptive playback
+            }
+            else
+            {
+                // Regular streaming
+                StartDirectPlayback(movie.Id);
+            }
+
+        }
+
+        /// <summary>
+        /// Starts adaptive playback the video with the provided id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task StartAdaptivePlayback(string id)
+        {
+            string videoUrl =
+                Globals.Instance.Host + "/Videos/" + id + "/stream.mov?Static=true&mediaSourceId=" + id + "&deviceId=" + Globals.Instance.SessionInfo.DeviceId + "&api_key=" + Globals.Instance.AccessToken + "&Tag=beb6ef9128431e67c421e4cb890cf84f";
+
+            Uri uri = new Uri(videoUrl);
+
+            mediaPlayerElement.SetMediaPlayer(new MediaPlayer());
+            mediaPlayerElement.MediaPlayer.Source = MediaSource.CreateFromUri(uri);
+            mediaPlayerElement.MediaPlayer.Play();
+            OpenOsd();
+        }
+
+        /// <summary>
+        /// Starts playing back the video with the provided id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task StartDirectPlayback(string id)
+        {
+            string videoUrl =
+                Globals.Instance.Host + "/Videos/" + id + "/stream.mov?Static=true&mediaSourceId=" + id + "&deviceId=" + Globals.Instance.SessionInfo.DeviceId + "&api_key=" + Globals.Instance.AccessToken + "&Tag=beb6ef9128431e67c421e4cb890cf84f";
+
+            Uri uri = new Uri(videoUrl);
+
+            mediaPlayerElement.SetMediaPlayer(new MediaPlayer());
+            mediaPlayerElement.MediaPlayer.Source = MediaSource.CreateFromUri(uri);
+            mediaPlayerElement.MediaPlayer.Play();
+            OpenOsd();
+        }
+
+        #endregion
     }
 }

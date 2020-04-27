@@ -1,6 +1,7 @@
 ﻿using Jellyfin.Core;
 using Jellyfin.Models;
 using Jellyfin.Models.Adapters;
+using Jellyfin.Models.ServiceReturnModels.Movie;
 using Jellyfin.Services;
 using Jellyfin.Services.Interfaces;
 using Unity;
@@ -17,17 +18,32 @@ namespace Jellyfin
         /// </summary>
         public static void RegisterTypes()
         {
+            RegisterServices();
+            RegisterAdapters();
+        }
+
+        public static void RegisterAdapters()
+        {
             IUnityContainer container = Globals.Instance.Container;
-            
-            container.RegisterType<IJellyfinNavigationService, JellyfinNavigationService>();
 
             container.RegisterType<IAdapter<Item, Movie>, MovieAdapter>();
+            container.RegisterType<
+                IAdapter<Models.ServiceReturnModels.PlaybackInformation.Mediasource, MediaElementPlaybackSource>,
+                MediaElementPlaybackSourceAdapter>();
             container.RegisterType<IAdapter<MovieDetailsResult, MovieDetail>, MovieDetailAdapter>();
+        }
+
+        public static void RegisterServices()
+        {
+            IUnityContainer container = Globals.Instance.Container;
+
+            container.RegisterType<IJellyfinNavigationService, JellyfinNavigationService>();
 
             container.RegisterType<IMovieService, MovieService>();
             container.RegisterType<ILoginService, LoginService>();
             container.RegisterType<IImageService, ImageService>();
             container.RegisterType<ISettingsService, SettingsService>();
+            container.RegisterType<IPlaybackInfoService, PlaybackInfoService>();
         }
     }
 }

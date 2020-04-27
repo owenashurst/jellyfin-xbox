@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Windows.UI.Core;
 using Jellyfin.Core;
 
@@ -143,6 +144,12 @@ namespace Jellyfin.Models
         /// See field Overview
         /// </summary>
         public string Description { get; set; }
+
+        /// <summary>
+        /// The playback information of the media element.
+        /// Comes from PlaybackInfoService.
+        /// </summary>
+        public IEnumerable<MediaElementPlaybackSource> PlaybackInformation { get; set; }
 
         #endregion
 
