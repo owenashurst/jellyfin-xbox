@@ -13,7 +13,7 @@
             <ColumnDefinition Width="450" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <userControls:MenuView Grid.Column="0" />
-        <userControls:MovieListView Grid.Column="1" />
+        <userControls:MenuUserControl Grid.Column="0" />
+        <userControls:MovieListUserControl Grid.Column="1" />
     </Grid>
 </Page>

@@ -5,7 +5,7 @@ using Jellyfin.Core;
 
 namespace Jellyfin.UserControls
 {
-    public sealed partial class PlaybackMenuView
+    public sealed partial class PlaybackMenuUserControl
     {
         #region Additional methods
 
@@ -15,7 +15,7 @@ namespace Jellyfin.UserControls
 
         #region ctor
 
-        public PlaybackMenuView()
+        public PlaybackMenuUserControl()
         {
             InitializeComponent();
             AutoHideTimer = new Timer();

@@ -16,7 +16,7 @@
             IsFocusEngagementEnabled="True"
         />
         
-        <userControls:PlaybackMenuView x:Name="playbackMenuView"
+        <userControls:PlaybackMenuUserControl x:Name="playbackMenuView"
             HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
         
         <userControls:LoadingUserControl HorizontalAlignment="Center" VerticalAlignment="Center"></userControls:LoadingUserControl>

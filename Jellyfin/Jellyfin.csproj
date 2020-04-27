@@ -165,11 +165,14 @@
     <Compile Include="UserControls\LoadingUserControl.xaml.cs">
       <DependentUpon>LoadingUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\MediaElementGridUserControl.xaml.cs">
+      <DependentUpon>MediaElementGridUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\MovieItemUserControl.xaml.cs">
       <DependentUpon>MovieItemUserControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\PlaybackMenuView.xaml.cs">
-      <DependentUpon>PlaybackMenuView.xaml</DependentUpon>
+    <Compile Include="UserControls\PlaybackMenuUserControl.xaml.cs">
+      <DependentUpon>PlaybackMenuUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\AppUtils.cs" />
     <Compile Include="Utils\DeviceFormFactorType.cs" />
@@ -190,11 +193,11 @@
     <Compile Include="Views\MainWindowView.xaml.cs">
       <DependentUpon>MainWindowView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\MenuView.xaml.cs">
-      <DependentUpon>MenuView.xaml</DependentUpon>
+    <Compile Include="UserControls\MenuUserControl.xaml.cs">
+      <DependentUpon>MenuUserControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\MovieListView.xaml.cs">
-      <DependentUpon>MovieListView.xaml</DependentUpon>
+    <Compile Include="UserControls\MovieListUserControl.xaml.cs">
+      <DependentUpon>MovieListUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LoginView.xaml.cs">
       <DependentUpon>LoginView.xaml</DependentUpon>
@@ -280,11 +283,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UserControls\MediaElementGridUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UserControls\MovieItemUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControls\PlaybackMenuView.xaml">
+    <Page Include="UserControls\PlaybackMenuUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -300,11 +307,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControls\MenuView.xaml">
+    <Page Include="UserControls\MenuUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControls\MovieListView.xaml">
+    <Page Include="UserControls\MovieListUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

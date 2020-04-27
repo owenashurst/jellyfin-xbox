@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="Jellyfin.UserControls.PlaybackMenuView"
+    x:Class="Jellyfin.UserControls.PlaybackMenuUserControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:uwp="using:FontAwesome.UWP" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
