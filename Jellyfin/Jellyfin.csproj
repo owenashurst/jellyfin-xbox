@@ -165,11 +165,14 @@
     <Compile Include="UserControls\LoadingUserControl.xaml.cs">
       <DependentUpon>LoadingUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\MediaElementListUserControl.xaml.cs">
+      <DependentUpon>MediaElementListUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\MediaElementGridUserControl.xaml.cs">
       <DependentUpon>MediaElementGridUserControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\MovieItemUserControl.xaml.cs">
-      <DependentUpon>MovieItemUserControl.xaml</DependentUpon>
+    <Compile Include="UserControls\MediaElementItemUserControl.xaml.cs">
+      <DependentUpon>MediaElementItemUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\PlaybackMenuUserControl.xaml.cs">
       <DependentUpon>PlaybackMenuUserControl.xaml</DependentUpon>
@@ -283,11 +286,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UserControls\MediaElementListUserControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="UserControls\MediaElementGridUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControls\MovieItemUserControl.xaml">
+    <Page Include="UserControls\MediaElementItemUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

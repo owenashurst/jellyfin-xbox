@@ -57,10 +57,5 @@ namespace Jellyfin.ViewModels
         }
 
         #endregion
-
-        public void NavigateToMovie(Movie movie)
-        {
-            NavigationService.Navigate(typeof(MovieDetailView), movie);
-        }
     }
 }

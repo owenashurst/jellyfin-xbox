@@ -14,7 +14,7 @@
             ItemClick="MovieGridView_OnItemClick">
     <GridView.ItemTemplate>
         <DataTemplate>
-            <local:MovieItemUserControl DataContext="{Binding}" />
+            <local:MediaElementItemUserControl DataContext="{Binding}" />
         </DataTemplate>
     </GridView.ItemTemplate>
     <GridView.ItemContainerStyle>

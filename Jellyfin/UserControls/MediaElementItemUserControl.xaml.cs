@@ -7,7 +7,7 @@ using Windows.UI.Xaml.Media.Animation;
 
 namespace Jellyfin.UserControls
 {
-    public partial class MovieItemUserControl
+    public partial class MediaElementItemUserControl
     {
         #region Properties
 
@@ -20,7 +20,7 @@ namespace Jellyfin.UserControls
 
         #region ctor
 
-        public MovieItemUserControl()
+        public MediaElementItemUserControl()
         {
             InitializeComponent();
         }
@@ -29,19 +29,25 @@ namespace Jellyfin.UserControls
 
         #region Additional methods
 
-        public void StartAnimation()
+        public void FocusGot()
         {
             Animate(containerCanvas);
             ImageBorder.Background = new SolidColorBrush(Color.FromArgb(255, 0, 164, 220));
+
+            notMovingTextBlock.Opacity = 1;
+            yearTextBlock.Opacity = 1;
         }
 
-        public void EndAnimation()
+        public void FocusLost()
         {
             animateStoryboard.Stop();
             ImageBorder.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
 
             containerCanvas.Visibility = Visibility.Collapsed;
             notMovingTextBlock.Visibility = Visibility.Visible;
+
+            notMovingTextBlock.Opacity = .7;
+            yearTextBlock.Opacity = .7;
         }
         
         private void Animate(Canvas c)

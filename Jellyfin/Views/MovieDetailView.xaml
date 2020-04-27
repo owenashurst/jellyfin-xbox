@@ -7,6 +7,7 @@
     xmlns:viewModels="using:Jellyfin.ViewModels"
     xmlns:uwp="using:FontAwesome.UWP"
     xmlns:models="using:Jellyfin.Models"
+    xmlns:userControls="using:Jellyfin.UserControls"
     mc:Ignorable="d"
     PreviewKeyDown="MovieDetailView_OnPreviewKeyDown"
     DataContext="{Binding MovieDetailPage, Source={StaticResource ViewModelLocator}}"
@@ -101,29 +102,8 @@
 
                 <TextBlock Grid.Row="0" Text="RELATED MOVIES" FontSize="32" FontWeight="SemiBold" Margin="15, 0, 0, 20" />
 
-                <ListView Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                      ScrollViewer.HorizontalScrollMode="Enabled"                  
-                      ScrollViewer.VerticalScrollMode="Disabled"
-                      ItemsSource="{Binding RelatedMovies}">
-                    <ListView.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Background="Transparent" Orientation="Horizontal" />
-                        </ItemsPanelTemplate>
-                    </ListView.ItemsPanel>
-                    <ListView.ItemTemplate>
-                        <DataTemplate x:DataType="models:Movie">
-                            <Button>
-                                <Button.Content>
-                                    <StackPanel Orientation="Vertical" Margin="0, 0, 15, 25" Height="400" Width="250">
-                                        <Image Source="{Binding ImageData, Converter={StaticResource ByteArrayToImageConverter}}" Height="300" Width="250" />
-                                        <TextBlock Text="{x:Bind Name}" FontSize="30" Foreground="White" HorizontalAlignment="Center"/>
-                                        <TextBlock Text="{x:Bind Year}" FontSize="30" Foreground="White" HorizontalAlignment="Center"/>
-                                    </StackPanel>
-                                </Button.Content>
-                            </Button>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                <userControls:MediaElementListUserControl Grid.Row="1"
+                    MediaSource="{Binding RelatedMovies}" />
             </Grid>
         </Grid>
     </ScrollViewer>

@@ -2,7 +2,9 @@
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Jellyfin.Core;
+using Jellyfin.Models;
 using Jellyfin.Services.Interfaces;
+using Jellyfin.Views;
 using Unity;
 
 namespace Jellyfin.ViewModels
@@ -78,6 +80,11 @@ namespace Jellyfin.ViewModels
         protected bool CanExecute(string commandParameter)
         {
             return true;
+        }
+
+        public void NavigateToMovie(Movie movie)
+        {
+            NavigationService.Navigate(typeof(MovieDetailView), movie);
         }
 
         #endregion

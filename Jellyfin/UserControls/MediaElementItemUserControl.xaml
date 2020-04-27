@@ -1,9 +1,10 @@
 ﻿<UserControl
-    x:Class="Jellyfin.UserControls.MovieItemUserControl"
+    x:Class="Jellyfin.UserControls.MediaElementItemUserControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:Jellyfin.Models"
+    xmlns:userControls="using:Jellyfin.UserControls"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance models:Movie}">
     <StackPanel Orientation="Vertical" Margin="11, 0, 11, 25" Width="250">
@@ -31,6 +32,7 @@
         <TextBlock Text="{Binding Name}" FontSize="30" x:Name="notMovingTextBlock"
                    Foreground="White" HorizontalAlignment="Center" />
 
-        <TextBlock Text="{Binding Year}" FontSize="30" Foreground="White" HorizontalAlignment="Center"/>
+        <TextBlock Text="{Binding Year}" x:Name="yearTextBlock" FontSize="30" Foreground="White" HorizontalAlignment="Center"/>
     </StackPanel>
 </UserControl>
+

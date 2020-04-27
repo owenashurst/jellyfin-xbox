@@ -8,33 +8,41 @@ using Jellyfin.ViewModels;
 
 namespace Jellyfin.UserControls
 {
-    public sealed partial class MediaElementGridUserControl
+    public sealed partial class MediaElementListUserControl
     {
+        #region Properties
+
+        public ListViewItem FirstElement
+        {
+            get => (ListViewItem)itemsContainer.ContainerFromIndex(0);
+        }
+
+        #endregion
+
         #region ItemsSource Dependency Property
 
-        public static readonly DependencyProperty MediaSourceDependency =
-            DependencyProperty.Register("MediaSource", typeof(ObservableCollection<ModelBase>),
-                typeof(MediaElementGridUserControl), new PropertyMetadata(null));
+        public static readonly DependencyProperty MediaSourceDependency = DependencyProperty.Register("MediaSource", typeof(ObservableCollection<ModelBase>), typeof(MediaElementListUserControl), new PropertyMetadata(null));
 
         public ObservableCollection<ModelBase> MediaSource
         {
-            get => (ObservableCollection<ModelBase>) GetValue(MediaSourceDependency);
+            get => (ObservableCollection<ModelBase>)GetValue(MediaSourceDependency);
             set => SetValue(MediaSourceDependency, value);
         }
 
         #endregion
 
-        public MediaElementGridUserControl()
+        #region ctor
+
+        public MediaElementListUserControl()
         {
             InitializeComponent();
         }
 
-        public GridViewItem FirstElement
-        {
-            get => (GridViewItem) itemsContainer.ContainerFromIndex(0);
-        }
+        #endregion
 
-        public MediaElementItemUserControl ItemFromGridViewItem(GridViewItem item)
+        #region Additional methods
+
+        public MediaElementItemUserControl ItemFromGridViewItem(ListViewItem item)
         {
             return item.FindVisualChild<MediaElementItemUserControl>();
         }
@@ -48,11 +56,11 @@ namespace Jellyfin.UserControls
             }
         }
 
-        private void MovieGridView_OnItemClick(object sender, ItemClickEventArgs e)
+        private void MovieListView_OnItemClick(object sender, ItemClickEventArgs e)
         {
             (DataContext as JellyfinViewModelBase).NavigateToMovie(e.ClickedItem as Movie);
         }
-
+        
         private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (itemsContainer == null)
@@ -70,7 +78,7 @@ namespace Jellyfin.UserControls
             }
             foreach (object deletedItem in delArr)
             {
-                GridViewItem selectedItem = (GridViewItem) itemsContainer.ContainerFromItem(deletedItem);
+                ListViewItem selectedItem = (ListViewItem)itemsContainer.ContainerFromItem(deletedItem);
 
                 MediaElementItemUserControl result = ItemFromGridViewItem(selectedItem);
 
@@ -79,7 +87,7 @@ namespace Jellyfin.UserControls
 
             foreach (object addedItem in arr)
             {
-                GridViewItem selectedItem = (GridViewItem) itemsContainer.ContainerFromItem(addedItem);
+                ListViewItem selectedItem = (ListViewItem)itemsContainer.ContainerFromItem(addedItem);
                 MediaElementItemUserControl result = ItemFromGridViewItem(selectedItem);
 
                 result?.FocusGot();
@@ -94,5 +102,7 @@ namespace Jellyfin.UserControls
                 SelectFirst();
             }
         }
+
+        #endregion
     }
 }
