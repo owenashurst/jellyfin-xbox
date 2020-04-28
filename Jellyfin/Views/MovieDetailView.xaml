@@ -6,17 +6,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="using:Jellyfin.ViewModels"
     xmlns:uwp="using:FontAwesome.UWP"
-    xmlns:models="using:Jellyfin.Models"
     xmlns:userControls="using:Jellyfin.UserControls"
     mc:Ignorable="d"
     PreviewKeyDown="MovieDetailView_OnPreviewKeyDown"
     DataContext="{Binding MovieDetailPage, Source={StaticResource ViewModelLocator}}"
     d:DataContext="{d:DesignInstance viewModels:MovieDetailViewModel}">
     <Page.Background>
-        <LinearGradientBrush>
-            <GradientStop Color="#FF552f56" Offset="0"/>
-            <GradientStop Color="#FF1f4f5f" Offset="1"/>
-        </LinearGradientBrush>
+        <ImageBrush ImageSource="/Assets/Images/background.png" Stretch="UniformToFill"/>
     </Page.Background>
     <ScrollViewer>
         <Grid Margin="15, 150, 30, 200">

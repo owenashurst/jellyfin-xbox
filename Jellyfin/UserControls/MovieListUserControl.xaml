@@ -9,10 +9,7 @@
     Loaded="MovieView_OnLoaded"
     DataContext="{Binding MovieListPage, Source={StaticResource ViewModelLocator}}">
     <Frame.Background>
-        <LinearGradientBrush>
-            <GradientStop Color="#FF552f56" Offset="0"/>
-            <GradientStop Color="#FF1f4f5f" Offset="1"/>
-        </LinearGradientBrush>
+        <ImageBrush ImageSource="/Assets/Images/background.png" Stretch="UniformToFill"/>
     </Frame.Background>
 
     <Grid HorizontalAlignment="Stretch">

@@ -161,6 +161,7 @@
     <Compile Include="Models\ServiceReturnModels\PlaybackInformation\PlaybackInformationResult.cs" />
     <Compile Include="Services\Interfaces\IPlaybackInfoService.cs" />
     <Compile Include="Services\Interfaces\ISettingsService.cs" />
+    <Compile Include="Services\PlaybackInfoService.Constants.cs" />
     <Compile Include="Services\PlaybackInfoService.cs" />
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="Extensions\HttpClientExtensions.cs" />
@@ -232,6 +233,7 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Images\background.png" />
     <Content Include="Assets\Images\play-button.png" />
     <Content Include="Assets\LargeTile.scale-100.png" />
     <Content Include="Assets\LargeTile.scale-125.png" />

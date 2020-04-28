@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using Jellyfin.Core;
 using Jellyfin.Extensions;
@@ -12,10 +14,10 @@ using Newtonsoft.Json;
 
 namespace Jellyfin.Services
 {
-    public class PlaybackInfoService : ServiceBase, IPlaybackInfoService
+    public partial class PlaybackInfoService : ServiceBase, IPlaybackInfoService
     {
         #region Properties
-
+        
         public string GetPlaybackInfoEndpoint
         {
             get => $"{Globals.Instance.Host}/Items/{{0}}/PlaybackInfo?UserId={Globals.Instance.User.Id}&StartTimeTicks=0&IsPlayback=false&AutoOpenLiveStream=false&MaxStreamingBitrate=4000000";
@@ -60,9 +62,12 @@ namespace Jellyfin.Services
             using (HttpClient cli = new HttpClient())
             {
                 cli.AddAuthorizationHeaders();
+                cli.DefaultRequestHeaders.Accept
+                    .Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                HttpResponseMessage result = await cli.GetAsync(url);
+                HttpContent content = new StringContent(PlaybackConfigurationInfo, Encoding.UTF8, "application/json");
 
+                HttpResponseMessage result = await cli.PostAsync(url, content);
                 if (!result.IsSuccessStatusCode)
                 {
                     return new List<MediaElementPlaybackSource>();
