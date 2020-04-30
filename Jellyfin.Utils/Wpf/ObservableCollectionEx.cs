@@ -1,0 +1,44 @@
+﻿using System.Collections;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
+
+namespace Jellyfin.Utils.Wpf
+{
+    public class ObservableCollectionEx<T> : ObservableCollection<T> where T : INotifyPropertyChanged
+    {
+        protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        {
+            Unsubscribe(e.OldItems);
+            Subscribe(e.NewItems);
+            base.OnCollectionChanged(e);
+        }
+
+        private void Subscribe(IList newItems)
+        {
+            if (newItems != null)
+            {
+                foreach (T item in newItems)
+                {
+                    item.PropertyChanged += ContainedElementChanged;
+                }
+            }
+        }
+
+        private void Unsubscribe(IList removedItems)
+        {
+            if (removedItems != null)
+            {
+                foreach (T element in removedItems)
+                {
+                    element.PropertyChanged -= ContainedElementChanged;
+                }
+            }
+        }
+
+        private void ContainedElementChanged(object x, PropertyChangedEventArgs e)
+        {
+            OnPropertyChanged(e);
+        }
+    }
+}

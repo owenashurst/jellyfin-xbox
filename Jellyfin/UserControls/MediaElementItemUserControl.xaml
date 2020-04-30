@@ -6,7 +6,7 @@
     xmlns:models="using:Jellyfin.Models"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance models:Movie}">
-    <StackPanel Orientation="Vertical" Margin="11, 0, 11, 25" Width="250">
+    <StackPanel x:Name="stackPanel" Orientation="Vertical" Margin="11, 0, 11, 25" Width="250">
         <Border CornerRadius="5" Width="192" Padding="4" x:Name="ImageBorder">
             <Image Source="{Binding ImageData, Converter={StaticResource ByteArrayToImageConverter}}" Height="280" />
         </Border>
@@ -23,7 +23,7 @@
                 </Storyboard>
             </Canvas.Resources>
             <Canvas.Clip>
-                <RectangleGeometry Rect="0, 0, 250, 40" />
+                <RectangleGeometry x:Name="RectangleGeometry" Rect="0, 0, 250, 40" />
             </Canvas.Clip>
             <TextBlock x:Name="movingTextBlock"
                        Text="{Binding Name}" FontSize="30" Foreground="White" HorizontalAlignment="Center" TextAlignment="Center" />

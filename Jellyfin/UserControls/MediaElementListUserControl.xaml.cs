@@ -17,6 +17,19 @@ namespace Jellyfin.UserControls
             get => (ListViewItem)itemsContainer.ContainerFromIndex(0);
         }
 
+        public ListViewItem SelectedElement
+        {
+            get
+            {
+                if (itemsContainer.SelectedIndex == -1)
+                {
+                    return null;
+                }
+
+                return (ListViewItem)itemsContainer.ContainerFromIndex(itemsContainer.SelectedIndex);
+            } 
+        }
+
         #endregion
 
         #region ItemsSource Dependency Property
@@ -27,6 +40,18 @@ namespace Jellyfin.UserControls
         {
             get => (ObservableCollection<ModelBase>)GetValue(MediaSourceDependency);
             set => SetValue(MediaSourceDependency, value);
+        }
+
+        #endregion
+
+        #region IsLong Dependency Property
+
+        public static readonly DependencyProperty IsLongDependency = DependencyProperty.Register("IsLong", typeof(bool), typeof(MediaElementListUserControl), new PropertyMetadata(false));
+
+        public bool IsLong
+        {
+            get => (bool)GetValue(IsLongDependency);
+            set => SetValue(IsLongDependency, value);
         }
 
         #endregion
@@ -100,6 +125,23 @@ namespace Jellyfin.UserControls
             {
                 itemsContainer.SelectedIndex = 0;
                 SelectFirst();
+            }
+            else
+            {
+                if (SelectedElement != null)
+                {
+                    MediaElementItemUserControl result = ItemFromGridViewItem(SelectedElement);
+                    result?.FocusGot();
+                }
+            }
+        }
+
+        public void LoseFocus()
+        {
+            if (SelectedElement != null)
+            {
+                MediaElementItemUserControl result = ItemFromGridViewItem(SelectedElement);
+                result?.FocusLost();
             }
         }
 

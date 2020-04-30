@@ -19,7 +19,12 @@ namespace Jellyfin.Converters
         public object ConvertBack(object value, Type targetType, object parameter,
             string language)
         {
-            throw new NotImplementedException();
+            if (value == null || !(value is bool))
+            {
+                return null;
+            }
+
+            return !(bool)value;
         }
     }
 }

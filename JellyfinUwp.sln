@@ -12,13 +12,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Doc", "Doc", "{A497F636-B20
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9BA6E54B-B71A-4C79-8D15-F6C3335432E9}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{9BA6E54B-B71A-4C79-8D15-F6C3335432E9}.Debug|x64.ActiveCfg = Debug|x64
 		{9BA6E54B-B71A-4C79-8D15-F6C3335432E9}.Debug|x64.Build.0 = Debug|x64
 		{9BA6E54B-B71A-4C79-8D15-F6C3335432E9}.Debug|x64.Deploy.0 = Debug|x64
+		{9BA6E54B-B71A-4C79-8D15-F6C3335432E9}.Release|Any CPU.ActiveCfg = Release|x86
 		{9BA6E54B-B71A-4C79-8D15-F6C3335432E9}.Release|x64.ActiveCfg = Release|x64
 		{9BA6E54B-B71A-4C79-8D15-F6C3335432E9}.Release|x64.Build.0 = Release|x64
 		{9BA6E54B-B71A-4C79-8D15-F6C3335432E9}.Release|x64.Deploy.0 = Release|x64

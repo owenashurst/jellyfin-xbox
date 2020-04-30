@@ -133,9 +133,11 @@
     <Compile Include="Converters\ByteArrayToImageConverter.cs" />
     <Compile Include="Converters\ParametrizedBooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\BooleanInverterConverter.cs" />
+    <Compile Include="Converters\StringToUpperCaseConverter.cs" />
     <Compile Include="Converters\TimeSpanConverter.cs" />
     <Compile Include="Core\Globals.cs" />
     <Compile Include="Core\TaskQueue.cs" />
+    <Compile Include="Extensions\ObservableCollectionEx.cs" />
     <Compile Include="Models\Adapters\MediaElementPlaybackSourceAdapter.cs" />
     <Compile Include="Models\Adapters\MovieDetailAdapter.cs" />
     <Compile Include="Models\ControllerButtonHandledResult.cs" />
@@ -194,6 +196,9 @@
     </Compile>
     <Compile Include="UserControls\MediaElementItemUserControl.xaml.cs">
       <DependentUpon>MediaElementItemUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\MovieRecommendationsUserControl.xaml.cs">
+      <DependentUpon>MovieRecommendationsUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\PlaybackMenuUserControl.xaml.cs">
       <DependentUpon>PlaybackMenuUserControl.xaml</DependentUpon>
@@ -317,6 +322,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\MediaElementItemUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\MovieRecommendationsUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

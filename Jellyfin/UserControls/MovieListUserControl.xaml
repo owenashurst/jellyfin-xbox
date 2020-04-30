@@ -12,7 +12,42 @@
         <ImageBrush ImageSource="/Assets/Images/background.png" Stretch="UniformToFill"/>
     </Frame.Background>
 
-    <Grid HorizontalAlignment="Stretch">
-        <userControls:MediaElementGridUserControl MediaSource="{Binding Movies}" />
+    <Grid HorizontalAlignment="Stretch" Margin="15, 40, 0, 0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <ToggleButton Content="Recommendations"
+                    Command="{Binding ToolCommand}" 
+                    CommandParameter="OpenRecommendations"
+                    IsChecked="{Binding IsRecommendationsOpened, Mode=TwoWay}" 
+                    Style="{StaticResource SelectableToggleButton}"
+                    Template="{StaticResource SelectableToggleButtonControlTemplate}">
+            </ToggleButton>
+            <ToggleButton Content="Library"
+                    Command="{Binding ToolCommand}"
+                    CommandParameter="OpenLibrary"
+                    IsChecked="{Binding IsRecommendationsOpened, Mode=TwoWay, Converter={StaticResource BooleanInverterConverter}}"
+                    Margin="30, 0, 0, 0"
+                    Style="{StaticResource SelectableToggleButton}"
+                    Template="{StaticResource SelectableToggleButtonControlTemplate}" />
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Visibility="Collapsed">
+            <Button Content="Order by: Name ABC" Style="{StaticResource PrimaryButton}"
+                    HorizontalAlignment="Left" Margin="0, 30, 0, 0" FontSize="{StaticResource FontM}"
+                    Command="{Binding ToolCommand}" CommandParameter="OrderBy" />
+        </StackPanel>
+
+        <userControls:MediaElementGridUserControl Grid.Row="2" MediaSource="{Binding Movies}"
+            Visibility="{Binding IsRecommendationsOpened, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=false}"
+        />
+
+        <userControls:MovieRecommendationsUserControl Grid.Row="2"
+            Visibility="{Binding IsRecommendationsOpened, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=true}"
+            MediaSource="{Binding Movies}" />
     </Grid>
 </Frame>

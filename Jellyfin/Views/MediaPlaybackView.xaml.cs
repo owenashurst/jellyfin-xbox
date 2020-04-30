@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Media.Core;
 using Windows.Media.Playback;
+using Windows.Media.Streaming.Adaptive;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
@@ -92,10 +93,38 @@ namespace Jellyfin.Views
                 return;
             }
 
-            var container = movie.PlaybackInformation.ToList()[0].Container.ToLower();
-            if (container.Contains("mkv"))
+            var playbackInformation = movie.PlaybackInformation.ToList()[0];
+            if (!string.IsNullOrEmpty(playbackInformation.TranscodingUrl))
             {
-                // adaptive playback
+                AdaptiveMediaSource ams;
+
+                Uri uri = new Uri(Globals.Instance.Host + playbackInformation.TranscodingUrl);
+                AdaptiveMediaSourceCreationResult result = await AdaptiveMediaSource.CreateFromUriAsync(uri);
+
+                if (result.Status == AdaptiveMediaSourceCreationStatus.Success)
+                {
+                    ams = result.MediaSource;
+                    mediaPlayerElement.SetMediaPlayer(new MediaPlayer());
+                    mediaPlayerElement.MediaPlayer.Source = MediaSource.CreateFromAdaptiveMediaSource(ams);
+                    mediaPlayerElement.MediaPlayer.Play();
+
+
+                    ams.InitialBitrate = ams.AvailableBitrates.Max<uint>();
+
+                    ////Register for download requests
+                    //ams.DownloadRequested += DownloadRequested;
+
+                    ////Register for download failure and completion events
+                    //ams.DownloadCompleted += DownloadCompleted;
+                    //ams.DownloadFailed += DownloadFailed;
+
+                    ////Register for bitrate change events
+                    //ams.DownloadBitrateChanged += DownloadBitrateChanged;
+                    //ams.PlaybackBitrateChanged += PlaybackBitrateChanged;
+
+                    ////Register for diagnostic event
+                    //ams.Diagnostics.DiagnosticAvailable += DiagnosticAvailable;
+                }
             }
             else
             {

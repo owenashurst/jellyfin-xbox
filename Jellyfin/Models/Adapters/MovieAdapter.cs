@@ -37,6 +37,7 @@ namespace Jellyfin.Models.Adapters
             m.ImageId = source.ImageTags.Primary;
             
             m.HasSubtitles = source.HasSubtitles;
+            m.Genres = source.Genres;
             m.PremiereDate = source.PremiereDate;
             m.CommunityRating = source.CommunityRating.ToString();
             m.Runtime = new TimeSpan(source.RunTimeTicks);

@@ -9,6 +9,21 @@ namespace Jellyfin.UserControls
 {
     public partial class MediaElementItemUserControl
     {
+        #region IsLong Dependency Property
+
+        public static readonly DependencyProperty IsLongDependency = DependencyProperty.Register("IsLong", typeof(bool), typeof(MediaElementItemUserControl), new PropertyMetadata(false, PropertyChangedCallback));
+
+        
+
+        public bool IsLong
+        {
+            get => (bool)GetValue(IsLongDependency);
+            set => SetValue(IsLongDependency, value);
+        }
+
+        #endregion
+
+
         #region Properties
 
         private Storyboard animateStoryboard
@@ -28,6 +43,25 @@ namespace Jellyfin.UserControls
         #endregion
 
         #region Additional methods
+
+        private static void PropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
+        {
+            if(e.NewValue != null && (bool)e.NewValue)
+            {
+                MediaElementItemUserControl mediaElementItemUserControl =
+                    dependencyObject as MediaElementItemUserControl;
+                mediaElementItemUserControl?.SetWide();
+            }
+        }
+
+        public void SetWide()
+        {
+            stackPanel.Width = 500;
+            ImageBorder.Width = 442;
+            DoubleAnimation doubleAnimation = animateStoryboard.Children[0] as DoubleAnimation;
+            doubleAnimation.From = 500;
+            RectangleGeometry.Rect = new Rect(0, 0, 500, 40);
+        }
 
         public void FocusGot()
         {

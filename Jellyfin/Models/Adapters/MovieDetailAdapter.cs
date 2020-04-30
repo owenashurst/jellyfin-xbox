@@ -10,24 +10,6 @@ namespace Jellyfin.Models.Adapters
     /// </summary>
     public class MovieDetailAdapter : IAdapter<MovieDetailsResult, MovieDetail>
     {
-        #region Properties
-
-        private readonly IImageService _imageService;
-
-        #endregion
-
-        #region ctor
-
-        public MovieDetailAdapter(IImageService imageService)
-        {
-            _imageService = imageService ??
-                            throw new ArgumentNullException(nameof(imageService));
-        }
-
-        #endregion
-
-        #region Additional methods
-
         public MovieDetail Convert(MovieDetailsResult source)
         {
             MovieDetail m = new MovieDetail();
@@ -52,7 +34,5 @@ namespace Jellyfin.Models.Adapters
 
             return m;
         }
-
-        #endregion
     }
 }
