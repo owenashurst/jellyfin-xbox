@@ -301,10 +301,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Resources\JellyfinStyleResources.DeviceFamily-Desktop.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Resources\JellyfinStyleResources.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
