@@ -1,4 +1,4 @@
-﻿namespace Jellyfin.Models.ServiceReturnModels.PlaybackInformation
+﻿namespace Jellyfin.Models.ServiceModels.PlaybackInformation
 {
 
     public class PlaybackInformationResult

@@ -8,7 +8,7 @@ using Jellyfin.Core;
 using Jellyfin.Extensions;
 using Jellyfin.Models;
 using Jellyfin.Models.Adapters;
-using Jellyfin.Models.ServiceReturnModels.PlaybackInformation;
+using Jellyfin.Models.ServiceModels.PlaybackInformation;
 using Jellyfin.Services.Interfaces;
 using Newtonsoft.Json;
 

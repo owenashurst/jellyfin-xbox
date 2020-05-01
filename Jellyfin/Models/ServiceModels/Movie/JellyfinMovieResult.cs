@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace Jellyfin.Models.ServiceReturnModels.Movie
+﻿namespace Jellyfin.Models.ServiceModels.Movie
 {
     public class JellyfinMovieResult
     {

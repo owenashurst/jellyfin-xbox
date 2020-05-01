@@ -7,7 +7,7 @@ using Jellyfin.Core;
 using Jellyfin.Extensions;
 using Jellyfin.Models;
 using Jellyfin.Models.Adapters;
-using Jellyfin.Models.ServiceReturnModels.Movie;
+using Jellyfin.Models.ServiceModels.Movie;
 using Jellyfin.Services.Interfaces;
 using Newtonsoft.Json;
 

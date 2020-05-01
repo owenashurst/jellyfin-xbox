@@ -1,6 +1,6 @@
-using Jellyfin.Models.ServiceReturnModels.Movie;
+using Jellyfin.Models.ServiceModels.Movie;
 
-namespace Jellyfin.Models.ServiceReturnModels.PlaybackInformation
+namespace Jellyfin.Models.ServiceModels.PlaybackInformation
 {
     public class Mediasource
     {

@@ -19,6 +19,8 @@
         <userControls:PlaybackMenuUserControl x:Name="playbackMenuView"
             HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
         
-        <userControls:LoadingUserControl HorizontalAlignment="Center" VerticalAlignment="Center"></userControls:LoadingUserControl>
+        <userControls:LoadingUserControl HorizontalAlignment="Center"
+            Visibility="{Binding IsLoading, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=true}"           
+            VerticalAlignment="Center" />
     </Grid>
 </Page>

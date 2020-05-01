@@ -1,6 +1,6 @@
-namespace Jellyfin.Models.ServiceReturnModels.Movie
+namespace Jellyfin.Models.ServiceModels.Movie
 {
-    public class Studio
+    public class Genreitem
     {
         public string Name { get; set; }
         public string Id { get; set; }

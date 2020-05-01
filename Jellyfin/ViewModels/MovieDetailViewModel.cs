@@ -1,5 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Text;
 using System.Threading.Tasks;
 using Windows.System;
 using Jellyfin.Models;
@@ -23,6 +24,35 @@ namespace Jellyfin.ViewModels
             {
                 _selectedMovie = value;
                 RaisePropertyChanged(nameof(SelectedMovie));
+                RaisePropertyChanged(nameof(FormattedResumeText));
+            }
+        }
+
+        #endregion
+
+        #region FormattedResumeText
+
+        public string FormattedResumeText
+        {
+            get
+            {
+                if (SelectedMovie == null)
+                {
+                    return string.Empty;
+                }
+
+                StringBuilder bld = new StringBuilder();
+                bld.Append("Resume from ");
+
+                if (SelectedMovie.PlaybackPosition.Hours > 0)
+                {
+                    bld.Append(SelectedMovie.PlaybackPosition.Hours).Append(":");
+                }
+
+                bld.Append(SelectedMovie.PlaybackPosition.Minutes).Append(":");
+                bld.Append(SelectedMovie.PlaybackPosition.Seconds);
+
+                return bld.ToString();
             }
         }
 
@@ -78,6 +108,12 @@ namespace Jellyfin.ViewModels
                 case "Play":
                     Play();
                     break;
+                case "PlayFromBeginning":
+                    PlayFromBeginning();
+                    break;
+                case "PlayFromPosition":
+                    PlayFromPosition();
+                    break;
                 default:
                     base.Execute(commandParameter);
                     break;
@@ -102,7 +138,31 @@ namespace Jellyfin.ViewModels
 
         private void Play()
         {
-            NavigationService.Navigate(typeof(MediaPlaybackView), SelectedMovie);
+            if (SelectedMovie.PlaybackPosition != TimeSpan.Zero && SelectedMovie.PlaybackPosition.TotalMinutes > 2)
+            {
+                NavigationService.Navigate(typeof(PlaybackConfirmationView), SelectedMovie);
+            }
+            else
+            {
+                PlayFromBeginning();
+            }
+        }
+
+        private void PlayFromBeginning()
+        {
+            NavigationService.Navigate(typeof(MediaPlaybackView), new PlaybackViewParameters
+            {
+                SelectedMovie  = SelectedMovie, IsPlaybackFromBeginning = true
+            });
+        }
+
+        private void PlayFromPosition()
+        {
+            NavigationService.Navigate(typeof(MediaPlaybackView), new PlaybackViewParameters
+            {
+                SelectedMovie = SelectedMovie,
+                IsPlaybackFromBeginning = false
+            });
         }
 
         #endregion

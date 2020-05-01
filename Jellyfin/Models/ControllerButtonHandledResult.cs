@@ -9,6 +9,8 @@
         #region Additional methods
 
         public bool ShouldOsdOpen { get; set; }
+
+        public bool ShouldStartLoading { get; set; }
         
         #endregion
     }

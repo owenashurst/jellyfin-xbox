@@ -1,6 +1,6 @@
 using System;
 
-namespace Jellyfin.Models.ServiceReturnModels.Movie
+namespace Jellyfin.Models.ServiceModels.Movie
 {
     public class Userdata
     {

@@ -1,10 +1,11 @@
 ﻿using Jellyfin.Core;
 using Jellyfin.Models;
 using Jellyfin.Models.Adapters;
-using Jellyfin.Models.ServiceReturnModels.Movie;
+using Jellyfin.Models.ServiceModels.Movie;
 using Jellyfin.Services;
 using Jellyfin.Services.Interfaces;
 using Unity;
+using Mediasource = Jellyfin.Models.ServiceModels.PlaybackInformation.Mediasource;
 
 namespace Jellyfin
 {
@@ -28,7 +29,7 @@ namespace Jellyfin
 
             container.RegisterType<IAdapter<Item, Movie>, MovieAdapter>();
             container.RegisterType<
-                IAdapter<Models.ServiceReturnModels.PlaybackInformation.Mediasource, MediaElementPlaybackSource>,
+                IAdapter<Mediasource, MediaElementPlaybackSource>,
                 MediaElementPlaybackSourceAdapter>();
             container.RegisterType<IAdapter<MovieDetailsResult, MovieDetail>, MovieDetailAdapter>();
         }

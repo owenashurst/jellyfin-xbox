@@ -1,4 +1,4 @@
-﻿using Jellyfin.Models.ServiceReturnModels.PlaybackInformation;
+﻿using Jellyfin.Models.ServiceModels.PlaybackInformation;
 
 namespace Jellyfin.Models.Adapters
 {

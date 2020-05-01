@@ -11,7 +11,7 @@
             <StackPanel>
                 <Image Visibility="{Binding ElementName=UI, Path=IsLong, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=false}" Source="{Binding ImageData, Converter={StaticResource ByteArrayToImageConverter}}" Height="280" />
 
-                <Image Visibility="{Binding ElementName=UI, Path=IsLong, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=true}"  Source="{Binding BackdropImageData, Converter={StaticResource ByteArrayToImageConverter}}" Height="265" />
+                <Image Visibility="{Binding ElementName=UI, Path=IsLong, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=true, TargetNullValue=Collapsed, FallbackValue=Collapsed}"  Source="{Binding BackdropImageData, Converter={StaticResource ByteArrayToImageConverter}}" Height="265" />
             </StackPanel>
         </Border>
 
@@ -41,8 +41,6 @@
 
         <TextBlock Text="{Binding Year}" x:Name="yearTextBlock" Opacity=".7"
                    FontSize="30" Foreground="White" HorizontalAlignment="Center"/>
-
-        
     </StackPanel>
 </UserControl>
 

@@ -65,6 +65,14 @@ namespace Jellyfin.ViewModels
         }
 
         /// <summary>
+        /// Mapping for Playback confirmation page - Movie Details View model.
+        /// </summary>
+        public MovieDetailViewModel PlaybackConfirmationPage
+        {
+            get => _container.Resolve<MovieDetailViewModel>();
+        }
+        
+        /// <summary>
         /// Mapping for Movie List Page - Movie list View Model.
         /// </summary>
         public MovieListViewModel MovieListPage

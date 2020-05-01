@@ -5,6 +5,7 @@ using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.Media.Streaming.Adaptive;
 using Windows.System;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
@@ -19,12 +20,22 @@ namespace Jellyfin.Views
     /// </summary>
     public sealed partial class MediaPlaybackView
     {
+        #region Properties
+
+        private MediaPlaybackViewModel _dataContext
+        {
+            get => (DataContext as MediaPlaybackViewModel);
+        }
+
+        #endregion
+
         #region ctor
 
         public MediaPlaybackView()
         {
             InitializeComponent();
-            (DataContext as MediaPlaybackViewModel).MediaPlayer = mediaPlayerElement;
+
+            _dataContext.MediaPlayer = mediaPlayerElement;
         }
 
         #endregion
@@ -32,7 +43,9 @@ namespace Jellyfin.Views
         #region Additional methods
 
         /// <summary>
-        /// Handles that if the controller B is pressed, stops the playback.
+        /// Handles generic controller actions.
+        /// * if the controller B is pressed, stops the playback.
+        /// * Seeking with the trigger buttons
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -49,7 +62,7 @@ namespace Jellyfin.Views
                 e.Handled = true;
             }
 
-            ControllerButtonHandledResult actionResult = (DataContext as MediaPlaybackViewModel).HandleKeyPressed(e.Key);
+            ControllerButtonHandledResult actionResult = _dataContext.HandleKeyPressed(e.Key);
 
             if (actionResult == null)
             {
@@ -60,6 +73,11 @@ namespace Jellyfin.Views
             if (actionResult.ShouldOsdOpen)
             {
                 OpenOsd(7000);
+            }
+
+            if (actionResult.ShouldStartLoading)
+            {
+                _dataContext.IsLoading = true;
             }
         }
         
@@ -81,19 +99,23 @@ namespace Jellyfin.Views
         /// <param name="e"></param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            Movie movie = e.Parameter as Movie;
-            (DataContext as MediaPlaybackViewModel).SelectedMediaElement = movie;
-            StartPrelude(movie);
+            PlaybackViewParameters playbackViewParameters = e.Parameter as PlaybackViewParameters;
+            
+            _dataContext.SelectedMediaElement = playbackViewParameters.SelectedMovie;
+            _dataContext.IsPlaybackConfirmationDisplayedBefore = !playbackViewParameters.IsPlaybackFromBeginning;
+
+            StartPrelude(playbackViewParameters);
         }
 
-        public async Task StartPrelude(Movie movie)
+        public async Task StartPrelude(PlaybackViewParameters playbackViewParameters)
         {
-            if (movie.PlaybackInformation == null || !movie.PlaybackInformation.Any())
+            Movie movie = playbackViewParameters?.SelectedMovie;
+            if (movie?.PlaybackInformation == null || !movie.PlaybackInformation.Any())
             {
                 return;
             }
 
-            var playbackInformation = movie.PlaybackInformation.ToList()[0];
+            MediaElementPlaybackSource playbackInformation = movie.PlaybackInformation.ToList()[0];
             if (!string.IsNullOrEmpty(playbackInformation.TranscodingUrl))
             {
                 AdaptiveMediaSource ams;
@@ -106,70 +128,74 @@ namespace Jellyfin.Views
                     ams = result.MediaSource;
                     mediaPlayerElement.SetMediaPlayer(new MediaPlayer());
                     mediaPlayerElement.MediaPlayer.Source = MediaSource.CreateFromAdaptiveMediaSource(ams);
+                    
+                    mediaPlayerElement.MediaPlayer.PlaybackSession.PlaybackStateChanged += PlaybackSession_PlaybackStateChanged;
+                    
                     mediaPlayerElement.MediaPlayer.Play();
-
-
+                    
                     ams.InitialBitrate = ams.AvailableBitrates.Max<uint>();
-
-                    ////Register for download requests
-                    //ams.DownloadRequested += DownloadRequested;
-
-                    ////Register for download failure and completion events
-                    //ams.DownloadCompleted += DownloadCompleted;
-                    //ams.DownloadFailed += DownloadFailed;
-
-                    ////Register for bitrate change events
-                    //ams.DownloadBitrateChanged += DownloadBitrateChanged;
-                    //ams.PlaybackBitrateChanged += PlaybackBitrateChanged;
-
-                    ////Register for diagnostic event
-                    //ams.Diagnostics.DiagnosticAvailable += DiagnosticAvailable;
                 }
             }
             else
             {
                 // Regular streaming
-                StartDirectPlayback(movie.Id);
+                StartDirectPlayback(playbackViewParameters);
             }
 
         }
-
-        /// <summary>
-        /// Starts adaptive playback the video with the provided id.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public async Task StartAdaptivePlayback(string id)
+        
+        private void PlaybackSession_PlaybackStateChanged(MediaPlaybackSession sender, object args)
         {
-            string videoUrl =
-                Globals.Instance.Host + "/Videos/" + id + "/stream.mov?Static=true&mediaSourceId=" + id + "&deviceId=" + Globals.Instance.SessionInfo.DeviceId + "&api_key=" + Globals.Instance.AccessToken + "&Tag=beb6ef9128431e67c421e4cb890cf84f";
-
-            Uri uri = new Uri(videoUrl);
-
-            mediaPlayerElement.SetMediaPlayer(new MediaPlayer());
-            mediaPlayerElement.MediaPlayer.Source = MediaSource.CreateFromUri(uri);
-            mediaPlayerElement.MediaPlayer.Play();
-            OpenOsd();
+            #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            Globals.Instance.UIDispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            {
+                _dataContext.IsLoading = sender.PlaybackState == MediaPlaybackState.Buffering;
+            });
+            #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
 
         /// <summary>
         /// Starts playing back the video with the provided id.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="playbackViewParameters">The playback view parameters.</param>
         /// <returns></returns>
-        public async Task StartDirectPlayback(string id)
+        public async Task StartDirectPlayback(PlaybackViewParameters playbackViewParameters)
         {
+            Movie movie = playbackViewParameters.SelectedMovie;
+            string id = movie.Id;
+
             string videoUrl =
-                Globals.Instance.Host + "/Videos/" + id + "/stream.mov?Static=true&mediaSourceId=" + id + "&deviceId=" + Globals.Instance.SessionInfo.DeviceId + "&api_key=" + Globals.Instance.AccessToken + "&Tag=beb6ef9128431e67c421e4cb890cf84f";
+                $"{Globals.Instance.Host}/Videos/{id}/stream.mov?Static=true&mediaSourceId={id}&deviceId={Globals.Instance.SessionInfo.DeviceId}&api_key={Globals.Instance.AccessToken}&Tag=beb6ef9128431e67c421e4cb890cf84f";
 
             Uri uri = new Uri(videoUrl);
 
             mediaPlayerElement.SetMediaPlayer(new MediaPlayer());
             mediaPlayerElement.MediaPlayer.Source = MediaSource.CreateFromUri(uri);
+            
+            mediaPlayerElement.MediaPlayer.PlaybackSession.PlaybackStateChanged += PlaybackSession_PlaybackStateChanged;
+            
+            if (!playbackViewParameters.IsPlaybackFromBeginning)
+            {
+                mediaPlayerElement.MediaPlayer.PlaybackSession.NaturalDurationChanged += PlaybackSessionOnNaturalDurationChanged;
+            }
+
             mediaPlayerElement.MediaPlayer.Play();
             OpenOsd();
         }
 
+        private void PlaybackSessionOnNaturalDurationChanged(MediaPlaybackSession sender, object args)
+        {
+            #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            Globals.Instance.UIDispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            {
+                var session = mediaPlayerElement.MediaPlayer.PlaybackSession;
+                session.Position = _dataContext.SelectedMediaElement.PlaybackPosition;
+
+                session.NaturalDurationChanged -= PlaybackSessionOnNaturalDurationChanged;
+            });
+            #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+        }
+        
         #endregion
     }
 }

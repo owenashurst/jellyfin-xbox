@@ -17,6 +17,8 @@ namespace Jellyfin.ViewModels
 
         public Timer OSDUpdateTimer { get; set; }
 
+        public bool IsPlaybackConfirmationDisplayedBefore { get; set; }
+
         #region RemainingTimeLeft
 
         private TimeSpan _remainingTimeLeft;
@@ -89,10 +91,48 @@ namespace Jellyfin.ViewModels
                 {
                     return string.Empty;
                 }
-                
+
+                if (SeekRequestedSeconds < 0)
+                {
+                    return $" ({SeekRequestedSeconds}s)"; 
+                }
+
                 return $" (+{SeekRequestedSeconds}s)";
             }
         }
+
+        #region IsLoading
+
+        private bool _isLoading;
+
+        public bool IsLoading
+        {
+            get { return _isLoading; }
+            set
+            {
+                _isLoading = value;
+                RaisePropertyChanged(nameof(IsLoading));
+                RaisePropertyChanged(nameof(LoadingText));
+            }
+        }
+
+        #endregion
+
+        #region LoadingText
+
+        private string _loadingText = "Loading...";
+
+        public string LoadingText
+        {
+            get { return _loadingText; }
+            set
+            {
+                _loadingText = value;
+                RaisePropertyChanged(nameof(LoadingText));
+            }
+        }
+
+        #endregion
 
         #endregion
 
@@ -162,6 +202,12 @@ namespace Jellyfin.ViewModels
         {
             Pause();
             NavigationService.GoBack();
+
+            // to skip the "resume playback" screen
+            if (IsPlaybackConfirmationDisplayedBefore)
+            {
+                NavigationService.GoBack();
+            }
         }
 
         public void SeekRequest(int seconds)
@@ -231,10 +277,18 @@ namespace Jellyfin.ViewModels
                     return new ControllerButtonHandledResult();
                 case VirtualKey.GamepadRightTrigger:
                     Execute("SeekForward");
-                    return new ControllerButtonHandledResult { ShouldOsdOpen = true };
+                    return new ControllerButtonHandledResult
+                    {
+                        ShouldOsdOpen = true,
+                        ShouldStartLoading = true
+                    };
                 case VirtualKey.GamepadLeftTrigger:
                     Execute("SeekBackward");
-                    return new ControllerButtonHandledResult { ShouldOsdOpen = true };
+                    return new ControllerButtonHandledResult
+                    {
+                        ShouldOsdOpen = true,
+                        ShouldStartLoading = true
+                    };
                 default:
                     return null;
             }
