@@ -22,8 +22,7 @@ namespace Jellyfin.Models
         /// </summary>
         public string ImageId { get; set; }
 
-        
-        #region ToolCommand
+        #region ImageData
 
         private byte[] _imageData;
 
@@ -41,6 +40,35 @@ namespace Jellyfin.Models
                     () =>
                     {
                         RaisePropertyChanged(nameof(ImageData));
+                    });
+            }
+        }
+
+        #endregion
+
+        /// <summary>
+        /// The Image ID of the backdrop of the movie.
+        /// </summary>
+        public string BackdropImageId { get; set; }
+
+        #region BackdropImageData
+
+        private byte[] _backdropImageData;
+
+        /// <summary>
+        /// The byte array of the downloaded data of the backdrop image.
+        /// </summary>
+        public byte[] BackdropImageData
+        {
+            get { return _backdropImageData; }
+            set
+            {
+                _backdropImageData = value;
+                Globals.Instance.UIDispatcher.RunAsync(
+                    CoreDispatcherPriority.Normal,
+                    () =>
+                    {
+                        RaisePropertyChanged(nameof(BackdropImageData));
                     });
             }
         }

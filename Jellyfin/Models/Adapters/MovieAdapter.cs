@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Jellyfin.Models.ServiceReturnModels.Movie;
 using Jellyfin.Services.Interfaces;
 
@@ -35,7 +36,12 @@ namespace Jellyfin.Models.Adapters
             m.Name = source.Name;
             m.Year = source.ProductionYear.ToString();
             m.ImageId = source.ImageTags.Primary;
-            
+
+            if (source.BackdropImageTags != null)
+            {
+                m.BackdropImageId = source.BackdropImageTags.FirstOrDefault();
+            }
+
             m.HasSubtitles = source.HasSubtitles;
             m.Genres = source.Genres;
             m.PremiereDate = source.PremiereDate;

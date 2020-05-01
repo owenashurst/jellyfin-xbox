@@ -141,6 +141,7 @@
     <Compile Include="Models\Adapters\MediaElementPlaybackSourceAdapter.cs" />
     <Compile Include="Models\Adapters\MovieDetailAdapter.cs" />
     <Compile Include="Models\ControllerButtonHandledResult.cs" />
+    <Compile Include="Models\ImageTypeEnum.cs" />
     <Compile Include="Models\MediaElementPlaybackSource.cs" />
     <Compile Include="Models\ModelBase.cs" />
     <Compile Include="Models\MovieDetail.cs" />

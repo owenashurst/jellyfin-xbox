@@ -2,6 +2,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Jellyfin.Core;
 using Jellyfin.Extensions;
+using Jellyfin.Models;
 using Jellyfin.Services.Interfaces;
 
 namespace Jellyfin.Services
@@ -16,7 +17,7 @@ namespace Jellyfin.Services
         /// <param name="id">The ID of the media library element.</param>
         /// <param name="imageId">The ID of the image.</param>
         /// <returns></returns>
-        public async Task<byte[]> GetImage(string id, string imageId)
+        public async Task<byte[]> GetImage(string id, string imageId, ImageTypeEnum imageType)
         {
             if (string.IsNullOrEmpty(id))
             {
@@ -29,7 +30,7 @@ namespace Jellyfin.Services
             }
 
             string image =
-                $"{Globals.Instance.Host}/Items/{id}/Images/Primary?maxHeight=300&maxWidth=250&tag={imageId}&quality=90";
+                $"{Globals.Instance.Host}/Items/{id}/Images/{imageType}?maxHeight=300&maxWidth=250&tag={imageId}&quality=90";
 
             using (HttpClient cli = new HttpClient())
             {

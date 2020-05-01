@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Jellyfin.Models;
 
 namespace Jellyfin.Services.Interfaces
 {
@@ -7,6 +8,13 @@ namespace Jellyfin.Services.Interfaces
     /// </summary>
     public interface IImageService
     {
-        Task<byte[]> GetImage(string id, string imageId);
+        /// <summary>
+        /// Retrieves an image by its parent id, image id and image result type.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="imageId"></param>
+        /// <param name="imageType"></param>
+        /// <returns></returns>
+        Task<byte[]> GetImage(string id, string imageId, ImageTypeEnum imageType);
     }
 }

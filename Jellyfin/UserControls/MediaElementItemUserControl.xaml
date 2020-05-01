@@ -4,11 +4,15 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:Jellyfin.Models"
-    mc:Ignorable="d"
+    mc:Ignorable="d" x:Name="UI"
     d:DataContext="{d:DesignInstance models:Movie}">
     <StackPanel x:Name="stackPanel" Orientation="Vertical" Margin="11, 0, 11, 25" Width="250">
         <Border CornerRadius="5" Width="192" Padding="4" x:Name="ImageBorder">
-            <Image Source="{Binding ImageData, Converter={StaticResource ByteArrayToImageConverter}}" Height="280" />
+            <StackPanel>
+                <Image Visibility="{Binding ElementName=UI, Path=IsLong, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=false}" Source="{Binding ImageData, Converter={StaticResource ByteArrayToImageConverter}}" Height="280" />
+
+                <Image Visibility="{Binding ElementName=UI, Path=IsLong, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=true}"  Source="{Binding BackdropImageData, Converter={StaticResource ByteArrayToImageConverter}}" Height="265" />
+            </StackPanel>
         </Border>
 
         <Canvas HorizontalAlignment="Stretch" Height="40" x:Name="containerCanvas" Visibility="Collapsed">
@@ -28,11 +32,17 @@
             <TextBlock x:Name="movingTextBlock"
                        Text="{Binding Name}" FontSize="30" Foreground="White" HorizontalAlignment="Center" TextAlignment="Center" />
         </Canvas>
+        <ProgressBar Margin="17, -20, 17, 0" HorizontalAlignment="Stretch" Height="10" Minimum="0" Maximum="{Binding Runtime.Ticks}" Foreground="{StaticResource PrimaryColor}" Background="{StaticResource PrimaryBackgroundColor}"
+            Visibility="{Binding ElementName=UI, Path=IsLong, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=true}" 
+            Value="{Binding PlaybackPosition.Ticks}" />
+        
         <TextBlock Text="{Binding Name}" FontSize="30" x:Name="notMovingTextBlock"
                    Foreground="White" HorizontalAlignment="Center" Opacity=".7" />
 
         <TextBlock Text="{Binding Year}" x:Name="yearTextBlock" Opacity=".7"
                    FontSize="30" Foreground="White" HorizontalAlignment="Center"/>
+
+        
     </StackPanel>
 </UserControl>
 

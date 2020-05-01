@@ -173,8 +173,13 @@ namespace Jellyfin.Services
             if (!string.IsNullOrEmpty(movie.ImageId))
             {
                 movie.ImageData =
-                    _imageService.GetImage(movie.Id, movie.ImageId).Result;
-                
+                    _imageService.GetImage(movie.Id, movie.ImageId, ImageTypeEnum.Primary).Result;
+            }
+
+            if (!string.IsNullOrEmpty(movie.BackdropImageId))
+            {
+                movie.BackdropImageData =
+                    _imageService.GetImage(movie.Id, movie.BackdropImageId, ImageTypeEnum.Backdrop).Result;
             }
         }
 

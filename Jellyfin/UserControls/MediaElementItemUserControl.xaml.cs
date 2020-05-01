@@ -12,9 +12,7 @@ namespace Jellyfin.UserControls
         #region IsLong Dependency Property
 
         public static readonly DependencyProperty IsLongDependency = DependencyProperty.Register("IsLong", typeof(bool), typeof(MediaElementItemUserControl), new PropertyMetadata(false, PropertyChangedCallback));
-
         
-
         public bool IsLong
         {
             get => (bool)GetValue(IsLongDependency);
@@ -57,7 +55,7 @@ namespace Jellyfin.UserControls
         public void SetWide()
         {
             stackPanel.Width = 500;
-            ImageBorder.Width = 442;
+            ImageBorder.Width = 472;
             DoubleAnimation doubleAnimation = animateStoryboard.Children[0] as DoubleAnimation;
             doubleAnimation.From = 500;
             RectangleGeometry.Rect = new Rect(0, 0, 500, 40);
