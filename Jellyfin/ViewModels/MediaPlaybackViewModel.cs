@@ -6,6 +6,7 @@ using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 using Jellyfin.Core;
 using Jellyfin.Models;
+using Jellyfin.Services.Interfaces;
 
 namespace Jellyfin.ViewModels
 {
@@ -16,6 +17,11 @@ namespace Jellyfin.ViewModels
         public MediaPlayerElement MediaPlayer { get; set; }
 
         public Timer OSDUpdateTimer { get; set; }
+
+        /// <summary>
+        /// Timer for reporting playback status.
+        /// </summary>
+        public Timer ReportPlaybackStatusTimer { get; set; }
 
         public bool IsPlaybackConfirmationDisplayedBefore { get; set; }
 
@@ -134,41 +140,52 @@ namespace Jellyfin.ViewModels
 
         #endregion
 
+        #region PlaybackMode
+
+        private string _playbackMode;
+
+        /// <summary>
+        /// Indicates the playback mode: is it transcoding or direct stream.
+        /// </summary>
+        public string PlaybackMode
+        {
+            get { return _playbackMode; }
+            set
+            {
+                _playbackMode = value;
+                RaisePropertyChanged(nameof(PlaybackMode));
+            }
+        }
+
+        #endregion
+
+        /// <summary>
+        /// The service for reporting current playback.
+        /// </summary>
+        private readonly IReportProgressService _reportProgressService;
+        
         #endregion
 
         #region ctor
 
-        public MediaPlaybackViewModel()
+        public MediaPlaybackViewModel(IReportProgressService reportProgressService)
         {
             OSDUpdateTimer = new Timer();
             OSDUpdateTimer.Interval = 1000;
             OSDUpdateTimer.AutoReset = true;
             OSDUpdateTimer.Elapsed += OsdUpdateTimerOnElapsed;
             OSDUpdateTimer.Start();
+
+            _reportProgressService = reportProgressService ??
+                throw new ArgumentNullException(nameof(reportProgressService));
+
+            ReportPlaybackStatusTimer = new Timer();
+            ReportPlaybackStatusTimer.Interval = 10000;
+            ReportPlaybackStatusTimer.AutoReset = true;
+            ReportPlaybackStatusTimer.Elapsed += ReportPlaybackStatusTimer_Elapsed;
+            ReportPlaybackStatusTimer.Start();
         }
-
-        private void OsdUpdateTimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
-        {
-            #pragma warning disable CS4014
-            // Because this call is not awaited, execution of the current method continues before the call is completed
-            Globals.Instance.UIDispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                if (MediaPlayer != null && MediaPlayer.MediaPlayer != null)
-                {
-                    MediaPlayer mp = MediaPlayer.MediaPlayer;
-                    RemainingTimeLeft = mp.NaturalDuration - mp.PlaybackSession.Position;
-
-                    RaisePropertyChanged(nameof(MediaPlayer));
-                }
-                else
-                {
-                    RemainingTimeLeft = TimeSpan.Zero;
-                }
-            });
-            #pragma warning restore CS4014
-            // Because this call is not awaited, execution of the current method continues before the call is completed
-        }
-
+        
         #endregion
 
         #region Additional methods
@@ -292,6 +309,54 @@ namespace Jellyfin.ViewModels
                 default:
                     return null;
             }
+        }
+
+        private void ReportPlaybackStatusTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            if (SelectedMediaElement == null)
+            {
+                return;
+            }
+
+            if (string.IsNullOrEmpty(PlaybackMode))
+            {
+                return;
+            }
+
+
+            #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            Globals.Instance.UIDispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            {
+                if (MediaPlayer?.MediaPlayer?.PlaybackSession?.Position == null)
+                {
+                    return;
+                }
+
+                _reportProgressService.Report(SelectedMediaElement.Id, PlaybackMode,
+                    MediaPlayer.MediaPlayer.PlaybackSession.Position);
+            });
+            #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+        }
+        private void OsdUpdateTimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
+        {
+#pragma warning disable CS4014
+            // Because this call is not awaited, execution of the current method continues before the call is completed
+            Globals.Instance.UIDispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                if (MediaPlayer != null && MediaPlayer.MediaPlayer != null)
+                {
+                    MediaPlayer mp = MediaPlayer.MediaPlayer;
+                    RemainingTimeLeft = mp.NaturalDuration - mp.PlaybackSession.Position;
+
+                    RaisePropertyChanged(nameof(MediaPlayer));
+                }
+                else
+                {
+                    RemainingTimeLeft = TimeSpan.Zero;
+                }
+            });
+#pragma warning restore CS4014
+            // Because this call is not awaited, execution of the current method continues before the call is completed
         }
 
         #endregion

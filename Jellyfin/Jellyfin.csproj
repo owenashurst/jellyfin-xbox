@@ -163,11 +163,14 @@
     <Compile Include="Models\ServiceModels\Movie\Userdata.cs" />
     <Compile Include="Models\ServiceModels\PlaybackInformation\Mediasource.cs" />
     <Compile Include="Models\ServiceModels\PlaybackInformation\PlaybackInformationResult.cs" />
-    <Compile Include="Models\ServiceModels\Progress.cs" />
+    <Compile Include="Models\ServiceModels\Progress\Bufferedrange.cs" />
+    <Compile Include="Models\ServiceModels\Progress\Progress.cs" />
     <Compile Include="Services\Interfaces\IPlaybackInfoService.cs" />
+    <Compile Include="Services\Interfaces\IReportProgressService.cs" />
     <Compile Include="Services\Interfaces\ISettingsService.cs" />
     <Compile Include="Services\PlaybackInfoService.Constants.cs" />
     <Compile Include="Services\PlaybackInfoService.cs" />
+    <Compile Include="Services\ReportProgressService.cs" />
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="Extensions\HttpClientExtensions.cs" />
     <Compile Include="Extensions\XamlExtensions.cs" />

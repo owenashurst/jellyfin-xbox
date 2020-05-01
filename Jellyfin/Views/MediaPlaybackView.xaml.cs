@@ -135,11 +135,15 @@ namespace Jellyfin.Views
                     
                     ams.InitialBitrate = ams.AvailableBitrates.Max<uint>();
                 }
+
+                _dataContext.PlaybackMode = "Transcoding";
             }
             else
             {
                 // Regular streaming
                 StartDirectPlayback(playbackViewParameters);
+
+                _dataContext.PlaybackMode = "DirectStream";
             }
 
         }

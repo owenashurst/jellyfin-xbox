@@ -16,16 +16,9 @@
         public string PlaySessionId { get; set; }
         public long PlaybackStartTimeTicks { get; set; }
         public string PlaylistItemId { get; set; }
-        public int PositionTicks { get; set; }
+        public long PositionTicks { get; set; }
         public string RepeatMode { get; set; }
         public int SubtitleStreamIndex { get; set; }
         public int VolumeLevel { get; set; }
     }
-
-    public class Bufferedrange
-    {
-        public int end { get; set; }
-        public int start { get; set; }
-    }
-
 }
