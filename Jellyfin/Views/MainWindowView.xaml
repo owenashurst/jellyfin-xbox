@@ -6,13 +6,45 @@
     DataContext="{Binding MainPage, Source={StaticResource ViewModelLocator}}"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Grid>
-        <Grid.ColumnDefinitions>
+        <NavigationView IsBackEnabled="False" IsBackButtonVisible="Collapsed" IsPaneToggleButtonVisible="False">
+            <NavigationView.PaneTitle>
+                omgomg omgomg omgomg omgomg omgomg
+            </NavigationView.PaneTitle>
+            <NavigationView.PaneHeader>
+                <TextBlock Text="hello" FontSize="50" />
+            </NavigationView.PaneHeader>
+            <NavigationView.MenuItems>
+                <NavigationViewItem Tag="home" Icon="Home" Content="Home" HorizontalAlignment="Center" FontSize="32" />
+                <NavigationViewItemSeparator/>
+                <NavigationViewItemHeader x:Name="MainPagesHeader"
+                                          Content="Main pages"/>
+                
+                <NavigationViewItem Tag="apps" Content="Apps" HorizontalAlignment="Stretch"  HorizontalContentAlignment="Right" Height="50" Background="Blue" FontSize="32">
+                    <NavigationViewItem.Icon>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEB3C;" FontSize="32"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                
+                <NavigationViewItem Tag="games" Content="Games" HorizontalAlignment="Center" FontSize="32">
+                    <NavigationViewItem.Icon>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7FC;" FontSize="32"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                
+                <NavigationViewItem Tag="music" Icon="Audio" Content="Music" HorizontalAlignment="Center" FontSize="32"/>
+            </NavigationView.MenuItems>
+
+            <!--<Grid.ColumnDefinitions>
             <ColumnDefinition Width="450" />
             <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <userControls:MenuUserControl Grid.Column="0" />
+        </Grid.ColumnDefinitions>-->
+            <!--<userControls:MenuUserControl Grid.Column="0" />-->
+
+            <userControls:MovieListUserControl />
+        </NavigationView>
         
-        <userControls:MovieListUserControl Grid.Column="1" />
+        
+        
 
         <!--<userControls:TvShowListUserControl Grid.Column="1"
             Visibility="{Binding IsTvShowsPanelDisplayed, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=true}"/>-->
