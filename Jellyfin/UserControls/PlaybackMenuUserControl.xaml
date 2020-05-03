@@ -54,20 +54,55 @@
         
 
             <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
-                <!--<Button Command="{Binding ToolCommand}" CommandParameter="Play" Style="{StaticResource OsdButton}">
+                <Button Command="{Binding ToolCommand}" CommandParameter="StepBackward" Click="StayAwake" GotFocus="StayAwake" Style="{StaticResource OsdButton}">
                     <Button.Content>
-                        <Image Grid.Row="3" Source="../Assets/Images/play-button.png" Width="30" Height="30" />
-                    </Button.Content>
-                </Button>-->
-                <Button x:Name="pauseButton" x:FieldModifier="public" 
-                        Command="{Binding ToolCommand}" CommandParameter="Pause" Style="{StaticResource OsdButton}">
-                    <Button.Content>
-                        <uwp:FontAwesome Icon="Pause" FontSize="25" />
+                        <uwp:FontAwesome Icon="StepBackward" FontSize="25" />
                     </Button.Content>
                 </Button>
-                <Button Command="{Binding ToolCommand}" CommandParameter="Return" Style="{StaticResource OsdButton}">
+                
+                <Button Command="{Binding ToolCommand}" CommandParameter="FastBackward" Click="StayAwake" GotFocus="StayAwake" Style="{StaticResource OsdButton}">
+                    <Button.Content>
+                        <uwp:FontAwesome Icon="FastBackward" FontSize="25" />
+                    </Button.Content>
+                </Button>
+                
+                <Button x:Name="playButton" x:FieldModifier="public"
+                        Click="StayAwake" GotFocus="StayAwake"
+                        Command="{Binding ToolCommand}" CommandParameter="Play"
+                        Style="{StaticResource OsdButton}">
+                    <Button.Content>
+                        <StackPanel>
+                            <Image Source="../Assets/Images/play-button.png"
+                                Width="30" Height="30"
+                                Visibility="{Binding IsPlaying, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=false}"
+                         />
+                            <uwp:FontAwesome Icon="Pause" FontSize="25" Visibility="{Binding IsPlaying, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=true}" />
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+                
+                <Button Command="{Binding ToolCommand}" CommandParameter="Return"
+                        Click="StayAwake" GotFocus="StayAwake"
+                        Style="{StaticResource OsdButton}">
                     <Button.Content>
                         <uwp:FontAwesome Icon="Close" FontSize="25" />
+                    </Button.Content>
+                </Button>
+
+                <Button Command="{Binding ToolCommand}" CommandParameter="FastForward"
+                        Click="StayAwake" GotFocus="StayAwake"
+                        Style="{StaticResource OsdButton}">
+                    <Button.Content>
+                        <uwp:FontAwesome Icon="FastForward" FontSize="25" />
+                    </Button.Content>
+                </Button>
+
+                <Button Command="{Binding ToolCommand}" CommandParameter="StepForward" 
+                        Click="StayAwake" GotFocus="StayAwake"
+                        Visibility="Collapsed"
+                        Style="{StaticResource OsdButton}">
+                    <Button.Content>
+                        <uwp:FontAwesome Icon="StepForward" FontSize="25" />
                     </Button.Content>
                 </Button>
             </StackPanel>

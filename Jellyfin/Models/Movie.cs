@@ -92,9 +92,8 @@ namespace Jellyfin.Models
         public bool HasSubtitles { get; set; }
 
         /// <summary>
-        /// The date when it went to premiere. Might be not used at all...
+        /// The date when it went to premiere.
         /// </summary>
-        [Obsolete]
         public DateTimeOffset PremiereDate { get; set; }
 
         /// <summary>

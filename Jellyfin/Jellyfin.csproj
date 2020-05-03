@@ -145,7 +145,7 @@
     <Compile Include="Models\MediaElementPlaybackSource.cs" />
     <Compile Include="Models\ModelBase.cs" />
     <Compile Include="Models\MovieDetail.cs" />
-    <Compile Include="Models\PlaybackViewParameters.cs" />
+    <Compile Include="Models\PlaybackViewParameterModel.cs" />
     <Compile Include="Models\ServiceModels\Movie\Chapter.cs" />
     <Compile Include="Models\ServiceModels\Movie\Externalurl.cs" />
     <Compile Include="Models\ServiceModels\Movie\Genreitem.cs" />
@@ -205,6 +205,9 @@
     </Compile>
     <Compile Include="UserControls\MovieRecommendationsUserControl.xaml.cs">
       <DependentUpon>MovieRecommendationsUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\NewMediaIndicator.xaml.cs">
+      <DependentUpon>NewMediaIndicator.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\PlaybackMenuUserControl.xaml.cs">
       <DependentUpon>PlaybackMenuUserControl.xaml</DependentUpon>
@@ -331,6 +334,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\MovieRecommendationsUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\NewMediaIndicator.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -47,10 +47,15 @@ namespace Jellyfin.ViewModels
                 if (SelectedMovie.PlaybackPosition.Hours > 0)
                 {
                     bld.Append(SelectedMovie.PlaybackPosition.Hours).Append(":");
+                    bld.Append(SelectedMovie.PlaybackPosition.Minutes.ToString().PadLeft(2, '0')).Append(":");
+                }
+                else
+                {
+                    bld.Append(SelectedMovie.PlaybackPosition.Minutes).Append(":");
                 }
 
-                bld.Append(SelectedMovie.PlaybackPosition.Minutes).Append(":");
-                bld.Append(SelectedMovie.PlaybackPosition.Seconds);
+                
+                bld.Append(SelectedMovie.PlaybackPosition.Seconds.ToString().PadLeft(2, '0'));
 
                 return bld.ToString();
             }
@@ -109,7 +114,7 @@ namespace Jellyfin.ViewModels
                     Play();
                     break;
                 case "PlayFromBeginning":
-                    PlayFromBeginning();
+                    PlayFromBeginning(false);
                     break;
                 case "PlayFromPosition":
                     PlayFromPosition();
@@ -138,30 +143,33 @@ namespace Jellyfin.ViewModels
 
         private void Play()
         {
-            if (SelectedMovie.PlaybackPosition != TimeSpan.Zero && SelectedMovie.PlaybackPosition.TotalMinutes > 2)
+            if (SelectedMovie.PlaybackPosition != TimeSpan.Zero && SelectedMovie.PlaybackPosition.TotalMinutes > 2 && SelectedMovie.PlaybackRemaining.TotalMinutes > 2)
             {
                 NavigationService.Navigate(typeof(PlaybackConfirmationView), SelectedMovie);
             }
             else
             {
-                PlayFromBeginning();
+                PlayFromBeginning(false);
             }
         }
 
-        private void PlayFromBeginning()
+        private void PlayFromBeginning(bool isPopupDisplayed)
         {
-            NavigationService.Navigate(typeof(MediaPlaybackView), new PlaybackViewParameters
+            NavigationService.Navigate(typeof(MediaPlaybackView), new PlaybackViewParameterModel
             {
-                SelectedMovie  = SelectedMovie, IsPlaybackFromBeginning = true
+                SelectedMovie = SelectedMovie,
+                IsPlaybackFromBeginning = true,
+                WasPlaybackPopupShown = isPopupDisplayed
             });
         }
 
         private void PlayFromPosition()
         {
-            NavigationService.Navigate(typeof(MediaPlaybackView), new PlaybackViewParameters
+            NavigationService.Navigate(typeof(MediaPlaybackView), new PlaybackViewParameterModel
             {
                 SelectedMovie = SelectedMovie,
-                IsPlaybackFromBeginning = false
+                IsPlaybackFromBeginning = false,
+                WasPlaybackPopupShown = true
             });
         }
 

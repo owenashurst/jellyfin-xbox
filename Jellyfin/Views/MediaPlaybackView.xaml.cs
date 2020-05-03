@@ -7,6 +7,7 @@ using Windows.Media.Streaming.Adaptive;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using Jellyfin.Core;
@@ -89,7 +90,8 @@ namespace Jellyfin.Views
         private void OpenOsd(int interval = 3500)
         {
             playbackMenuView.Visibility = Visibility.Visible;
-            playbackMenuView.pauseButton.Focus(FocusState.Programmatic);
+
+            playbackMenuView.playButton.Focus(FocusState.Programmatic);
             playbackMenuView.VisibilityChanged(interval);
         }
 
@@ -99,21 +101,23 @@ namespace Jellyfin.Views
         /// <param name="e"></param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            PlaybackViewParameters playbackViewParameters = e.Parameter as PlaybackViewParameters;
+            PlaybackViewParameterModel playbackViewParameterModel = e.Parameter as PlaybackViewParameterModel;
             
-            _dataContext.SelectedMediaElement = playbackViewParameters.SelectedMovie;
-            _dataContext.IsPlaybackConfirmationDisplayedBefore = !playbackViewParameters.IsPlaybackFromBeginning;
+            _dataContext.SelectedMediaElement = playbackViewParameterModel.SelectedMovie;
+            _dataContext.WasPlaybackPopupShown = playbackViewParameterModel.WasPlaybackPopupShown;
 
-            StartPrelude(playbackViewParameters);
+            StartPrelude(playbackViewParameterModel);
         }
 
-        public async Task StartPrelude(PlaybackViewParameters playbackViewParameters)
+        public async Task StartPrelude(PlaybackViewParameterModel playbackViewParameterModel)
         {
-            Movie movie = playbackViewParameters?.SelectedMovie;
+            Movie movie = playbackViewParameterModel?.SelectedMovie;
             if (movie?.PlaybackInformation == null || !movie.PlaybackInformation.Any())
             {
                 return;
             }
+
+            _dataContext.IsLoading = true;
 
             MediaElementPlaybackSource playbackInformation = movie.PlaybackInformation.ToList()[0];
             if (!string.IsNullOrEmpty(playbackInformation.TranscodingUrl))
@@ -130,9 +134,15 @@ namespace Jellyfin.Views
                     mediaPlayerElement.MediaPlayer.Source = MediaSource.CreateFromAdaptiveMediaSource(ams);
                     
                     mediaPlayerElement.MediaPlayer.PlaybackSession.PlaybackStateChanged += PlaybackSession_PlaybackStateChanged;
-                    
+
+                    if (!playbackViewParameterModel.IsPlaybackFromBeginning)
+                    {
+                        mediaPlayerElement.MediaPlayer.PlaybackSession.NaturalDurationChanged += PlaybackSessionOnNaturalDurationChanged;
+                    }
+
                     mediaPlayerElement.MediaPlayer.Play();
-                    
+                    OpenOsd();
+
                     ams.InitialBitrate = ams.AvailableBitrates.Max<uint>();
                 }
 
@@ -141,7 +151,7 @@ namespace Jellyfin.Views
             else
             {
                 // Regular streaming
-                StartDirectPlayback(playbackViewParameters);
+                StartDirectPlayback(playbackViewParameterModel);
 
                 _dataContext.PlaybackMode = "DirectStream";
             }
@@ -161,11 +171,11 @@ namespace Jellyfin.Views
         /// <summary>
         /// Starts playing back the video with the provided id.
         /// </summary>
-        /// <param name="playbackViewParameters">The playback view parameters.</param>
+        /// <param name="playbackViewParameterModel">The playback view parameters.</param>
         /// <returns></returns>
-        public async Task StartDirectPlayback(PlaybackViewParameters playbackViewParameters)
+        public async Task StartDirectPlayback(PlaybackViewParameterModel playbackViewParameterModel)
         {
-            Movie movie = playbackViewParameters.SelectedMovie;
+            Movie movie = playbackViewParameterModel.SelectedMovie;
             string id = movie.Id;
 
             string videoUrl =
@@ -178,7 +188,7 @@ namespace Jellyfin.Views
             
             mediaPlayerElement.MediaPlayer.PlaybackSession.PlaybackStateChanged += PlaybackSession_PlaybackStateChanged;
             
-            if (!playbackViewParameters.IsPlaybackFromBeginning)
+            if (!playbackViewParameterModel.IsPlaybackFromBeginning)
             {
                 mediaPlayerElement.MediaPlayer.PlaybackSession.NaturalDurationChanged += PlaybackSessionOnNaturalDurationChanged;
             }
@@ -187,12 +197,17 @@ namespace Jellyfin.Views
             OpenOsd();
         }
 
+        /// <summary>
+        /// Sets the playback position, then ubsubscribes from the event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         private void PlaybackSessionOnNaturalDurationChanged(MediaPlaybackSession sender, object args)
         {
             #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             Globals.Instance.UIDispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
             {
-                var session = mediaPlayerElement.MediaPlayer.PlaybackSession;
+                MediaPlaybackSession session = mediaPlayerElement.MediaPlayer.PlaybackSession;
                 session.Position = _dataContext.SelectedMediaElement.PlaybackPosition;
 
                 session.NaturalDurationChanged -= PlaybackSessionOnNaturalDurationChanged;

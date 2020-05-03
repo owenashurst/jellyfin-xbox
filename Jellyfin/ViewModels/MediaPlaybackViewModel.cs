@@ -23,7 +23,7 @@ namespace Jellyfin.ViewModels
         /// </summary>
         public Timer ReportPlaybackStatusTimer { get; set; }
 
-        public bool IsPlaybackConfirmationDisplayedBefore { get; set; }
+        public bool WasPlaybackPopupShown { get; set; }
 
         #region RemainingTimeLeft
 
@@ -64,14 +64,32 @@ namespace Jellyfin.ViewModels
         /// </summary>
         private object padlock = new object();
 
+        #region IsOsdKeepOnScreen
+
+        private bool _isOsdKeepOnScreen;
+
         /// <summary>
-        /// Indicates how many seek seconds requested in sum.
+        /// Indicates whether the OSD should be kept on screen.
         /// </summary>
+        public bool IsOsdKeepOnScreen
+        {
+            get { return _isOsdKeepOnScreen; }
+            set
+            {
+                _isOsdKeepOnScreen = value;
+                RaisePropertyChanged(nameof(IsOsdKeepOnScreen));
+            }
+        }
+
+        #endregion
 
         #region SeekRequestedSeconds
 
         private int _seekRequestedSeconds;
 
+        /// <summary>
+        /// Indicates how many seek seconds requested in sum.
+        /// </summary>
         public int SeekRequestedSeconds
         {
             get { return _seekRequestedSeconds; }
@@ -79,15 +97,19 @@ namespace Jellyfin.ViewModels
             {
                 _seekRequestedSeconds = value;
 
+                #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 Globals.Instance.UIDispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
                 {
                     RaisePropertyChanged(nameof(SeekRequestedSeconds));
                     RaisePropertyChanged(nameof(FormattedSeekRequestedSeconds));
                 });
+                #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             }
         }
 
         #endregion
+
+        #region FormattedSeekRequestedSeconds
 
         public string FormattedSeekRequestedSeconds
         {
@@ -100,46 +122,29 @@ namespace Jellyfin.ViewModels
 
                 if (SeekRequestedSeconds < 0)
                 {
-                    return $" ({SeekRequestedSeconds}s)"; 
+                    if (SeekRequestedSeconds < -90)
+                    {
+                        int minutes = SeekRequestedSeconds / 60;
+                        int seconds = Math.Abs(SeekRequestedSeconds % 60);
+                        return $" ({minutes}min {seconds}s)";
+                    }
+
+                    return $" ({SeekRequestedSeconds}s)";
+                }
+
+                if (SeekRequestedSeconds > 90)
+                {
+                    int minutes = SeekRequestedSeconds / 60;
+                    int seconds = SeekRequestedSeconds % 60;
+                    return $" (+{minutes}min {seconds}s)";
                 }
 
                 return $" (+{SeekRequestedSeconds}s)";
             }
         }
 
-        #region IsLoading
-
-        private bool _isLoading;
-
-        public bool IsLoading
-        {
-            get { return _isLoading; }
-            set
-            {
-                _isLoading = value;
-                RaisePropertyChanged(nameof(IsLoading));
-                RaisePropertyChanged(nameof(LoadingText));
-            }
-        }
-
         #endregion
-
-        #region LoadingText
-
-        private string _loadingText = "Loading...";
-
-        public string LoadingText
-        {
-            get { return _loadingText; }
-            set
-            {
-                _loadingText = value;
-                RaisePropertyChanged(nameof(LoadingText));
-            }
-        }
-
-        #endregion
-
+        
         #region PlaybackMode
 
         private string _playbackMode;
@@ -163,7 +168,23 @@ namespace Jellyfin.ViewModels
         /// The service for reporting current playback.
         /// </summary>
         private readonly IReportProgressService _reportProgressService;
-        
+
+        #region IsPlaying
+
+        private bool _isPlaying;
+
+        public bool IsPlaying
+        {
+            get { return _isPlaying; }
+            set
+            {
+                _isPlaying = value;
+                RaisePropertyChanged(nameof(IsPlaying));
+            }
+        }
+
+        #endregion
+
         #endregion
 
         #region ctor
@@ -180,10 +201,12 @@ namespace Jellyfin.ViewModels
                 throw new ArgumentNullException(nameof(reportProgressService));
 
             ReportPlaybackStatusTimer = new Timer();
-            ReportPlaybackStatusTimer.Interval = 10000;
+            ReportPlaybackStatusTimer.Interval = 60 * 1000;
             ReportPlaybackStatusTimer.AutoReset = true;
             ReportPlaybackStatusTimer.Elapsed += ReportPlaybackStatusTimer_Elapsed;
             ReportPlaybackStatusTimer.Start();
+
+            IsPlaying = true;
         }
         
         #endregion
@@ -209,6 +232,18 @@ namespace Jellyfin.ViewModels
                 case "SeekBackward":
                     SeekRequest(-30);
                     break;
+                case "StepBackward":
+                    StepBackward();
+                    break;
+                case "StepForward":
+                    // TODO for TV shows
+                    break;
+                case "FastBackward":
+                    FastBackward();
+                    break;
+                case "FastForward":
+                    FastForward();
+                    break;
                 default:
                     base.Execute(commandParameter);
                     break;
@@ -221,11 +256,13 @@ namespace Jellyfin.ViewModels
             NavigationService.GoBack();
 
             // to skip the "resume playback" screen
-            if (IsPlaybackConfirmationDisplayedBefore)
+            if (WasPlaybackPopupShown)
             {
                 NavigationService.GoBack();
             }
         }
+
+        #region Seek implementation
 
         public void SeekRequest(int seconds)
         {
@@ -275,13 +312,43 @@ namespace Jellyfin.ViewModels
             #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
 
+        /// <summary>
+        /// Rewinds to the beginning. 
+        /// </summary>
+        public void StepBackward()
+        {
+            #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            Globals.Instance.UIDispatcher.RunAsync(CoreDispatcherPriority.High, () =>
+            {
+                if (MediaPlayer != null)
+                {
+                    MediaPlayer.MediaPlayer.PlaybackSession.Position = TimeSpan.Zero;
+                }
+            });
+            #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+        }
+
+        public void FastBackward()
+        {
+            SeekRequest(-2 * 60);
+        }
+
+        public void FastForward()
+        {
+            SeekRequest(2 * 60);
+        }
+
+        #endregion
+        
         public void Pause()
         {
+            IsPlaying = false;
             MediaPlayer?.MediaPlayer.Pause();
         }
 
         public void Play()
         {
+            IsPlaying = true;
             MediaPlayer?.MediaPlayer.Play();
         }
 
@@ -311,6 +378,11 @@ namespace Jellyfin.ViewModels
             }
         }
 
+        /// <summary>
+        /// Reports back the current playback poisiton every minute.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ReportPlaybackStatusTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             if (SelectedMediaElement == null)
@@ -322,8 +394,7 @@ namespace Jellyfin.ViewModels
             {
                 return;
             }
-
-
+            
             #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             Globals.Instance.UIDispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
             {

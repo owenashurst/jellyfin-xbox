@@ -80,6 +80,11 @@ namespace Jellyfin.UserControls
 
             notMovingTextBlock.Opacity = .7;
             yearTextBlock.Opacity = .7;
+
+            if (IsLong)
+            {
+                watchedProgressBar.Margin = new Thickness(17, -20, 17, 0);
+            }
         }
         
         private void Animate(Canvas c)
@@ -94,7 +99,10 @@ namespace Jellyfin.UserControls
             
             // So the text is longer than the canvas width
             // c.Width = NaN sometimes
-            if (movingTextBlock.ActualWidth > 230)
+
+            int limit = IsLong ? 520 : 230;
+
+            if (movingTextBlock.ActualWidth > limit)
             {
                 DoubleAnimation doubleAnimation = animateStoryboard.Children[0] as DoubleAnimation;
                 doubleAnimation.To = -1 * movingTextBlock.ActualWidth;
@@ -103,6 +111,11 @@ namespace Jellyfin.UserControls
 
                 c.Visibility = Visibility.Visible;
                 notMovingTextBlock.Visibility = Visibility.Collapsed;
+
+                if (IsLong)
+                {
+                    watchedProgressBar.Margin = new Thickness(17, -100, 17, 0);
+                }
             }
             else
             {

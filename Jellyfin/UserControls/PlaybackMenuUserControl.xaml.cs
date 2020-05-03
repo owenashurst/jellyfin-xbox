@@ -1,7 +1,9 @@
-﻿using System.Timers;
+﻿using System;
+using System.Timers;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Jellyfin.Core;
+using Jellyfin.ViewModels;
 
 namespace Jellyfin.UserControls
 {
@@ -10,6 +12,8 @@ namespace Jellyfin.UserControls
         #region Additional methods
 
         private Timer AutoHideTimer { get; set; }
+
+        private int initialInterval = 3500;
 
         #endregion
 
@@ -28,20 +32,36 @@ namespace Jellyfin.UserControls
 
         #region Additional methods
 
-        private void AutoHideTimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
+        private async void AutoHideTimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
         {
-            Globals.Instance.UIDispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            await Globals.Instance.UIDispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                Visibility = Visibility.Collapsed;
+                if ((DataContext as MediaPlaybackViewModel).IsOsdKeepOnScreen)
+                {
+                    (sender as Timer).Stop();
+                    (sender as Timer).Start();
+                }
+                else
+                {
+                    Visibility = Visibility.Collapsed;
+                }
             });
         }
 
         public void VisibilityChanged(int interval = 3500)
         {
             AutoHideTimer.Interval = interval;
+            initialInterval = interval;
+
             AutoHideTimer.Start();
         }
 
         #endregion
+
+        private void StayAwake(object sender, RoutedEventArgs e)
+        {
+            AutoHideTimer.Stop();
+            AutoHideTimer.Start();
+        }
     }
 }

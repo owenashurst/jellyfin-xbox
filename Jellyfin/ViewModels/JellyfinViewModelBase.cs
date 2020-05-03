@@ -49,6 +49,24 @@ namespace Jellyfin.ViewModels
             {
                 _isLoading = value;
                 RaisePropertyChanged(nameof(IsLoading));
+                RaisePropertyChanged(nameof(LoadingText));
+            }
+        }
+
+        #endregion
+
+
+        #region LoadingText
+
+        private string _loadingText = "Loading...";
+
+        public string LoadingText
+        {
+            get { return _loadingText; }
+            set
+            {
+                _loadingText = value;
+                RaisePropertyChanged(nameof(LoadingText));
             }
         }
 
