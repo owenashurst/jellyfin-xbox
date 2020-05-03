@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Media.Core;
@@ -7,7 +8,6 @@ using Windows.Media.Streaming.Adaptive;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using Jellyfin.Core;
@@ -132,13 +132,8 @@ namespace Jellyfin.Views
                     ams = result.MediaSource;
                     mediaPlayerElement.SetMediaPlayer(new MediaPlayer());
                     mediaPlayerElement.MediaPlayer.Source = MediaSource.CreateFromAdaptiveMediaSource(ams);
-                    
-                    mediaPlayerElement.MediaPlayer.PlaybackSession.PlaybackStateChanged += PlaybackSession_PlaybackStateChanged;
 
-                    if (!playbackViewParameterModel.IsPlaybackFromBeginning)
-                    {
-                        mediaPlayerElement.MediaPlayer.PlaybackSession.NaturalDurationChanged += PlaybackSessionOnNaturalDurationChanged;
-                    }
+                    SubscribeToEvents(mediaPlayerElement.MediaPlayer, playbackViewParameterModel);
 
                     mediaPlayerElement.MediaPlayer.Play();
                     OpenOsd();
@@ -157,7 +152,29 @@ namespace Jellyfin.Views
             }
 
         }
-        
+
+        private void SubscribeToEvents(MediaPlayer mediaPlayer, PlaybackViewParameterModel vm)
+        {
+            mediaPlayer.PlaybackSession.PlaybackStateChanged += PlaybackSession_PlaybackStateChanged;
+
+            mediaPlayer.MediaEnded += MediaPlayerOnMediaEnded;
+
+            if (!vm.IsPlaybackFromBeginning)
+            {
+                mediaPlayer.PlaybackSession.NaturalDurationChanged += PlaybackSessionOnNaturalDurationChanged;
+            }
+        }
+
+        /// <summary>
+        /// Gets triggered when the media playback is ended.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void MediaPlayerOnMediaEnded(MediaPlayer sender, object args)
+        {
+            _dataContext.Return();
+        }
+
         private void PlaybackSession_PlaybackStateChanged(MediaPlaybackSession sender, object args)
         {
             #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
@@ -185,13 +202,8 @@ namespace Jellyfin.Views
 
             mediaPlayerElement.SetMediaPlayer(new MediaPlayer());
             mediaPlayerElement.MediaPlayer.Source = MediaSource.CreateFromUri(uri);
-            
-            mediaPlayerElement.MediaPlayer.PlaybackSession.PlaybackStateChanged += PlaybackSession_PlaybackStateChanged;
-            
-            if (!playbackViewParameterModel.IsPlaybackFromBeginning)
-            {
-                mediaPlayerElement.MediaPlayer.PlaybackSession.NaturalDurationChanged += PlaybackSessionOnNaturalDurationChanged;
-            }
+
+            SubscribeToEvents(mediaPlayerElement.MediaPlayer, playbackViewParameterModel);
 
             mediaPlayerElement.MediaPlayer.Play();
             OpenOsd();
