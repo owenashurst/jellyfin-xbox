@@ -140,11 +140,12 @@
     <Compile Include="Extensions\ObservableCollectionEx.cs" />
     <Compile Include="Models\Adapters\MediaElementPlaybackSourceAdapter.cs" />
     <Compile Include="Models\Adapters\MovieDetailAdapter.cs" />
+    <Compile Include="Models\Adapters\TvShowAdapter.cs" />
     <Compile Include="Models\ControllerButtonHandledResult.cs" />
     <Compile Include="Models\ImageTypeEnum.cs" />
+    <Compile Include="Models\MediaElementBase.cs" />
     <Compile Include="Models\MediaElementPlaybackSource.cs" />
     <Compile Include="Models\ModelBase.cs" />
-    <Compile Include="Models\MovieDetail.cs" />
     <Compile Include="Models\PlaybackViewParameterModel.cs" />
     <Compile Include="Models\ServiceModels\Movie\Chapter.cs" />
     <Compile Include="Models\ServiceModels\Movie\Externalurl.cs" />
@@ -165,9 +166,16 @@
     <Compile Include="Models\ServiceModels\PlaybackInformation\PlaybackInformationResult.cs" />
     <Compile Include="Models\ServiceModels\Progress\Bufferedrange.cs" />
     <Compile Include="Models\ServiceModels\Progress\Progress.cs" />
+    <Compile Include="Models\ServiceModels\TvShow\Imagetags.cs" />
+    <Compile Include="Models\ServiceModels\TvShow\Item.cs" />
+    <Compile Include="Models\ServiceModels\TvShow\JellyfinTvShowResult.cs" />
+    <Compile Include="Models\ServiceModels\TvShow\TvShowDetailsResult.cs" />
+    <Compile Include="Models\ServiceModels\TvShow\Userdata.cs" />
+    <Compile Include="Models\TvShow.cs" />
     <Compile Include="Services\Interfaces\IPlaybackInfoService.cs" />
     <Compile Include="Services\Interfaces\IReportProgressService.cs" />
     <Compile Include="Services\Interfaces\ISettingsService.cs" />
+    <Compile Include="Services\Interfaces\ITvShowService.cs" />
     <Compile Include="Services\PlaybackInfoService.Constants.cs" />
     <Compile Include="Services\PlaybackInfoService.cs" />
     <Compile Include="Services\ReportProgressService.cs" />
@@ -185,6 +193,7 @@
     <Compile Include="Services\LoginService.cs" />
     <Compile Include="Services\MovieService.cs" />
     <Compile Include="Services\ServiceBase.cs" />
+    <Compile Include="Services\TvShowService.cs" />
     <Compile Include="UnityRegistration.cs" />
     <Compile Include="Models\ServiceModels\Movie\JellyfinMovieResult.cs" />
     <Compile Include="Models\Movie.cs" />
@@ -202,6 +211,9 @@
     </Compile>
     <Compile Include="UserControls\MediaElementItemUserControl.xaml.cs">
       <DependentUpon>MediaElementItemUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\TvShowListUserControl.xaml.cs">
+      <DependentUpon>TvShowListUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\MovieRecommendationsUserControl.xaml.cs">
       <DependentUpon>MovieRecommendationsUserControl.xaml</DependentUpon>
@@ -332,6 +344,10 @@
     <Page Include="UserControls\MediaElementItemUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\TvShowListUserControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="UserControls\MovieRecommendationsUserControl.xaml">
       <SubType>Designer</SubType>

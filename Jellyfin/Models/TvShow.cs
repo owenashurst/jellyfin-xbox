@@ -1,19 +1,10 @@
-﻿using System;
-
-namespace Jellyfin.Models
+﻿namespace Jellyfin.Models
 {
     /// <summary>
-    /// Movie model representation
+    /// Tv show model representation
     /// </summary>
-    [Obsolete]
-    public class MovieDetail : Movie
+    public class TvShow : MediaElementBase
     {
-        #region Properties
-
-
-
-        #endregion
-
         #region Overrides
 
         public override string ToString()

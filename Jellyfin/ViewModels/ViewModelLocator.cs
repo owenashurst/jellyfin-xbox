@@ -37,12 +37,11 @@ namespace Jellyfin.ViewModels
             IJellyfinNavigationService navigationService = _container.Resolve<IJellyfinNavigationService>();
             IReportProgressService reportProgressService = _container.Resolve<IReportProgressService>();
 
-            _container.RegisterInstance(new MainViewModel());
+            _container.RegisterInstance(new MainViewModel(settingsService, navigationService));
             _container.RegisterInstance(new MovieDetailViewModel(movieService, playbackInfoService));
             _container.RegisterInstance(new MovieListViewModel(movieService));
             _container.RegisterInstance(new MediaPlaybackViewModel(reportProgressService));
             _container.RegisterInstance(new LoginViewModel(loginService, settingsService));
-            _container.RegisterInstance(new MenuViewModel(settingsService, navigationService));
         }
 
         #endregion
@@ -96,15 +95,7 @@ namespace Jellyfin.ViewModels
         {
             get => _container.Resolve<LoginViewModel>();
         }
-
-        /// <summary>
-        /// Mapping for Menu Page => Menu View Model.
-        /// </summary>
-        public MenuViewModel MenuPage
-        {
-            get => _container.Resolve<MenuViewModel>();
-        }
-
+        
         #endregion
     }
 }

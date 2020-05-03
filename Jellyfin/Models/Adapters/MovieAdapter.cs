@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using Jellyfin.Models.ServiceModels.Movie;
-using Jellyfin.Services.Interfaces;
 
 namespace Jellyfin.Models.Adapters
 {
@@ -10,22 +9,6 @@ namespace Jellyfin.Models.Adapters
     /// </summary>
     public class MovieAdapter : IAdapter<Item, Movie>
     {
-        #region Properties
-
-        private readonly IImageService _imageService;
-
-        #endregion
-
-        #region ctor
-
-        public MovieAdapter(IImageService imageService)
-        {
-            _imageService = imageService ??
-                throw new ArgumentNullException(nameof(imageService));
-        }
-
-        #endregion
-
         #region Additional methods
 
         public Movie Convert(Item source)

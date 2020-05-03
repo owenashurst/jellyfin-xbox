@@ -1,0 +1,21 @@
+﻿<Frame
+    x:Class="Jellyfin.UserControls.TvShowListUserControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:userControls="using:Jellyfin.UserControls"
+    Loaded="TvShowView_OnLoaded"
+    DataContext="{Binding MovieListPage, Source={StaticResource ViewModelLocator}}">
+    <Frame.Background>
+        <ImageBrush ImageSource="/Assets/Images/background.png" Stretch="UniformToFill"/>
+    </Frame.Background>
+
+    <Grid HorizontalAlignment="Stretch" Margin="15, 40, 0, 0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        
+        <TextBlock Text="tv-show-list-user-control works!" />
+    </Grid>
+</Frame>

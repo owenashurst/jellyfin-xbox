@@ -47,7 +47,7 @@ namespace Jellyfin.Services
         /// <summary>
         /// Reference for the movie details adapter.
         /// </summary>
-        private readonly IAdapter<MovieDetailsResult, MovieDetail> _movieDetailsAdapter;
+        private readonly IAdapter<MovieDetailsResult, Movie> _movieDetailsAdapter;
 
         /// <summary>
         /// Reference for the image service.
@@ -58,7 +58,7 @@ namespace Jellyfin.Services
 
         #region ctor
 
-        public MovieService(IAdapter<Item, Movie> movieAdapter, IAdapter<MovieDetailsResult, MovieDetail> movieDetailsAdapter, IImageService imageService)
+        public MovieService(IAdapter<Item, Movie> movieAdapter, IAdapter<MovieDetailsResult, Movie> movieDetailsAdapter, IImageService imageService)
         {
             _movieAdapter = movieAdapter ??
                 throw new ArgumentNullException(nameof(movieAdapter));
@@ -106,7 +106,7 @@ namespace Jellyfin.Services
             return movieList;
         }
 
-        public async Task<MovieDetail> GetMovieDetails(string movieId)
+        public async Task<Movie> GetMovieDetails(string movieId)
         {
             try
             {

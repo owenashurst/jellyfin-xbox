@@ -11,15 +11,5 @@ namespace Jellyfin.UserControls
         {
             InitializeComponent();
         }
-
-        private void MenuUserControl_OnGotFocus(object sender, RoutedEventArgs e)
-        {
-            sender.ToString();
-        }
-
-        private void MenuUserControl_OnLostFocus(object sender, RoutedEventArgs e)
-        {
-            sender.ToString();
-        }
     }
 }

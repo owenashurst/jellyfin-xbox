@@ -20,7 +20,7 @@ namespace Jellyfin.Services.Interfaces
         /// </summary>
         /// <param name="movieId">the ID of the movie to be retrieved.</param>
         /// <returns></returns>
-        Task<MovieDetail> GetMovieDetails(string movieId);
+        Task<Movie> GetMovieDetails(string movieId);
 
         /// <summary>
         /// Retrieves movies which are related to the provided movie.
