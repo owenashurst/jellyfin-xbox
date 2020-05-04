@@ -13,7 +13,7 @@ namespace Jellyfin.ViewModels
     /// <summary>
     /// View model for listing the movies available.
     /// </summary>
-    public class MovieListViewModel : JellyfinViewModelBase
+    public class MovieListViewModel : MediaElementListViewModelBase
     {
         #region Properties
 
@@ -232,7 +232,7 @@ namespace Jellyfin.ViewModels
                     OpenLibrary();
                     break;
                 case "OrderBy":
-                    Debugger.Break();
+                    // TODO smurancsik: add correct logging
                     break;
                 default:
                     base.Execute(commandParameter);

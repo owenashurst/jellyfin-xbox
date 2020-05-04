@@ -96,14 +96,14 @@ namespace Jellyfin.Views
         }
 
         /// <summary>
-        /// Handles to start playing back the movie passed from the previous frame.
+        /// Handles to start playing back the media element passed from the previous frame.
         /// </summary>
         /// <param name="e"></param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             PlaybackViewParameterModel playbackViewParameterModel = e.Parameter as PlaybackViewParameterModel;
             
-            _dataContext.SelectedMediaElement = playbackViewParameterModel.SelectedMovie;
+            _dataContext.SelectedMediaElement = playbackViewParameterModel.SelectedMediaElement;
             _dataContext.WasPlaybackPopupShown = playbackViewParameterModel.WasPlaybackPopupShown;
 
             StartPrelude(playbackViewParameterModel);
@@ -111,15 +111,15 @@ namespace Jellyfin.Views
 
         public async Task StartPrelude(PlaybackViewParameterModel playbackViewParameterModel)
         {
-            Movie movie = playbackViewParameterModel?.SelectedMovie;
-            if (movie?.PlaybackInformation == null || !movie.PlaybackInformation.Any())
+            MediaElementBase mediaElement = playbackViewParameterModel?.SelectedMediaElement;
+            if (mediaElement?.PlaybackInformation == null || !mediaElement.PlaybackInformation.Any())
             {
                 return;
             }
 
             _dataContext.IsLoading = true;
 
-            MediaElementPlaybackSource playbackInformation = movie.PlaybackInformation.ToList()[0];
+            MediaElementPlaybackSource playbackInformation = mediaElement.PlaybackInformation.ToList()[0];
             if (!string.IsNullOrEmpty(playbackInformation.TranscodingUrl))
             {
                 AdaptiveMediaSource ams;
@@ -192,8 +192,8 @@ namespace Jellyfin.Views
         /// <returns></returns>
         public async Task StartDirectPlayback(PlaybackViewParameterModel playbackViewParameterModel)
         {
-            Movie movie = playbackViewParameterModel.SelectedMovie;
-            string id = movie.Id;
+            MediaElementBase mediaElement = playbackViewParameterModel.SelectedMediaElement;
+            string id = mediaElement.Id;
 
             string videoUrl =
                 $"{Globals.Instance.Host}/Videos/{id}/stream.mov?Static=true&mediaSourceId={id}&deviceId={Globals.Instance.SessionInfo.DeviceId}&api_key={Globals.Instance.AccessToken}&Tag=beb6ef9128431e67c421e4cb890cf84f";

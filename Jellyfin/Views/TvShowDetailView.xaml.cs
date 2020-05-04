@@ -5,9 +5,12 @@ using Jellyfin.ViewModels;
 
 namespace Jellyfin.Views
 {
-    public partial class MovieDetailView
+    /// <summary>
+    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// </summary>
+    public sealed partial class TvShowDetailView
     {
-        public MovieDetailView()
+        public TvShowDetailView()
         {
             InitializeComponent();
         }
@@ -17,7 +20,7 @@ namespace Jellyfin.Views
         /// </summary>
         private void MovieDetailView_OnPreviewKeyDown(object sender, KeyRoutedEventArgs e)
         {
-            if ((DataContext as MovieDetailViewModel).HandleKeyPressed(e.Key))
+            if ((DataContext as TvShowDetailViewModel).HandleKeyPressed(e.Key))
             {
                 e.Handled = true;
             }
@@ -29,10 +32,10 @@ namespace Jellyfin.Views
         /// <param name="e"></param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            Movie movie = e.Parameter as Movie;
-            if (movie != null)
+            MediaElementBase mediaElement = e.Parameter as MediaElementBase;
+            if (mediaElement != null)
             {
-                (DataContext as MovieDetailViewModel).GetMovieDetails(movie);
+                (DataContext as TvShowDetailViewModel).GetTvShowDetails(mediaElement);
             }
         }
     }

@@ -39,9 +39,13 @@ namespace Jellyfin.ViewModels
             IReportProgressService reportProgressService = _container.Resolve<IReportProgressService>();
 
             _container.RegisterInstance(new MainViewModel(settingsService, navigationService));
-            _container.RegisterInstance(new MovieDetailViewModel(movieService, playbackInfoService));
+            
             _container.RegisterInstance(new MovieListViewModel(movieService));
+            _container.RegisterInstance(new MovieDetailViewModel(movieService, playbackInfoService));
+            
             _container.RegisterInstance(new TvShowListViewModel(tvShowService));
+            _container.RegisterInstance(new TvShowDetailViewModel(tvShowService, playbackInfoService));
+            
             _container.RegisterInstance(new MediaPlaybackViewModel(reportProgressService));
             _container.RegisterInstance(new LoginViewModel(loginService, settingsService));
         }
@@ -64,6 +68,14 @@ namespace Jellyfin.ViewModels
         public MovieDetailViewModel MovieDetailPage
         {
             get => _container.Resolve<MovieDetailViewModel>();
+        }
+
+        /// <summary>
+        /// Mapping for TV Show Details Page - TV Show Details View model.
+        /// </summary>
+        public TvShowDetailViewModel TvShowDetailPage
+        {
+            get => _container.Resolve<TvShowDetailViewModel>();
         }
 
         /// <summary>

@@ -12,7 +12,7 @@
             ItemsSource="{Binding ElementName=UI, Path=MediaSource, UpdateSourceTrigger=PropertyChanged}"
         Margin="0, 30, 0, 0" IsItemClickEnabled="True"
         SelectionChanged="Selector_OnSelectionChanged"
-        ItemClick="MovieListView_OnItemClick">
+        ItemClick="MediaElementListView_OnItemClick">
         <ListView.ItemsPanel>
             <ItemsPanelTemplate>
                 <StackPanel Background="Transparent" Orientation="Horizontal" />

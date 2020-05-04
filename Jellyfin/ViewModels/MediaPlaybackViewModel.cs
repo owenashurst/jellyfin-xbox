@@ -43,9 +43,9 @@ namespace Jellyfin.ViewModels
 
         #region SelectedMediaElement
 
-        private Movie _selectedMediaElement;
+        private MediaElementBase _selectedMediaElement;
 
-        public Movie SelectedMediaElement
+        public MediaElementBase SelectedMediaElement
         {
             get { return _selectedMediaElement; }
             set

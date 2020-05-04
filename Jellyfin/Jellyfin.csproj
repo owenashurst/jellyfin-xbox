@@ -142,6 +142,7 @@
     <Compile Include="Models\Adapters\MediaElementPlaybackSourceAdapter.cs" />
     <Compile Include="Models\Adapters\MovieDetailAdapter.cs" />
     <Compile Include="Models\Adapters\TvShowAdapter.cs" />
+    <Compile Include="Models\Adapters\TvShowDetailAdapter.cs" />
     <Compile Include="Models\ControllerButtonHandledResult.cs" />
     <Compile Include="Models\ImageTypeEnum.cs" />
     <Compile Include="Models\MediaElementBase.cs" />
@@ -167,9 +168,15 @@
     <Compile Include="Models\ServiceModels\PlaybackInformation\PlaybackInformationResult.cs" />
     <Compile Include="Models\ServiceModels\Progress\Bufferedrange.cs" />
     <Compile Include="Models\ServiceModels\Progress\Progress.cs" />
+    <Compile Include="Models\ServiceModels\TvShow\Externalurl.cs" />
+    <Compile Include="Models\ServiceModels\TvShow\Genreitem.cs" />
     <Compile Include="Models\ServiceModels\TvShow\Imagetags.cs" />
     <Compile Include="Models\ServiceModels\TvShow\Item.cs" />
     <Compile Include="Models\ServiceModels\TvShow\JellyfinTvShowResult.cs" />
+    <Compile Include="Models\ServiceModels\TvShow\Person.cs" />
+    <Compile Include="Models\ServiceModels\TvShow\Providerids.cs" />
+    <Compile Include="Models\ServiceModels\TvShow\Remotetrailer.cs" />
+    <Compile Include="Models\ServiceModels\TvShow\Studio.cs" />
     <Compile Include="Models\ServiceModels\TvShow\TvShowDetailsResult.cs" />
     <Compile Include="Models\ServiceModels\TvShow\Userdata.cs" />
     <Compile Include="Models\TvShow.cs" />
@@ -230,14 +237,19 @@
     <Compile Include="ViewModels\JellyfinViewModelBase.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\MediaElementListViewModelBase.cs" />
     <Compile Include="ViewModels\MediaPlaybackViewModel.cs" />
     <Compile Include="ViewModels\MenuViewModel.cs" />
     <Compile Include="ViewModels\MovieDetailViewModel.cs" />
     <Compile Include="ViewModels\MovieListViewModel.cs" />
+    <Compile Include="ViewModels\TvShowDetailViewModel.cs" />
     <Compile Include="ViewModels\TvShowListViewModel.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
     <Compile Include="Views\MediaPlaybackView.xaml.cs">
       <DependentUpon>MediaPlaybackView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TvShowDetailView.xaml.cs">
+      <DependentUpon>TvShowDetailView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PlaybackConfirmationView.xaml.cs">
       <DependentUpon>PlaybackConfirmationView.xaml</DependentUpon>
@@ -364,6 +376,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MediaPlaybackView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\TvShowDetailView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

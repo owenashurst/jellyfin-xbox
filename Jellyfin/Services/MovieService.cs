@@ -132,7 +132,7 @@ namespace Jellyfin.Services
             }
             catch (Exception xc)
             {
-                Debugger.Break();
+                // TODO smurancsik: add correct logging
             }
 
             return null;

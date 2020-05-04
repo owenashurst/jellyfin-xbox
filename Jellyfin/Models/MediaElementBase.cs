@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Windows.UI.Core;
-using GalaSoft.MvvmLight;
 using Jellyfin.Core;
 
 namespace Jellyfin.Models
@@ -83,6 +82,16 @@ namespace Jellyfin.Models
 
 
         /// <summary>
+        /// The genres of the media element.
+        /// </summary>
+        public string[] Genres { get; set; }
+
+        public string FormattedGenres
+        {
+            get => string.Join(", ", Genres);
+        }
+
+        /// <summary>
         /// The community rating of the movie.
         /// See field CommunityRating.
         /// </summary>
@@ -100,7 +109,20 @@ namespace Jellyfin.Models
 
         public string FormattedRuntime
         {
-            get { return Runtime.Hours + " hr " + Runtime.Minutes + " min"; }
+            get
+            {
+                if (Runtime == TimeSpan.Zero)
+                {
+                    return string.Empty;
+                }
+
+                if (Runtime.TotalHours > 1)
+                {
+                    return Runtime.Hours + " hr " + Runtime.Minutes + " min";
+                }
+
+                return Runtime.Minutes + " min";
+            }
         }
 
         public TimeSpan PlaybackPosition { get; set; }

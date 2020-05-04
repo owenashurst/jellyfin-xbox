@@ -16,19 +16,10 @@ namespace Jellyfin.Models
         public string Year { get; set; }
 
         /// <summary>
-        /// Inidicates whether the media element has subtitles.
+        /// Indicates whether the media element has subtitles.
         /// </summary>
         public bool HasSubtitles { get; set; }
 
-        /// <summary>
-        /// The genres of the movie.
-        /// </summary>
-        public string[] Genres { get; set; }
-
-        public string FormattedGenres
-        {
-            get => string.Join(", ", Genres);
-        }
 
         /// <summary>
         /// The date when it went to premiere.

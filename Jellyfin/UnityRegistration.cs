@@ -31,6 +31,7 @@ namespace Jellyfin
 
             container.RegisterType<IAdapter<Item, Movie>, MovieAdapter>();
             container.RegisterType<IAdapter<Models.ServiceModels.TvShow.Item, TvShow>, TvShowAdapter>();
+            container.RegisterType<IAdapter<TvShowDetailsResult, TvShow>, TvShowDetailAdapter>();
 
             container.RegisterType<
                 IAdapter<Mediasource, MediaElementPlaybackSource>,

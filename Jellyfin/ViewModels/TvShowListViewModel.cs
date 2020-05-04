@@ -12,7 +12,7 @@ namespace Jellyfin.ViewModels
     /// <summary>
     /// View model for listing the tv shows available.
     /// </summary>
-    public class TvShowListViewModel : JellyfinViewModelBase
+    public class TvShowListViewModel : MediaElementListViewModelBase
     {
         #region Properties
 
@@ -103,7 +103,7 @@ namespace Jellyfin.ViewModels
                     OpenLibrary();
                     break;
                 case "OrderBy":
-                    Debugger.Break();
+                    // TODO smurancsik: add correct logging
                     break;
                 default:
                     base.Execute(commandParameter);

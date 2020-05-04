@@ -9,21 +9,21 @@ using Jellyfin.Views;
 
 namespace Jellyfin.ViewModels
 {
-    public class MovieDetailViewModel : JellyfinViewModelBase
+    public class TvShowDetailViewModel : JellyfinViewModelBase
     {
         #region Properties
 
-        #region SelectedMovie
+        #region SelectedTvShow
 
-        private Movie _selectedMovie;
+        private TvShow _selectedTvShow;
 
-        public Movie SelectedMovie
+        public TvShow SelectedTvShow
         {
-            get { return _selectedMovie; }
+            get { return _selectedTvShow; }
             set
             {
-                _selectedMovie = value;
-                RaisePropertyChanged(nameof(SelectedMovie));
+                _selectedTvShow = value;
+                RaisePropertyChanged(nameof(SelectedTvShow));
                 RaisePropertyChanged(nameof(FormattedResumeText));
             }
         }
@@ -36,7 +36,7 @@ namespace Jellyfin.ViewModels
         {
             get
             {
-                if (SelectedMovie == null)
+                if (SelectedTvShow == null)
                 {
                     return string.Empty;
                 }
@@ -44,18 +44,18 @@ namespace Jellyfin.ViewModels
                 StringBuilder bld = new StringBuilder();
                 bld.Append("Resume from ");
 
-                if (SelectedMovie.PlaybackPosition.Hours > 0)
+                if (SelectedTvShow.PlaybackPosition.Hours > 0)
                 {
-                    bld.Append(SelectedMovie.PlaybackPosition.Hours).Append(":");
-                    bld.Append(SelectedMovie.PlaybackPosition.Minutes.ToString().PadLeft(2, '0')).Append(":");
+                    bld.Append(SelectedTvShow.PlaybackPosition.Hours).Append(":");
+                    bld.Append(SelectedTvShow.PlaybackPosition.Minutes.ToString().PadLeft(2, '0')).Append(":");
                 }
                 else
                 {
-                    bld.Append(SelectedMovie.PlaybackPosition.Minutes).Append(":");
+                    bld.Append(SelectedTvShow.PlaybackPosition.Minutes).Append(":");
                 }
 
                 
-                bld.Append(SelectedMovie.PlaybackPosition.Seconds.ToString().PadLeft(2, '0'));
+                bld.Append(SelectedTvShow.PlaybackPosition.Seconds.ToString().PadLeft(2, '0'));
 
                 return bld.ToString();
             }
@@ -63,17 +63,17 @@ namespace Jellyfin.ViewModels
 
         #endregion
 
-        #region RelatedMovies
+        #region RelatedTvShows
 
-        private ObservableCollection<Movie> _relatedMovies = new ObservableCollection<Movie>();
+        private ObservableCollection<TvShow> _relatedTvShows = new ObservableCollection<TvShow>();
 
-        public ObservableCollection<Movie> RelatedMovies
+        public ObservableCollection<TvShow> RelatedTvShows
         {
-            get { return _relatedMovies; }
+            get { return _relatedTvShows; }
             set
             {
-                _relatedMovies = value;
-                RaisePropertyChanged(nameof(RelatedMovies));
+                _relatedTvShows = value;
+                RaisePropertyChanged(nameof(RelatedTvShows));
             }
         }
 
@@ -82,7 +82,7 @@ namespace Jellyfin.ViewModels
         /// <summary>
         /// Reference for the movie service.
         /// </summary>
-        private readonly IMovieService _movieService;
+        private readonly ITvShowService _tvShowService;
 
         /// <summary>
         /// Reference for the playback info service.
@@ -93,13 +93,13 @@ namespace Jellyfin.ViewModels
 
         #region ctor
 
-        public MovieDetailViewModel(IMovieService movieService, IPlaybackInfoService playbackInfoService)
+        public TvShowDetailViewModel(ITvShowService tvShowService, IPlaybackInfoService playbackInfoService)
         {
-            _movieService = movieService ??
-                    throw new ArgumentNullException(nameof(movieService));
+            _tvShowService = tvShowService ??
+                            throw new ArgumentNullException(nameof(tvShowService));
 
             _playbackInfoService = playbackInfoService ??
-                            throw new ArgumentNullException(nameof(movieService));
+                                   throw new ArgumentNullException(nameof(tvShowService));
         }
 
         #endregion
@@ -125,27 +125,27 @@ namespace Jellyfin.ViewModels
             }
         }
 
-        public async Task GetMovieDetails(Movie movie)
+        public async Task GetTvShowDetails(MediaElementBase tvShow)
         {
-            RelatedMovies.Clear();
-            SelectedMovie = await _movieService.GetMovieDetails(movie.Id);
+            RelatedTvShows.Clear();
+            SelectedTvShow = await _tvShowService.GetTvShowDetails(tvShow.Id);
 
-            foreach (Movie relatedMovie in await _movieService.GetRelatedMovies(movie.Id))
-            {
-                RelatedMovies.Add(relatedMovie);
-            }
+            //foreach (TvShow relatedTvShow in await _tvShowService.GetRelatedTvShows(tvShow.Id))
+            //{
+            //    RelatedTvShows.Add(relatedTvShow);
+            //}
 
-            if (SelectedMovie.PlaybackInformation == null)
+            if (SelectedTvShow.PlaybackInformation == null)
             {
-                SelectedMovie.PlaybackInformation = await _playbackInfoService.GetPlaybackInformation(movie.Id);
+                SelectedTvShow.PlaybackInformation = await _playbackInfoService.GetPlaybackInformation(tvShow.Id);
             }
         }
 
         private void Play()
         {
-            if (SelectedMovie.PlaybackPosition != TimeSpan.Zero && SelectedMovie.PlaybackPosition.TotalMinutes > 2 && SelectedMovie.PlaybackRemaining.TotalMinutes > 2)
+            if (SelectedTvShow.PlaybackPosition != TimeSpan.Zero && SelectedTvShow.PlaybackPosition.TotalMinutes > 2 && SelectedTvShow.PlaybackRemaining.TotalMinutes > 2)
             {
-                NavigationService.Navigate(typeof(PlaybackConfirmationView), SelectedMovie);
+                NavigationService.Navigate(typeof(PlaybackConfirmationView), SelectedTvShow);
             }
             else
             {
@@ -157,7 +157,7 @@ namespace Jellyfin.ViewModels
         {
             NavigationService.Navigate(typeof(MediaPlaybackView), new PlaybackViewParameterModel
             {
-                SelectedMediaElement = SelectedMovie,
+                SelectedMediaElement = SelectedTvShow,
                 IsPlaybackFromBeginning = true,
                 WasPlaybackPopupShown = isPopupDisplayed
             });
@@ -167,7 +167,7 @@ namespace Jellyfin.ViewModels
         {
             NavigationService.Navigate(typeof(MediaPlaybackView), new PlaybackViewParameterModel
             {
-                SelectedMediaElement = SelectedMovie,
+                SelectedMediaElement = SelectedTvShow,
                 IsPlaybackFromBeginning = false,
                 WasPlaybackPopupShown = true
             });

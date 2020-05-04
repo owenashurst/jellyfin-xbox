@@ -6,7 +6,7 @@
     <GridView x:Name="itemsContainer" GotFocus="ItemsContainer_OnGotFocus" ItemsSource="{Binding ElementName=UI, Path=MediaSource, UpdateSourceTrigger=PropertyChanged}"
             Margin="0, 30, 0, 0" IsItemClickEnabled="True"
             SelectionChanged="Selector_OnSelectionChanged"
-            ItemClick="MovieGridView_OnItemClick">
+            ItemClick="MediaElementGridView_OnItemClick">
     <GridView.ItemTemplate>
         <DataTemplate>
             <local:MediaElementItemUserControl DataContext="{Binding}" />

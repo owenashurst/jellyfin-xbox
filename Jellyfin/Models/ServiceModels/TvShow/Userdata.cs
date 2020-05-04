@@ -6,6 +6,7 @@
         public string Key { get; set; }
         public int PlayCount { get; set; }
         public int PlaybackPositionTicks { get; set; }
+        public int PlayedPercentage { get; set; }
         public bool Played { get; set; }
         public int UnplayedItemCount { get; set; }
     }

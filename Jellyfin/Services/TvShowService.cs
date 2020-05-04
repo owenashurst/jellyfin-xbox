@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Jellyfin.Core;
@@ -58,14 +59,14 @@ namespace Jellyfin.Services
         #region ctor
 
         public TvShowService(IAdapter<Item, TvShow> tvShowAdapter,
-            //IAdapter<TvShowDetailsResult, TvShow> tvShowDetailsAdapter,
+            IAdapter<TvShowDetailsResult, TvShow> tvShowDetailsAdapter,
             IImageService imageService)
         {
             _tvShowAdapter = tvShowAdapter ??
                             throw new ArgumentNullException(nameof(tvShowAdapter));
 
-            //_tvShowDetailsAdapter = tvShowDetailsAdapter ??
-            //                       throw new ArgumentNullException(nameof(tvShowDetailsAdapter));
+            _tvShowDetailsAdapter = tvShowDetailsAdapter ??
+                                   throw new ArgumentNullException(nameof(tvShowDetailsAdapter));
 
             _imageService = imageService ??
                             throw new ArgumentNullException(nameof(imageService));
@@ -109,34 +110,32 @@ namespace Jellyfin.Services
 
         public async Task<TvShow> GetTvShowDetails(string tvShowId)
         {
-            //try
-            //{
-            //    using (HttpClient cli = new HttpClient())
-            //    {
-            //        cli.AddAuthorizationHeaders();
+            try
+            {
+                using (HttpClient cli = new HttpClient())
+                {
+                    cli.AddAuthorizationHeaders();
 
-            //        HttpResponseMessage result = cli.GetAsync($"{GetTvShowDetailsEndpoint}{tvShowId}").Result;
+                    HttpResponseMessage result = cli.GetAsync($"{GetTvShowDetailsEndpoint}{tvShowId}").Result;
 
-            //        if (!result.IsSuccessStatusCode)
-            //        {
-            //            return null;
-            //        }
+                    if (!result.IsSuccessStatusCode)
+                    {
+                        return null;
+                    }
 
-            //        string jsonResult = await result.Content.ReadAsStringAsync();
+                    string jsonResult = await result.Content.ReadAsStringAsync();
 
-            //        TvShowDetailsResult resultSet = JsonConvert.DeserializeObject<TvShowDetailsResult>(jsonResult);
+                    TvShowDetailsResult resultSet = JsonConvert.DeserializeObject<TvShowDetailsResult>(jsonResult);
 
-            //        var item = _tvShowDetailsAdapter.Convert(resultSet);
-            //        TvShowImageDownloadQueue.EnqueueTask(item);
-            //        return item;
-            //    }
-            //}
-            //catch (Exception xc)
-            //{
-            //    Debugger.Break();
-            //}
-
-            //return null;
+                    TvShow item = _tvShowDetailsAdapter.Convert(resultSet);
+                    TvShowImageDownloadQueue.EnqueueTask(item);
+                    return item;
+                }
+            }
+            catch (Exception xc)
+            {
+                // TODO smurancsik add correct logging
+            }
 
             return null;
         }

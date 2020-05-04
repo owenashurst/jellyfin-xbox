@@ -81,9 +81,18 @@ namespace Jellyfin.UserControls
             }
         }
 
-        private void MovieListView_OnItemClick(object sender, ItemClickEventArgs e)
+        private void MediaElementListView_OnItemClick(object sender, ItemClickEventArgs e)
         {
-            (DataContext as JellyfinViewModelBase).NavigateToMovie(e.ClickedItem as Movie);
+            MediaElementListViewModelBase dataContext = DataContext as MediaElementListViewModelBase;
+
+            if (dataContext == null)
+            {
+                // TODO smurancsik: throw new Argument exception
+                return;
+            }
+
+            dataContext.SelectedMediaElement = e.ClickedItem as MediaElementBase;
+            dataContext.NavigateToSelected();
         }
         
         private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

@@ -4,7 +4,7 @@
     {
         #region Properties
 
-        public Movie SelectedMovie { get; set; }
+        public MediaElementBase SelectedMediaElement { get; set; }
 
         public bool IsPlaybackFromBeginning { get; set; }
 

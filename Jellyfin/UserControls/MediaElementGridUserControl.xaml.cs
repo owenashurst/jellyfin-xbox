@@ -24,16 +24,34 @@ namespace Jellyfin.UserControls
 
         #endregion
 
+        #region Properties
+
+        /// <summary>
+        /// Indicates the first element of the grid.
+        /// </summary>
+        public GridViewItem FirstElement
+        {
+            get => (GridViewItem)itemsContainer.ContainerFromIndex(0);
+        }
+
+        #endregion
+
+        #region ctor
+
         public MediaElementGridUserControl()
         {
             InitializeComponent();
         }
 
-        public GridViewItem FirstElement
-        {
-            get => (GridViewItem) itemsContainer.ContainerFromIndex(0);
-        }
+        #endregion
 
+        #region Additional methods
+
+        /// <summary>
+        /// Creates a the item user control of the grid view item.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         public MediaElementItemUserControl ItemFromGridViewItem(GridViewItem item)
         {
             return item.FindVisualChild<MediaElementItemUserControl>();
@@ -48,9 +66,18 @@ namespace Jellyfin.UserControls
             }
         }
 
-        private void MovieGridView_OnItemClick(object sender, ItemClickEventArgs e)
+        private void MediaElementGridView_OnItemClick(object sender, ItemClickEventArgs e)
         {
-            (DataContext as JellyfinViewModelBase).NavigateToMovie(e.ClickedItem as Movie);
+            MediaElementListViewModelBase dataContext = DataContext as MediaElementListViewModelBase;
+
+            if (dataContext == null)
+            {
+                // TODO smurancsik: throw new Argument exception
+                return;
+            }
+
+            dataContext.SelectedMediaElement = e.ClickedItem as MediaElementBase;
+            dataContext.NavigateToSelected();
         }
 
         private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -94,5 +121,7 @@ namespace Jellyfin.UserControls
                 SelectFirst();
             }
         }
+
+        #endregion
     }
 }

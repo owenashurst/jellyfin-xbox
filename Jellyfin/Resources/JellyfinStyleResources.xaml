@@ -169,11 +169,43 @@
     </Style>
 
     <Style x:Key="MenuButton" TargetType="Button">
+        <Setter Property="Background" Value="Transparent" />
         <Setter Property="Padding" Value="35" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="HorizontalContentAlignment" Value="Right" />
         <Setter Property="FocusVisualPrimaryBrush" Value="{StaticResource PrimaryColor}" />
         <Setter Property="FocusVisualSecondaryBrush" Value="{StaticResource PrimaryColor}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="RootGrid" Background="{TemplateBinding Background}" CornerRadius="4">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="Focused">
+                                    <VisualState.Setters>
+                                        <Setter Target="RootGrid.(Border.Background)"
+                                                Value="{StaticResource PrimaryBackgroundColor}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Pressed" />
+                                <VisualState x:Name="Disabled" />
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <ContentPresenter x:Name="ContentPresenter"
+                                          BorderBrush="{TemplateBinding BorderBrush}"
+                                          BorderThickness="{TemplateBinding BorderThickness}"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTransitions="{TemplateBinding ContentTransitions}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          Padding="{TemplateBinding Padding}"
+                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          AutomationProperties.AccessibilityView="Raw" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <Style x:Key="SimpleTextBlock" TargetType="TextBlock">
@@ -205,18 +237,15 @@
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
                                 <VisualState x:Name="Normal" />
-
                                 <VisualState x:Name="Focused">
                                     <VisualState.Setters>
                                         <Setter Target="RootGrid.(Border.Background)"
                                                 Value="{StaticResource PrimaryColor}" />
                                     </VisualState.Setters>
                                 </VisualState>
-
                                 <VisualState x:Name="Pressed" />
                                 <VisualState x:Name="Disabled" />
                             </VisualStateGroup>
-
                         </VisualStateManager.VisualStateGroups>
                         <ContentPresenter x:Name="ContentPresenter"
                                           BorderBrush="{TemplateBinding BorderBrush}"
