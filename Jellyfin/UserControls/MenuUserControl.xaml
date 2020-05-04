@@ -2,8 +2,7 @@
     x:Class="Jellyfin.UserControls.MenuUserControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:uwp="using:FontAwesome.UWP"
-    Background="Black">
+    xmlns:uwp="using:FontAwesome.UWP">
     <Frame.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

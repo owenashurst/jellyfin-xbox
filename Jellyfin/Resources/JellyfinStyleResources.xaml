@@ -22,6 +22,7 @@
     <converters:BooleanInverterConverter x:Key="BooleanInverterConverter" />
     <converters:TimeSpanConverter x:Key="TimeSpanConverter" />
     <converters:ParametrizedBooleanToVisibilityConverter x:Key="ParametrizedBooleanToVisibilityConverter"/>
+    <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     <converters:StringToUpperConverter  x:Key="StringToUpperConverter"/>
 
     <x:Double x:Key="FontS">24</x:Double>

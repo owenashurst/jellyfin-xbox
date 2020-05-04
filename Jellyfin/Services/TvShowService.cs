@@ -58,14 +58,14 @@ namespace Jellyfin.Services
         #region ctor
 
         public TvShowService(IAdapter<Item, TvShow> tvShowAdapter,
-            IAdapter<TvShowDetailsResult, TvShow> tvShowDetailsAdapter,
+            //IAdapter<TvShowDetailsResult, TvShow> tvShowDetailsAdapter,
             IImageService imageService)
         {
             _tvShowAdapter = tvShowAdapter ??
                             throw new ArgumentNullException(nameof(tvShowAdapter));
 
-            _tvShowDetailsAdapter = tvShowDetailsAdapter ??
-                                   throw new ArgumentNullException(nameof(tvShowDetailsAdapter));
+            //_tvShowDetailsAdapter = tvShowDetailsAdapter ??
+            //                       throw new ArgumentNullException(nameof(tvShowDetailsAdapter));
 
             _imageService = imageService ??
                             throw new ArgumentNullException(nameof(imageService));

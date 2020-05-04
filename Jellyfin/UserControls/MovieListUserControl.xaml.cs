@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using Windows.UI.Xaml;
-using Jellyfin.Models;
+﻿using Windows.UI.Xaml;
 using Jellyfin.ViewModels;
 
 namespace Jellyfin.UserControls

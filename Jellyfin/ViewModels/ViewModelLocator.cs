@@ -31,6 +31,7 @@ namespace Jellyfin.ViewModels
             _container = Globals.Instance.Container;
 
             IMovieService movieService = _container.Resolve<IMovieService>();
+            ITvShowService tvShowService = _container.Resolve<ITvShowService>();
             IPlaybackInfoService playbackInfoService = _container.Resolve<IPlaybackInfoService>();
             ILoginService loginService = _container.Resolve<ILoginService>();
             ISettingsService settingsService = _container.Resolve<ISettingsService>();
@@ -40,6 +41,7 @@ namespace Jellyfin.ViewModels
             _container.RegisterInstance(new MainViewModel(settingsService, navigationService));
             _container.RegisterInstance(new MovieDetailViewModel(movieService, playbackInfoService));
             _container.RegisterInstance(new MovieListViewModel(movieService));
+            _container.RegisterInstance(new TvShowListViewModel(tvShowService));
             _container.RegisterInstance(new MediaPlaybackViewModel(reportProgressService));
             _container.RegisterInstance(new LoginViewModel(loginService, settingsService));
         }
@@ -78,6 +80,14 @@ namespace Jellyfin.ViewModels
         public MovieListViewModel MovieListPage
         {
             get => _container.Resolve<MovieListViewModel>();
+        }
+
+        /// <summary>
+        /// Mapping for TV Show List Page - TV Show list View Model.
+        /// </summary>
+        public TvShowListViewModel TvShowListPage
+        {
+            get => _container.Resolve<TvShowListViewModel>();
         }
 
         /// <summary>

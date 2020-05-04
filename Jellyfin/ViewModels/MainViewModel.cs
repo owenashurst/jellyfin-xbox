@@ -17,39 +17,55 @@ namespace Jellyfin.ViewModels
         /// Reference for the navigation service.
         /// </summary>
         private readonly IJellyfinNavigationService _navigationService;
+
+        #region IsShowMovies
+
+        private bool _isShowMovies;
+
+        public bool IsShowMovies
+        {
+            get { return _isShowMovies; }
+            set
+            {
+                _isShowMovies = value;
+                RaisePropertyChanged(nameof(IsShowMovies));
+            }
+        }
+
+        #endregion
+
+        #region IsShowTvShows
+
+        private bool _isShowTvShows;
+
+        public bool IsShowTvShows
+        {
+            get { return _isShowTvShows; }
+            set
+            {
+                _isShowTvShows = value;
+                RaisePropertyChanged(nameof(IsShowTvShows));
+            }
+        }
+
+        #endregion
+
+        #region IsShowMusic
+
+        private bool _isShowMusic;
+
+        public bool IsShowMusic
+        {
+            get { return _isShowMusic; }
+            set
+            {
+                _isShowMusic = value;
+                RaisePropertyChanged(nameof(IsShowMusic));
+            }
+        }
+
+        #endregion
         
-        #region IsMoviesPanelDisplayed
-
-        private bool _isMoviesPanelDisplayed;
-
-        public bool IsMoviesPanelDisplayed
-        {
-            get { return _isMoviesPanelDisplayed; }
-            set
-            {
-                _isMoviesPanelDisplayed = value;
-                RaisePropertyChanged(nameof(IsMoviesPanelDisplayed));
-            }
-        }
-
-        #endregion
-
-        #region IsTvShowsPanelDisplayed
-
-        private bool _isTvShowsPanelDisplayed;
-
-        public bool IsTvShowsPanelDisplayed
-        {
-            get { return _isTvShowsPanelDisplayed; }
-            set
-            {
-                _isTvShowsPanelDisplayed = value;
-                RaisePropertyChanged(nameof(IsTvShowsPanelDisplayed));
-            }
-        }
-
-        #endregion
-
         #endregion
 
         #region ctor
@@ -62,8 +78,7 @@ namespace Jellyfin.ViewModels
             _navigationService = jellyfinNavigationService ??
                                  throw new ArgumentNullException(nameof(jellyfinNavigationService));
 
-            IsMoviesPanelDisplayed = false;
-            IsTvShowsPanelDisplayed = false;
+            IsShowMovies = true;
         }
 
         #endregion
@@ -75,12 +90,19 @@ namespace Jellyfin.ViewModels
             switch (commandParameter)
             {
                 case "Movies":
-                    IsTvShowsPanelDisplayed = false;
-                    IsMoviesPanelDisplayed = true;
+                    IsShowMovies = true;
+                    IsShowTvShows = false;
+                    IsShowMusic = false; 
                     break;
                 case "TvShows":
-                    IsTvShowsPanelDisplayed = true;
-                    IsMoviesPanelDisplayed = false;
+                    IsShowMovies = false;
+                    IsShowTvShows = true;
+                    IsShowMusic = false;
+                    break;
+                case "Music":
+                    IsShowMovies = false;
+                    IsShowTvShows = false;
+                    IsShowMusic = true;
                     break;
                 case "Logout":
                     Logout();

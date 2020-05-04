@@ -10,9 +10,9 @@ namespace Jellyfin.UserControls
             InitializeComponent();
         }
 
-        private void TvShowView_OnLoaded(object sender, RoutedEventArgs e)
+        private void TvShowListView_OnLoaded(object sender, RoutedEventArgs e)
         {
-            (DataContext as MovieListViewModel).Load();
+            (DataContext as TvShowListViewModel).Load();
         }
     }
 }

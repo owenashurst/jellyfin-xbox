@@ -2,9 +2,11 @@
 using Jellyfin.Models;
 using Jellyfin.Models.Adapters;
 using Jellyfin.Models.ServiceModels.Movie;
+using Jellyfin.Models.ServiceModels.TvShow;
 using Jellyfin.Services;
 using Jellyfin.Services.Interfaces;
 using Unity;
+using Item = Jellyfin.Models.ServiceModels.Movie.Item;
 using Mediasource = Jellyfin.Models.ServiceModels.PlaybackInformation.Mediasource;
 
 namespace Jellyfin
