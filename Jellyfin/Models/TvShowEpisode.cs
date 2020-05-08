@@ -3,7 +3,7 @@ using Jellyfin.Core.Models;
 
 namespace Jellyfin.Models
 {
-    public class Episode : ModelBase
+    public class TvShowEpisode : ModelBase
     {
         #region Properties
 

@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Jellyfin.Core;
 using Jellyfin.Extensions;
 using Jellyfin.Models;
-using Jellyfin.Models.Adapters;
 using Jellyfin.Models.ServiceModels;
 using Jellyfin.Models.ServiceModels.TvShow;
 using Jellyfin.Services.Interfaces;
@@ -13,14 +12,9 @@ using Newtonsoft.Json;
 
 namespace Jellyfin.Services
 {
-    public class TvShowService : ServiceBase, ITvShowService
+    public class TvShowService : MediaQueryServiceBase, ITvShowService
     {
         #region Properties
-
-        /// <summary>
-        /// Queue for downloading tv show images.
-        /// </summary>
-        public TaskQueue<TvShow> TvShowImageDownloadQueue { get; set; }
 
         public string ListTvShowsEndpoint
         {
@@ -59,11 +53,6 @@ namespace Jellyfin.Services
         /// </summary>
         private readonly IAdapter<TvShowSeasonItem, TvShowSeason> _tvShowSeasonAdapter;
 
-        /// <summary>
-        /// Reference for the image service.
-        /// </summary>
-        private readonly IImageService _imageService;
-
         #endregion
 
         #region ctor
@@ -71,7 +60,7 @@ namespace Jellyfin.Services
         public TvShowService(IAdapter<TvShowItem, TvShow> tvShowAdapter,
             IAdapter<TvShowDetailsResult, TvShow> tvShowDetailsAdapter,
             IAdapter<TvShowSeasonItem, TvShowSeason> tvShowSeasonAdapter,
-            IImageService imageService)
+            IImageService imageService) : base(imageService)
         {
             _tvShowAdapter = tvShowAdapter ??
                             throw new ArgumentNullException(nameof(tvShowAdapter));
@@ -81,11 +70,6 @@ namespace Jellyfin.Services
 
             _tvShowSeasonAdapter = tvShowSeasonAdapter ??
                                    throw new ArgumentNullException(nameof(tvShowSeasonAdapter));
-
-            _imageService = imageService ??
-                            throw new ArgumentNullException(nameof(imageService));
-
-            TvShowImageDownloadQueue = new TaskQueue<TvShow>(1, ProcessTvShowImages);
         }
         
         #endregion
@@ -115,7 +99,7 @@ namespace Jellyfin.Services
                 {
                     TvShow tvShow = _tvShowAdapter.Convert(item);
                     tvShowList.Add(tvShow);
-                    TvShowImageDownloadQueue.EnqueueTask(tvShow);
+                    ImageDownloadQueue.EnqueueTask(tvShow);
                 }
             }
 
@@ -142,7 +126,7 @@ namespace Jellyfin.Services
                     TvShowDetailsResult resultSet = JsonConvert.DeserializeObject<TvShowDetailsResult>(jsonResult);
 
                     TvShow item = _tvShowDetailsAdapter.Convert(resultSet);
-                    TvShowImageDownloadQueue.EnqueueTask(item);
+                    ImageDownloadQueue.EnqueueTask(item);
                     return item;
                 }
             }
@@ -178,8 +162,9 @@ namespace Jellyfin.Services
 
                     foreach (TvShowSeasonItem item in resultSet.Items)
                     {
-                        seasons.Add(_tvShowSeasonAdapter.Convert(item));
-                        // TODO TvShowImageDownloadQueue.EnqueueTask(item);
+                        TvShowSeason tvShowSeason = _tvShowSeasonAdapter.Convert(item);
+                        seasons.Add(tvShowSeason);
+                        ImageDownloadQueue.EnqueueTask(tvShowSeason);
                     }
 
                     return seasons;
@@ -224,20 +209,7 @@ namespace Jellyfin.Services
             return null;
         }
 
-        private void ProcessTvShowImages(TvShow tvShow)
-        {
-            if (!string.IsNullOrEmpty(tvShow.ImageId))
-            {
-                tvShow.ImageData =
-                    _imageService.GetImage(tvShow.Id, tvShow.ImageId, ImageTypeEnum.Primary).Result;
-            }
-
-            if (!string.IsNullOrEmpty(tvShow.BackdropImageId))
-            {
-                tvShow.BackdropImageData =
-                    _imageService.GetImage(tvShow.Id, tvShow.BackdropImageId, ImageTypeEnum.Backdrop).Result;
-            }
-        }
+        
 
         #endregion
     }

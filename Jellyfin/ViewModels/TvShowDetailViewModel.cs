@@ -1,9 +1,9 @@
 using System;
-using System.Collections.ObjectModel;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.System;
 using Jellyfin.Core;
+using Jellyfin.Extensions;
 using Jellyfin.Models;
 using Jellyfin.Services.Interfaces;
 using Jellyfin.Views;
@@ -66,9 +66,9 @@ namespace Jellyfin.ViewModels
 
         #region RelatedTvShows
 
-        private ObservableCollection<TvShow> _relatedTvShows = new ObservableCollection<TvShow>();
+        private ObservableCollectionEx<TvShow> _relatedTvShows = new ObservableCollectionEx<TvShow>();
 
-        public ObservableCollection<TvShow> RelatedTvShows
+        public ObservableCollectionEx<TvShow> RelatedTvShows
         {
             get { return _relatedTvShows; }
             set
@@ -131,8 +131,10 @@ namespace Jellyfin.ViewModels
             RelatedTvShows.Clear();
             SelectedTvShow = await _tvShowService.GetTvShowDetails(tvShow.Id);
 
-            SelectedTvShow.Seasons = new ObservableCollection<TvShowSeason>(
-                await _tvShowService.GetSeasonsBy(tvShow.Id));
+            foreach (TvShowSeason season in await _tvShowService.GetSeasonsBy(tvShow.Id))
+            {
+                SelectedTvShow.Seasons.Add(season);
+            }
 
             //foreach (TvShow relatedTvShow in await _tvShowService.GetRelatedTvShows(tvShow.Id))
             //{

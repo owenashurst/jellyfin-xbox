@@ -89,7 +89,7 @@
 
             <!-- Related seasons Grid -->
             <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
-                  Margin="15, 100, 30, 15">
+                  Margin="15, 100, 30, 15" Background="#60000000">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
@@ -97,13 +97,13 @@
 
                 <TextBlock Grid.Row="0" Text="EPISODES" FontSize="32" FontWeight="SemiBold" Margin="15, 0, 0, 20" />
 
-                <!--<userControls:MediaElementListUserControl Grid.Row="1"
-                    MediaSource="{Binding RelatedMovies}" />-->
+                <userControls:MediaElementListUserControl Grid.Row="1"
+                    MediaSource="{Binding SelectedTvShow.SelectedSeason.TvShowEpisodes}" />
             </Grid>
 
             <!-- Related seasons Grid -->
             <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
-              Margin="15, 100, 30, 15">
+              Margin="15, 100, 30, 15" Background="#60000000">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />

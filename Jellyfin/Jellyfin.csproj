@@ -146,7 +146,7 @@
     <Compile Include="Models\Adapters\TvShowDetailAdapter.cs" />
     <Compile Include="Models\Adapters\TvShowSeasonAdapter.cs" />
     <Compile Include="Models\ControllerButtonHandledResult.cs" />
-    <Compile Include="Models\Episode.cs" />
+    <Compile Include="Models\TvShowEpisode.cs" />
     <Compile Include="Models\ImageTypeEnum.cs" />
     <Compile Include="Models\MediaElementBase.cs" />
     <Compile Include="Models\MediaElementPlaybackSource.cs" />
@@ -171,6 +171,7 @@
     <Compile Include="Services\Interfaces\IReportProgressService.cs" />
     <Compile Include="Services\Interfaces\ISettingsService.cs" />
     <Compile Include="Services\Interfaces\ITvShowService.cs" />
+    <Compile Include="Services\MediaQueryServiceBase.cs" />
     <Compile Include="Services\PlaybackInfoService.Constants.cs" />
     <Compile Include="Services\PlaybackInfoService.cs" />
     <Compile Include="Services\ReportProgressService.cs" />

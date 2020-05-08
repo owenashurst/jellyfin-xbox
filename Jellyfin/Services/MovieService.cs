@@ -12,14 +12,9 @@ using Newtonsoft.Json;
 
 namespace Jellyfin.Services
 {
-    public class MovieService : ServiceBase, IMovieService
+    public class MovieService : MediaQueryServiceBase, IMovieService
     {
         #region Properties
-
-        /// <summary>
-        /// Queue for downloading movie images.
-        /// </summary>
-        public TaskQueue<Movie> MovieImageDownloadQueue { get; set; }
 
         public string ListMoviesEndpoint
         {
@@ -48,27 +43,17 @@ namespace Jellyfin.Services
         /// </summary>
         private readonly IAdapter<MovieDetailsResult, Movie> _movieDetailsAdapter;
 
-        /// <summary>
-        /// Reference for the image service.
-        /// </summary>
-        private readonly IImageService _imageService;
-
         #endregion
 
         #region ctor
 
-        public MovieService(IAdapter<MovieItem, Movie> movieAdapter, IAdapter<MovieDetailsResult, Movie> movieDetailsAdapter, IImageService imageService)
+        public MovieService(IAdapter<MovieItem, Movie> movieAdapter, IAdapter<MovieDetailsResult, Movie> movieDetailsAdapter, IImageService imageService) : base(imageService)
         {
             _movieAdapter = movieAdapter ??
                 throw new ArgumentNullException(nameof(movieAdapter));
 
             _movieDetailsAdapter = movieDetailsAdapter ??
                 throw new ArgumentNullException(nameof(movieDetailsAdapter));
-
-            _imageService = imageService ??
-                throw new ArgumentNullException(nameof(imageService));
-
-            MovieImageDownloadQueue = new TaskQueue<Movie>(1, ProcessMovieImages);
         }
         
         #endregion
@@ -98,7 +83,7 @@ namespace Jellyfin.Services
                 {
                     Movie movie = _movieAdapter.Convert(item);
                     movieList.Add(movie);
-                    MovieImageDownloadQueue.EnqueueTask(movie);
+                    ImageDownloadQueue.EnqueueTask(movie);
                 }
             }
 
@@ -125,7 +110,7 @@ namespace Jellyfin.Services
                     MovieDetailsResult resultSet = JsonConvert.DeserializeObject<MovieDetailsResult>(jsonResult);
 
                     var item = _movieDetailsAdapter.Convert(resultSet);
-                    MovieImageDownloadQueue.EnqueueTask(item);
+                    ImageDownloadQueue.EnqueueTask(item);
                     return item;
                 }
             }
@@ -160,26 +145,11 @@ namespace Jellyfin.Services
                 {
                     Movie movie = _movieAdapter.Convert(item);
                     movieList.Add(movie);
-                    MovieImageDownloadQueue.EnqueueTask(movie);
+                    ImageDownloadQueue.EnqueueTask(movie);
                 }
             }
 
             return movieList;
-        }
-
-        private void ProcessMovieImages(Movie movie)
-        {
-            if (!string.IsNullOrEmpty(movie.ImageId))
-            {
-                movie.ImageData =
-                    _imageService.GetImage(movie.Id, movie.ImageId, ImageTypeEnum.Primary).Result;
-            }
-
-            if (!string.IsNullOrEmpty(movie.BackdropImageId))
-            {
-                movie.BackdropImageData =
-                    _imageService.GetImage(movie.Id, movie.BackdropImageId, ImageTypeEnum.Backdrop).Result;
-            }
         }
 
         #endregion
