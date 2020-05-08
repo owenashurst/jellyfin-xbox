@@ -3,7 +3,7 @@
 
     public class JellyfinTvShowResult
     {
-        public Item[] Items { get; set; }
+        public TvShowItem[] Items { get; set; }
         public int StartIndex { get; set; }
         public int TotalRecordCount { get; set; }
     }

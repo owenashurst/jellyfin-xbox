@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.System;
+using Jellyfin.Core;
 using Jellyfin.Models;
 using Jellyfin.Services.Interfaces;
 using Jellyfin.Views;
@@ -129,6 +130,9 @@ namespace Jellyfin.ViewModels
         {
             RelatedTvShows.Clear();
             SelectedTvShow = await _tvShowService.GetTvShowDetails(tvShow.Id);
+
+            SelectedTvShow.Seasons = new ObservableCollection<TvShowSeason>(
+                await _tvShowService.GetSeasonsBy(tvShow.Id));
 
             //foreach (TvShow relatedTvShow in await _tvShowService.GetRelatedTvShows(tvShow.Id))
             //{

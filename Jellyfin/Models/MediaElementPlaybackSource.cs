@@ -1,4 +1,6 @@
-﻿namespace Jellyfin.Models
+﻿using Jellyfin.Core.Models;
+
+namespace Jellyfin.Models
 {
     public class MediaElementPlaybackSource : ModelBase
     {

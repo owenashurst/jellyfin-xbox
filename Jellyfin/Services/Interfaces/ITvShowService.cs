@@ -23,6 +23,13 @@ namespace Jellyfin.Services.Interfaces
         Task<TvShow> GetTvShowDetails(string tvShowId);
 
         /// <summary>
+        /// Retrieves seasons by tv show id.
+        /// </summary>
+        /// <param name="tvShowId">The tv show id to requested.</param>
+        /// <returns></returns>
+        Task<IEnumerable<TvShowSeason>> GetSeasonsBy(string tvShowId);
+
+        /// <summary>
         /// Retrieves tv shows which are related to the provided tv show.
         /// </summary>
         /// <param name="tvShowId">the ID of the tv show for finding similars.</param>

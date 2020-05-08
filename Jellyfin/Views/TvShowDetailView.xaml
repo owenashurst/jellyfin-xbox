@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:uwp="using:FontAwesome.UWP"
+    xmlns:userControls="using:Jellyfin.UserControls"
     mc:Ignorable="d"
     PreviewKeyDown="MovieDetailView_OnPreviewKeyDown"
     DataContext="{Binding TvShowDetailPage, Source={StaticResource ViewModelLocator}}">
@@ -19,6 +20,7 @@
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
@@ -42,7 +44,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding SelectedTvShow.Year}" FontSize="{StaticResource FontL}" Margin="0, 0, 0, 10" />
+                        <TextBlock Text="{Binding SelectedTvShow}" FontSize="{StaticResource FontL}" Margin="0, 0, 0, 10" />
 
                         <StackPanel Grid.Column="1" Orientation="Horizontal">
                             <TextBlock Text="{Binding SelectedTvShow.CommunityRating}" VerticalAlignment="Center" FontSize="{StaticResource FontL}" Margin="0, 0, 10, 4" />
@@ -61,7 +63,7 @@
 
                             <TextBlock Opacity=".7" Text="{Binding SelectedTvShow.FormattedPlaybackRemaining}" FontSize="{StaticResource FontL}" />
 
-                            <Border Background="#333" Padding="40, 5" Margin="20, -5, 0, 0" CornerRadius="5">
+                            <Border Background="#333" Padding="40, 5" Margin="20, -5, 0, 0" CornerRadius="5" Visibility="{Binding SelectedTvShow.OfficialRating, Converter={StaticResource StringEmptyToVisibilityConverter}}">
                                 <TextBlock Text="{Binding SelectedTvShow.OfficialRating}" FontSize="{StaticResource FontL}" FontWeight="Bold" />
                             </Border>
                         </StackPanel>
@@ -85,18 +87,32 @@
                 </Button>
             </Grid>
 
-            <!-- Related movies Grid -->
+            <!-- Related seasons Grid -->
             <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                  Margin="15, 100, 30, 15">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="EPISODES" FontSize="32" FontWeight="SemiBold" Margin="15, 0, 0, 20" />
+
+                <!--<userControls:MediaElementListUserControl Grid.Row="1"
+                    MediaSource="{Binding RelatedMovies}" />-->
+            </Grid>
+
+            <!-- Related seasons Grid -->
+            <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
               Margin="15, 100, 30, 15">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Text="RELATED TV SHOWS" FontSize="32" FontWeight="SemiBold" Margin="15, 0, 0, 20" />
+                <TextBlock Grid.Row="0" Text="SEASONS" FontSize="32" FontWeight="SemiBold" Margin="15, 0, 0, 20" />
 
-                <!--<userControls:MediaElementListUserControl Grid.Row="1"
-                    MediaSource="{Binding RelatedMovies}" />-->
+                <userControls:MediaElementListUserControl Grid.Row="1"
+                    MediaSource="{Binding SelectedTvShow.Seasons}" />
             </Grid>
         </Grid>
     </ScrollViewer>

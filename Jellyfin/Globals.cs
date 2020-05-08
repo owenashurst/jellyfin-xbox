@@ -5,7 +5,7 @@ using Jellyfin.Services.Interfaces;
 using Newtonsoft.Json;
 using Unity;
 
-namespace Jellyfin.Core
+namespace Jellyfin
 {
     public class Globals
     {

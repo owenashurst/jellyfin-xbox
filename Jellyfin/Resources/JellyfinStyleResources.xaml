@@ -24,6 +24,7 @@
     <converters:ParametrizedBooleanToVisibilityConverter x:Key="ParametrizedBooleanToVisibilityConverter"/>
     <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     <converters:StringToUpperConverter  x:Key="StringToUpperConverter"/>
+    <converters:StringEmptyToVisibilityConverter  x:Key="StringEmptyToVisibilityConverter"/>
 
     <x:Double x:Key="FontS">24</x:Double>
     <x:Double x:Key="FontM">28</x:Double>

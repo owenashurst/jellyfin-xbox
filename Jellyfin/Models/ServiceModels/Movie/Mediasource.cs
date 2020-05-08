@@ -29,7 +29,6 @@ namespace Jellyfin.Models.ServiceModels.Movie
         public object[] MediaAttachments { get; set; }
         public object[] Formats { get; set; }
         public int Bitrate { get; set; }
-        public Requiredhttpheaders RequiredHttpHeaders { get; set; }
         public int DefaultAudioStreamIndex { get; set; }
         public int DefaultSubtitleStreamIndex { get; set; }
     }

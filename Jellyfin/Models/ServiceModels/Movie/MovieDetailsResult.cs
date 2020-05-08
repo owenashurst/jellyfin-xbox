@@ -1,4 +1,5 @@
 ﻿using System;
+using Jellyfin.Models.ServiceModels.TvShow;
 
 namespace Jellyfin.Models.ServiceModels.Movie
 {

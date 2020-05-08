@@ -2,6 +2,7 @@
 using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Jellyfin.Core.Models;
 using Jellyfin.Extensions;
 using Jellyfin.Models;
 using Jellyfin.ViewModels;

@@ -1,4 +1,5 @@
 using System;
+using Jellyfin.Core;
 using Jellyfin.Services.Interfaces;
 using Jellyfin.Views;
 

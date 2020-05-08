@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Windows.UI.Core;
-using Jellyfin.Core;
+using Jellyfin.Core.Models;
 
 namespace Jellyfin.Models
 {

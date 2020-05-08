@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Linq;
-using Jellyfin.Models.ServiceModels.Movie;
+using Jellyfin.Core;
+using Jellyfin.Models.ServiceModels;
 
 namespace Jellyfin.Models.Adapters
 {
     /// <summary>
     /// Adapter to map the JSON Item to Movie.
     /// </summary>
-    public class MovieAdapter : IAdapter<Item, Movie>
+    public class MovieAdapter : IAdapter<MovieItem, Movie>
     {
         #region Additional methods
 
-        public Movie Convert(Item source)
+        public Movie Convert(MovieItem source)
         {
             Movie m = new Movie();
 

@@ -1,4 +1,5 @@
-﻿using Jellyfin.Models;
+﻿using Jellyfin.Core;
+using Jellyfin.Models;
 using Jellyfin.Views;
 
 namespace Jellyfin.ViewModels

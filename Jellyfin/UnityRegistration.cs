@@ -1,12 +1,12 @@
 ﻿using Jellyfin.Core;
 using Jellyfin.Models;
 using Jellyfin.Models.Adapters;
+using Jellyfin.Models.ServiceModels;
 using Jellyfin.Models.ServiceModels.Movie;
 using Jellyfin.Models.ServiceModels.TvShow;
 using Jellyfin.Services;
 using Jellyfin.Services.Interfaces;
 using Unity;
-using Item = Jellyfin.Models.ServiceModels.Movie.Item;
 using Mediasource = Jellyfin.Models.ServiceModels.PlaybackInformation.Mediasource;
 
 namespace Jellyfin
@@ -29,9 +29,10 @@ namespace Jellyfin
         {
             IUnityContainer container = Globals.Instance.Container;
 
-            container.RegisterType<IAdapter<Item, Movie>, MovieAdapter>();
-            container.RegisterType<IAdapter<Models.ServiceModels.TvShow.Item, TvShow>, TvShowAdapter>();
+            container.RegisterType<IAdapter<MovieItem, Movie>, MovieAdapter>();
+            container.RegisterType<IAdapter<TvShowItem, TvShow>, TvShowAdapter>();
             container.RegisterType<IAdapter<TvShowDetailsResult, TvShow>, TvShowDetailAdapter>();
+            container.RegisterType<IAdapter<TvShowSeasonItem, TvShowSeason>, TvShowSeasonAdapter>();
 
             container.RegisterType<
                 IAdapter<Mediasource, MediaElementPlaybackSource>,

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Jellyfin.Core;
 using Jellyfin.Models.ServiceModels.TvShow;
 
 namespace Jellyfin.Models.Adapters

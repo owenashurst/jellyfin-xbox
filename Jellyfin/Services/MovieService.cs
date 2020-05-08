@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Jellyfin.Core;
 using Jellyfin.Extensions;
 using Jellyfin.Models;
-using Jellyfin.Models.Adapters;
+using Jellyfin.Models.ServiceModels;
 using Jellyfin.Models.ServiceModels.Movie;
 using Jellyfin.Services.Interfaces;
 using Newtonsoft.Json;
@@ -42,7 +41,7 @@ namespace Jellyfin.Services
         /// <summary>
         /// Reference for the movie adapter.
         /// </summary>
-        private readonly IAdapter<Item, Movie> _movieAdapter;
+        private readonly IAdapter<MovieItem, Movie> _movieAdapter;
 
         /// <summary>
         /// Reference for the movie details adapter.
@@ -58,7 +57,7 @@ namespace Jellyfin.Services
 
         #region ctor
 
-        public MovieService(IAdapter<Item, Movie> movieAdapter, IAdapter<MovieDetailsResult, Movie> movieDetailsAdapter, IImageService imageService)
+        public MovieService(IAdapter<MovieItem, Movie> movieAdapter, IAdapter<MovieDetailsResult, Movie> movieDetailsAdapter, IImageService imageService)
         {
             _movieAdapter = movieAdapter ??
                 throw new ArgumentNullException(nameof(movieAdapter));
@@ -95,7 +94,7 @@ namespace Jellyfin.Services
 
                 JellyfinMovieResult resultSet = JsonConvert.DeserializeObject<JellyfinMovieResult>(jsonResult);
                 
-                foreach (Item item in resultSet.Items)
+                foreach (MovieItem item in resultSet.Items)
                 {
                     Movie movie = _movieAdapter.Convert(item);
                     movieList.Add(movie);
@@ -157,7 +156,7 @@ namespace Jellyfin.Services
 
                 JellyfinMovieResult resultSet = JsonConvert.DeserializeObject<JellyfinMovieResult>(jsonResult);
 
-                foreach (Item item in resultSet.Items)
+                foreach (MovieItem item in resultSet.Items)
                 {
                     Movie movie = _movieAdapter.Convert(item);
                     movieList.Add(movie);

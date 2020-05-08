@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.System;
+using Jellyfin.Core;
 using Jellyfin.Models;
 using Jellyfin.Services.Interfaces;
 using Jellyfin.Views;

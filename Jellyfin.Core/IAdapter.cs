@@ -1,4 +1,4 @@
-﻿namespace Jellyfin.Models.Adapters
+﻿namespace Jellyfin.Core
 {
     /// <summary>
     /// Adds an interface to implement a conversion function for TOut type.

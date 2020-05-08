@@ -1,6 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
 
-namespace Jellyfin.Models
+namespace Jellyfin.Core.Models
 {
     public abstract class ModelBase : ObservableObject
     {

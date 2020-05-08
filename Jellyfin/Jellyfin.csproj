@@ -134,52 +134,39 @@
     <Compile Include="Converters\ByteArrayToImageConverter.cs" />
     <Compile Include="Converters\ParametrizedBooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\BooleanInverterConverter.cs" />
+    <Compile Include="Converters\StringEmptyToVisibilityConverter.cs" />
     <Compile Include="Converters\StringToUpperCaseConverter.cs" />
     <Compile Include="Converters\TimeSpanConverter.cs" />
-    <Compile Include="Core\Globals.cs" />
-    <Compile Include="Core\TaskQueue.cs" />
+    <Compile Include="Globals.cs" />
     <Compile Include="Extensions\ObservableCollectionEx.cs" />
+    <Compile Include="JellyfinViewModelBase.cs" />
     <Compile Include="Models\Adapters\MediaElementPlaybackSourceAdapter.cs" />
     <Compile Include="Models\Adapters\MovieDetailAdapter.cs" />
     <Compile Include="Models\Adapters\TvShowAdapter.cs" />
     <Compile Include="Models\Adapters\TvShowDetailAdapter.cs" />
+    <Compile Include="Models\Adapters\TvShowSeasonAdapter.cs" />
     <Compile Include="Models\ControllerButtonHandledResult.cs" />
+    <Compile Include="Models\Episode.cs" />
     <Compile Include="Models\ImageTypeEnum.cs" />
     <Compile Include="Models\MediaElementBase.cs" />
     <Compile Include="Models\MediaElementPlaybackSource.cs" />
-    <Compile Include="Models\ModelBase.cs" />
     <Compile Include="Models\PlaybackViewParameterModel.cs" />
     <Compile Include="Models\ServiceModels\Movie\Chapter.cs" />
-    <Compile Include="Models\ServiceModels\Movie\Externalurl.cs" />
-    <Compile Include="Models\ServiceModels\Movie\Genreitem.cs" />
-    <Compile Include="Models\ServiceModels\Movie\Imagetags.cs" />
-    <Compile Include="Models\ServiceModels\Movie\Item.cs" />
     <Compile Include="Models\ServiceModels\Movie\Mediasource.cs" />
     <Compile Include="Models\ServiceModels\Movie\Mediastream.cs" />
     <Compile Include="Models\ServiceModels\Movie\Mediastream1.cs" />
     <Compile Include="Models\ServiceModels\Movie\MovieDetailsResult.cs" />
     <Compile Include="Models\ServiceModels\Movie\Person.cs" />
-    <Compile Include="Models\ServiceModels\Movie\Providerids.cs" />
-    <Compile Include="Models\ServiceModels\Movie\Remotetrailer.cs" />
-    <Compile Include="Models\ServiceModels\Movie\Requiredhttpheaders.cs" />
-    <Compile Include="Models\ServiceModels\Movie\Studio.cs" />
-    <Compile Include="Models\ServiceModels\Movie\Userdata.cs" />
     <Compile Include="Models\ServiceModels\PlaybackInformation\Mediasource.cs" />
     <Compile Include="Models\ServiceModels\PlaybackInformation\PlaybackInformationResult.cs" />
     <Compile Include="Models\ServiceModels\Progress\Bufferedrange.cs" />
     <Compile Include="Models\ServiceModels\Progress\Progress.cs" />
-    <Compile Include="Models\ServiceModels\TvShow\Externalurl.cs" />
-    <Compile Include="Models\ServiceModels\TvShow\Genreitem.cs" />
-    <Compile Include="Models\ServiceModels\TvShow\Imagetags.cs" />
-    <Compile Include="Models\ServiceModels\TvShow\Item.cs" />
     <Compile Include="Models\ServiceModels\TvShow\JellyfinTvShowResult.cs" />
     <Compile Include="Models\ServiceModels\TvShow\Person.cs" />
-    <Compile Include="Models\ServiceModels\TvShow\Providerids.cs" />
-    <Compile Include="Models\ServiceModels\TvShow\Remotetrailer.cs" />
-    <Compile Include="Models\ServiceModels\TvShow\Studio.cs" />
     <Compile Include="Models\ServiceModels\TvShow\TvShowDetailsResult.cs" />
-    <Compile Include="Models\ServiceModels\TvShow\Userdata.cs" />
+    <Compile Include="Models\ServiceModels\TvShow\TvShowSeasonResult.cs" />
     <Compile Include="Models\TvShow.cs" />
+    <Compile Include="Models\TvShowSeason.cs" />
     <Compile Include="Services\Interfaces\IPlaybackInfoService.cs" />
     <Compile Include="Services\Interfaces\IReportProgressService.cs" />
     <Compile Include="Services\Interfaces\ISettingsService.cs" />
@@ -190,7 +177,6 @@
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="Extensions\HttpClientExtensions.cs" />
     <Compile Include="Extensions\XamlExtensions.cs" />
-    <Compile Include="Models\Adapters\IAdapter.cs" />
     <Compile Include="Models\Adapters\MovieAdapter.cs" />
     <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\LoginResult.cs" />
@@ -234,12 +220,10 @@
     </Compile>
     <Compile Include="Utils\AppUtils.cs" />
     <Compile Include="Utils\DeviceFormFactorType.cs" />
-    <Compile Include="ViewModels\JellyfinViewModelBase.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\MediaElementListViewModelBase.cs" />
     <Compile Include="ViewModels\MediaPlaybackViewModel.cs" />
-    <Compile Include="ViewModels\MenuViewModel.cs" />
     <Compile Include="ViewModels\MovieDetailViewModel.cs" />
     <Compile Include="ViewModels\MovieListViewModel.cs" />
     <Compile Include="ViewModels\TvShowDetailViewModel.cs" />
@@ -430,6 +414,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Jellyfin_TemporaryKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Jellyfin.Core\Jellyfin.Core.csproj">
+      <Project>{54407F8E-FB53-4123-9538-316C2912066E}</Project>
+      <Name>Jellyfin.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Jellyfin.Models\Jellyfin.Models.csproj">
+      <Project>{EA64A1BB-04C0-4385-9FC1-1CD0DE047A02}</Project>
+      <Name>Jellyfin.Models</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />

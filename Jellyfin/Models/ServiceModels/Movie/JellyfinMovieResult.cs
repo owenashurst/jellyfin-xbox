@@ -2,7 +2,7 @@
 {
     public class JellyfinMovieResult
     {
-        public Item[] Items { get; set; }
+        public MovieItem[] Items { get; set; }
 
         public long TotalRecordCount { get; set; }
 

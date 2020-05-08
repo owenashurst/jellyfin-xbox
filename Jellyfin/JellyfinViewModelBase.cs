@@ -1,10 +1,9 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using Jellyfin.Core;
 using Jellyfin.Services.Interfaces;
 using Unity;
 
-namespace Jellyfin.ViewModels
+namespace Jellyfin.Core
 {
     public abstract class JellyfinViewModelBase : ViewModelBase
     {

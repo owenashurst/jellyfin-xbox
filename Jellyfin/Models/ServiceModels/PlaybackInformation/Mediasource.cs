@@ -22,7 +22,6 @@ namespace Jellyfin.Models.ServiceModels.PlaybackInformation
         public string Path { get; set; }
         public string Protocol { get; set; }
         public bool ReadAtNativeFramerate { get; set; }
-        public Requiredhttpheaders RequiredHttpHeaders { get; set; }
         public bool RequiresClosing { get; set; }
         public bool RequiresLooping { get; set; }
         public bool RequiresOpening { get; set; }
