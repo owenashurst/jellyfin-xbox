@@ -24,6 +24,10 @@ namespace Jellyfin.Models.Adapters
             t.IndexNumber = source.IndexNumber;
             t.Description = source.Overview;
 
+            if (source.ImageTags != null) { 
+                t.BackdropImageId = source.ImageTags.Primary;
+            }
+
             return t;
         }
 

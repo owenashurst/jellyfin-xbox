@@ -223,6 +223,9 @@ namespace Jellyfin.ViewModels
                 case "Pause":
                     Pause();
                     break;
+                case "PlayPause":
+                    PlayPause();
+                    break;
                 case "Return":
                     Return();
                     break;
@@ -339,7 +342,20 @@ namespace Jellyfin.ViewModels
         }
 
         #endregion
-        
+
+        public void PlayPause()
+        {
+            if (IsPlaying)
+            {
+                Pause();
+            }
+            else
+            {
+                Play();
+            }
+        }
+
+
         public void Pause()
         {
             IsPlaying = false;

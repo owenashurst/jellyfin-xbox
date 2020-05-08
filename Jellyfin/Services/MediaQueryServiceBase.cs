@@ -35,18 +35,33 @@ namespace Jellyfin.Services
 
         #region Additional methods
 
-        private void ProcessTvShowImages(MediaElementBase tvShow)
+        private void ProcessTvShowImages(MediaElementBase mediaElementBase)
         {
-            if (!string.IsNullOrEmpty(tvShow.ImageId))
+            // TODO smurancsik: to fix up this workaround
+            if (mediaElementBase.GetType() == typeof(TvShowEpisode))
             {
-                tvShow.ImageData =
-                    _imageService.GetImage(tvShow.Id, tvShow.ImageId, ImageTypeEnum.Primary).Result;
+                if (!string.IsNullOrEmpty(mediaElementBase.BackdropImageId))
+                {
+                    mediaElementBase.BackdropImageData =
+                        _imageService.GetImage(mediaElementBase.Id, mediaElementBase.BackdropImageId,
+                            ImageTypeEnum.Primary).Result;
+                }
             }
-
-            if (!string.IsNullOrEmpty(tvShow.BackdropImageId))
+            else
             {
-                tvShow.BackdropImageData =
-                    _imageService.GetImage(tvShow.Id, tvShow.BackdropImageId, ImageTypeEnum.Backdrop).Result;
+                if (!string.IsNullOrEmpty(mediaElementBase.ImageId))
+                {
+                    mediaElementBase.ImageData =
+                        _imageService.GetImage(mediaElementBase.Id, mediaElementBase.ImageId, ImageTypeEnum.Primary)
+                            .Result;
+                }
+
+                if (!string.IsNullOrEmpty(mediaElementBase.BackdropImageId))
+                {
+                    mediaElementBase.BackdropImageData =
+                        _imageService.GetImage(mediaElementBase.Id, mediaElementBase.BackdropImageId,
+                            ImageTypeEnum.Backdrop).Result;
+                }
             }
         }
 

@@ -44,7 +44,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding SelectedMediaElement}" FontSize="{StaticResource FontL}" Margin="0, 0, 0, 10" />
+                        <TextBlock Text="{Binding SelectedMediaElement.SecondLine}" FontSize="{StaticResource FontL}" Margin="0, 0, 0, 10" />
 
                         <StackPanel Grid.Column="1" Orientation="Horizontal">
                             <TextBlock Text="{Binding SelectedMediaElement.CommunityRating}" VerticalAlignment="Center" FontSize="{StaticResource FontL}" Margin="0, 0, 10, 4" />

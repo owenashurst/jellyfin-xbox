@@ -152,6 +152,15 @@
         <Setter Property="Background" Value="#00A4DC" />
     </Style>
 
+    <Style x:Key="DetailHeaderButton" TargetType="Button">
+        <Setter Property="Margin" Value="0, 0, 20, 0"/>
+        <Setter Property="CornerRadius" Value="5"/>
+        <Setter Property="FontSize" Value="32"/>
+        <Setter Property="Background" Value="#1F4F5F" />
+        <Setter Property="FocusVisualPrimaryBrush" Value="{StaticResource PrimaryColor}" />
+        <Setter Property="FocusVisualSecondaryBrush" Value="{StaticResource PrimaryColor}" />
+    </Style>
+
     <Style x:Key="SelectableToggleButton" TargetType="ToggleButton">
         <Setter Property="FontSize" Value="{StaticResource FontM}"/>
         <Setter Property="FocusVisualPrimaryBrush" Value="{StaticResource PrimaryColor}" />

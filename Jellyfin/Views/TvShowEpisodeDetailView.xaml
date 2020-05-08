@@ -13,7 +13,7 @@
         <ImageBrush ImageSource="/Assets/Images/background.png" Stretch="UniformToFill"/>
     </Page.Background>
     <ScrollViewer>
-        <Grid Margin="15, 150, 30, 0">
+        <Grid Margin="15, 30, 30, 0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
@@ -22,12 +22,37 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Image Grid.Row="0" Grid.Column="0" Source="{Binding SelectedMediaElement.ImageData, Converter={StaticResource ByteArrayToImageConverter}}" Height="500" Width="400" VerticalAlignment="Top">
+            <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Margin="0, 0, 0, 60"
+                Orientation="Horizontal" BorderThickness="2">
+                <Button Command="{Binding ToolCommand}" CommandParameter="Home"
+                        Style="{StaticResource DetailHeaderButton}">
+                    <Button.Content>
+                        <uwp:FontAwesome Icon="ArrowLeft" FontSize="{StaticResource FontL}" HorizontalAlignment="Center" />
+                    </Button.Content>
+                </Button>
+
+                <Button Command="{Binding ToolCommand}" CommandParameter="GoToSeriesPage"
+                        Style="{StaticResource DetailHeaderButton}">
+                    <Button.Content>
+                        <TextBlock Text="{Binding SelectedMediaElement.SeriesName}" />
+                    </Button.Content>
+                </Button>
+
+                <Button Command="{Binding ToolCommand}" CommandParameter="GoToSeasonPage"
+                        Style="{StaticResource DetailHeaderButton}">
+                    <Button.Content>
+                        <TextBlock Text="{Binding SelectedMediaElement.SeasonName}" />
+                    </Button.Content>
+                </Button>
+            </StackPanel>
+
+            <Image Grid.Row="1" Grid.Column="0" Source="{Binding SelectedMediaElement.BackdropImageData, Converter={StaticResource ByteArrayToImageConverter}}" Height="500" Width="400" VerticalAlignment="Top">
             </Image>
 
-            <Grid Grid.Row="0" Grid.Column="1" Margin="30, 0, 0, 0">
+            <Grid Grid.Row="1" Grid.Column="1" Margin="30, 0, 0, 0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -88,7 +113,7 @@
                 </Button>
             </Grid>
 
-            <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Background="#60000000" Margin="-15, 50, -30, 0" Padding="15, 0, 30, 70">
+            <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Background="#60000000" Margin="-15, 50, -30, 0" Padding="15, 0, 30, 70">
 
                 <!-- Related episodes Grid -->
                 <Grid Margin="0, 50, 0, 0">

@@ -68,7 +68,7 @@
                 
                 <Button x:Name="playButton" x:FieldModifier="public"
                         Click="StayAwake" GotFocus="StayAwake"
-                        Command="{Binding ToolCommand}" CommandParameter="Play"
+                        Command="{Binding ToolCommand}" CommandParameter="PlayPause"
                         Style="{StaticResource OsdButton}">
                     <Button.Content>
                         <StackPanel>
