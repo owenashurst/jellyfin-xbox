@@ -140,12 +140,15 @@
     <Compile Include="Globals.cs" />
     <Compile Include="Extensions\ObservableCollectionEx.cs" />
     <Compile Include="JellyfinViewModelBase.cs" />
+    <Compile Include="Models\Adapters\ItemMediaElementBaseAdapter.cs" />
     <Compile Include="Models\Adapters\MediaElementPlaybackSourceAdapter.cs" />
     <Compile Include="Models\Adapters\MovieDetailAdapter.cs" />
     <Compile Include="Models\Adapters\TvShowAdapter.cs" />
     <Compile Include="Models\Adapters\TvShowDetailAdapter.cs" />
+    <Compile Include="Models\Adapters\TvShowEpisodeAdapter.cs" />
     <Compile Include="Models\Adapters\TvShowSeasonAdapter.cs" />
     <Compile Include="Models\ControllerButtonHandledResult.cs" />
+    <Compile Include="Models\ServiceModels\TvShow\TvShowEpisodeResult.cs" />
     <Compile Include="Models\TvShowEpisode.cs" />
     <Compile Include="Models\ImageTypeEnum.cs" />
     <Compile Include="Models\MediaElementBase.cs" />
@@ -223,15 +226,19 @@
     <Compile Include="Utils\DeviceFormFactorType.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
-    <Compile Include="ViewModels\MediaElementListViewModelBase.cs" />
+    <Compile Include="ViewModels\NavigableMediaElementViewModelBase.cs" />
     <Compile Include="ViewModels\MediaPlaybackViewModel.cs" />
     <Compile Include="ViewModels\MovieDetailViewModel.cs" />
     <Compile Include="ViewModels\MovieListViewModel.cs" />
     <Compile Include="ViewModels\TvShowDetailViewModel.cs" />
+    <Compile Include="ViewModels\TvShowEpisodeDetailViewModel.cs" />
     <Compile Include="ViewModels\TvShowListViewModel.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
     <Compile Include="Views\MediaPlaybackView.xaml.cs">
       <DependentUpon>MediaPlaybackView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TvShowEpisodeDetailView.xaml.cs">
+      <DependentUpon>TvShowEpisodeDetailView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TvShowDetailView.xaml.cs">
       <DependentUpon>TvShowDetailView.xaml</DependentUpon>
@@ -361,6 +368,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MediaPlaybackView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\TvShowEpisodeDetailView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

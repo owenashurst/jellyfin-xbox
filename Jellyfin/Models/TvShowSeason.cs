@@ -6,7 +6,10 @@ namespace Jellyfin.Models
     {
         #region Properties
 
-        public string ProductionYear { get; set; }
+        public override string SecondLine
+        {
+            get => Year;
+        }
 
         public int IndexNumber { get; set; }
 
@@ -31,6 +34,11 @@ namespace Jellyfin.Models
         #endregion
 
         #region ctor
+
+        public TvShowSeason()
+        {
+            TvShowEpisodes = new ObservableCollectionEx<TvShowEpisode>();
+        }
 
         #endregion
 

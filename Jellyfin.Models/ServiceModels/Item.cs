@@ -1,5 +1,3 @@
-using System;
-
 namespace Jellyfin.Models.ServiceModels
 {
     public class Item
@@ -16,7 +14,7 @@ namespace Jellyfin.Models.ServiceModels
 
         public long RunTimeTicks { get; set; }
 
-        public long ProductionYear { get; set; }
+        public string ProductionYear { get; set; }
 
         public bool IsFolder { get; set; }
 

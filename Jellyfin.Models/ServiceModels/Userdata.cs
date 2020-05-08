@@ -2,7 +2,7 @@ using System;
 
 namespace Jellyfin.Models.ServiceModels
 {
-    public class Userdata
+    public class UserData
     {
         public float PlayedPercentage { get; set; }
         public long PlaybackPositionTicks { get; set; }

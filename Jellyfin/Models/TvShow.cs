@@ -9,6 +9,11 @@ namespace Jellyfin.Models
     {
         #region Properties
 
+        public override string SecondLine
+        {
+            get => Year;
+        }
+
         #region Seasons
 
         private ObservableCollection<TvShowSeason> _seasons;

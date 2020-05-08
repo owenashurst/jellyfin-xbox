@@ -1,21 +1,27 @@
 ﻿using System;
-using Jellyfin.Core.Models;
 
 namespace Jellyfin.Models
 {
-    public class TvShowEpisode : ModelBase
+    public class TvShowEpisode : MediaElementBase
     {
         #region Properties
 
-        public string SeasonNumber { get; set; }
+        public override string SecondLine
+        {
+            get { return $"{SeasonName}, Episode {IndexNumber}"; }
+        }
 
-        public string EpisodeNumber { get; set; }
+        public string SeriesName { get; set; }
 
-        public string EpisodeName { get; set; }
+        public string SeriesId { get; set; }
 
-        public bool IsPlayed { get; set; }
+        public string SeasonId { get; set; }
 
-        public TimeSpan Runtime { get; set; }
+        public string SeasonName { get; set; }
+
+        public DateTime PremiereDate { get; set; }
+
+        public int IndexNumber { get; set; }
 
         public TimeSpan PlayedLength { get; set; }
 

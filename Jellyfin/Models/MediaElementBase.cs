@@ -43,6 +43,13 @@ namespace Jellyfin.Models
 
         #endregion
 
+        public abstract string SecondLine { get; }
+
+        /// <summary>
+        /// The production year of the media element.
+        /// </summary>
+        public string Year { get; set; }
+
         /// <summary>
         /// The Image ID of the backdrop of the movie.
         /// </summary>
@@ -80,7 +87,6 @@ namespace Jellyfin.Models
         /// </summary>
         public string Name { get; set; }
 
-
         /// <summary>
         /// The genres of the media element.
         /// </summary>
@@ -88,7 +94,15 @@ namespace Jellyfin.Models
 
         public string FormattedGenres
         {
-            get => string.Join(", ", Genres);
+            get
+            {
+                if (Genres == null)
+                {
+                    return string.Empty;
+                }
+
+                return string.Join(", ", Genres);
+            }
         }
 
         /// <summary>

@@ -41,7 +41,7 @@ namespace Jellyfin.Models.ServiceModels.Movie
         public Studio[] Studios { get; set; }
         public Genreitem[] GenreItems { get; set; }
         public int LocalTrailerCount { get; set; }
-        public Userdata UserData { get; set; }
+        public UserData UserData { get; set; }
         public int SpecialFeatureCount { get; set; }
         public string DisplayPreferencesId { get; set; }
         public object[] Tags { get; set; }

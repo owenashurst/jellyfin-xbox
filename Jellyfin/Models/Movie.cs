@@ -8,13 +8,12 @@ namespace Jellyfin.Models
     public class Movie : MediaElementBase
     {
         #region Properties
-        
-        /// <summary>
-        /// The year of the release.
-        /// See field ProductionYear
-        /// </summary>
-        public string Year { get; set; }
 
+        public override string SecondLine
+        {
+            get => Year;
+        }
+        
         /// <summary>
         /// Indicates whether the media element has subtitles.
         /// </summary>

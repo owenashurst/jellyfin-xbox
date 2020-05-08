@@ -12,7 +12,7 @@ namespace Jellyfin.ViewModels
     /// <summary>
     /// View model for listing the tv shows available.
     /// </summary>
-    public class TvShowListViewModel : MediaElementListViewModelBase
+    public class TvShowListViewModel : NavigableMediaElementViewModelBase
     {
         #region Properties
 

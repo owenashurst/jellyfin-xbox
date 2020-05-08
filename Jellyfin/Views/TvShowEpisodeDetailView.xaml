@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="Jellyfin.Views.TvShowDetailView"
+    x:Class="Jellyfin.Views.TvShowEpisodeDetailView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -8,7 +8,7 @@
     xmlns:userControls="using:Jellyfin.UserControls"
     mc:Ignorable="d"
     PreviewKeyDown="MovieDetailView_OnPreviewKeyDown"
-    DataContext="{Binding TvShowDetailPage, Source={StaticResource ViewModelLocator}}">
+    DataContext="{Binding TvShowEpisodeDetailPage, Source={StaticResource ViewModelLocator}}">
     <Page.Background>
         <ImageBrush ImageSource="/Assets/Images/background.png" Stretch="UniformToFill"/>
     </Page.Background>
@@ -27,7 +27,7 @@
             <Image Grid.Row="0" Grid.Column="0" Source="{Binding SelectedMediaElement.ImageData, Converter={StaticResource ByteArrayToImageConverter}}" Height="500" Width="400" VerticalAlignment="Top">
             </Image>
 
-            <Grid Grid.Row="0" Grid.Column="1">
+            <Grid Grid.Row="0" Grid.Column="1" Margin="30, 0, 0, 0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -44,7 +44,8 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding SelectedMediaElement}" FontSize="{StaticResource FontL}" Margin="0, 0, 0, 10" />
+                        <TextBlock Text="{Binding SelectedMediaElement.SecondLine}"
+                                   FontSize="{StaticResource FontL}" Margin="0, 0, 0, 10" />
 
                         <StackPanel Grid.Column="1" Orientation="Horizontal">
                             <TextBlock Text="{Binding SelectedMediaElement.CommunityRating}" VerticalAlignment="Center" FontSize="{StaticResource FontL}" Margin="0, 0, 10, 4" />
@@ -77,17 +78,15 @@
                            Margin="0, 20, 0, 20" />
                 </StackPanel>
 
-                <!--<Button Grid.Row="2" Command="{Binding ToolCommand}" Width="80" 
+                <Button Grid.Row="2" Command="{Binding ToolCommand}" Width="80" 
                 FocusVisualPrimaryThickness="2" FocusVisualSecondaryThickness="0"
                     FocusVisualSecondaryBrush="White" FocusVisualPrimaryBrush="Transparent"
                 CommandParameter="Play" Style="{StaticResource SelectableButton}" Padding="0, 5, 0, 5">
                     <Button.Content>
                         <Image Grid.Row="3" Source="../Assets/Images/play-button.png" Width="30" Height="30" />
                     </Button.Content>
-                </Button>-->
+                </Button>
             </Grid>
-
-            
 
             <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Background="#60000000" Margin="-15, 50, -30, 0" Padding="15, 0, 30, 70">
 
@@ -99,24 +98,9 @@
                     </Grid.RowDefinitions>
 
                     <TextBlock Grid.Row="0" Text="EPISODES" FontSize="32" FontWeight="SemiBold" Margin="15, 0, 0, 20" />
-                    <TextBlock Grid.Row="0" Text="{Binding SelectedMediaElement.SelectedSeason}" FontSize="32" FontWeight="SemiBold" Margin="15, 0, 0, 20" />
 
                     <userControls:MediaElementListUserControl Grid.Row="1" IsLong="true"
                         MediaSource="{Binding SelectedSeasonEpisodes}" />
-                </Grid>
-
-
-                <!-- Related seasons Grid -->
-                <Grid Margin="0, 50, 0, 0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-
-                    <TextBlock Grid.Row="0" Text="SEASONS" FontSize="32" FontWeight="SemiBold" Margin="15, 0, 0, 20" />
-
-                    <userControls:MediaElementListUserControl Grid.Row="1"
-                        MediaSource="{Binding SelectedMediaElement.Seasons}" />
                 </Grid>
             </StackPanel>
         </Grid>

@@ -33,6 +33,11 @@ namespace Jellyfin.Services
             get => $"{Globals.Instance.Host}/Shows/{{0}}/Seasons?userId={Globals.Instance.User.Id}&Fields=ItemCounts%2CPrimaryImageAspectRatio%2CBasicSyncInfo%2CCanDelete%2CMediaSourceCount";
         }
 
+        public string GetTvShowEpisodesBySeasonEndpoint
+        {
+            get => $"{Globals.Instance.Host}/Shows/{{0}}/Episodes?seasonId={{1}}&userId={Globals.Instance.User.Id}&Fields=ItemCounts%2CPrimaryImageAspectRatio%2CBasicSyncInfo%2CCanDelete%2CMediaSourceCount%2COverview";
+        }
+
         public string GetRelatedTvShowsEndpoint
         {
             get => $"{Globals.Instance.Host}/Items/{{0}}/Similar?userId={Globals.Instance.User.Id}&limit=12&fields=PrimaryImageAspectRatio";
@@ -53,6 +58,11 @@ namespace Jellyfin.Services
         /// </summary>
         private readonly IAdapter<TvShowSeasonItem, TvShowSeason> _tvShowSeasonAdapter;
 
+        /// <summary>
+        /// Reference for the tv show episode adapter.
+        /// </summary>
+        private readonly IAdapter<TvShowEpisodeItem, TvShowEpisode> _tvShowEpisodeAdapter;
+
         #endregion
 
         #region ctor
@@ -60,6 +70,7 @@ namespace Jellyfin.Services
         public TvShowService(IAdapter<TvShowItem, TvShow> tvShowAdapter,
             IAdapter<TvShowDetailsResult, TvShow> tvShowDetailsAdapter,
             IAdapter<TvShowSeasonItem, TvShowSeason> tvShowSeasonAdapter,
+            IAdapter<TvShowEpisodeItem, TvShowEpisode> tvShowEpisodeAdapter,
             IImageService imageService) : base(imageService)
         {
             _tvShowAdapter = tvShowAdapter ??
@@ -70,6 +81,9 @@ namespace Jellyfin.Services
 
             _tvShowSeasonAdapter = tvShowSeasonAdapter ??
                                    throw new ArgumentNullException(nameof(tvShowSeasonAdapter));
+
+            _tvShowEpisodeAdapter = tvShowEpisodeAdapter ??
+                                    throw new ArgumentNullException(nameof(tvShowEpisodeAdapter));
         }
         
         #endregion
@@ -168,6 +182,45 @@ namespace Jellyfin.Services
                     }
 
                     return seasons;
+                }
+            }
+            catch (Exception xc)
+            {
+                // TODO smurancsik add correct logging
+            }
+
+            return null;
+        }
+
+        public async Task<IEnumerable<TvShowEpisode>> GetEpisodesBy(string tvShowId, string seasonId)
+        {
+            IList<TvShowEpisode> episodes = new List<TvShowEpisode>();
+
+            try
+            {
+                using (HttpClient cli = new HttpClient())
+                {
+                    cli.AddAuthorizationHeaders();
+
+                    HttpResponseMessage result = await cli.GetAsync(string.Format(GetTvShowEpisodesBySeasonEndpoint, tvShowId, seasonId));
+
+                    if (!result.IsSuccessStatusCode)
+                    {
+                        return null;
+                    }
+
+                    string jsonResult = await result.Content.ReadAsStringAsync();
+
+                    TvShowEpisodeResult resultSet = JsonConvert.DeserializeObject<TvShowEpisodeResult>(jsonResult);
+
+                    foreach (TvShowEpisodeItem item in resultSet.Items)
+                    {
+                        TvShowEpisode tvShowEpisode = _tvShowEpisodeAdapter.Convert(item);
+                        episodes.Add(tvShowEpisode);
+                        ImageDownloadQueue.EnqueueTask(tvShowEpisode);
+                    }
+
+                    return episodes;
                 }
             }
             catch (Exception xc)

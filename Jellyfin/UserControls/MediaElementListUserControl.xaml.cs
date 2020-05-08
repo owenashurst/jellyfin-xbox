@@ -33,7 +33,7 @@ namespace Jellyfin.UserControls
 
         #endregion
 
-        #region ItemsSource Dependency Property
+        #region MediaSource Dependency Property
 
         public static readonly DependencyProperty MediaSourceDependency = DependencyProperty.Register("MediaSource", typeof(ObservableCollection<ModelBase>), typeof(MediaElementListUserControl), new PropertyMetadata(null));
 
@@ -84,7 +84,7 @@ namespace Jellyfin.UserControls
 
         private void MediaElementListView_OnItemClick(object sender, ItemClickEventArgs e)
         {
-            MediaElementListViewModelBase dataContext = DataContext as MediaElementListViewModelBase;
+            NavigableMediaElementViewModelBase dataContext = DataContext as NavigableMediaElementViewModelBase;
 
             if (dataContext == null)
             {

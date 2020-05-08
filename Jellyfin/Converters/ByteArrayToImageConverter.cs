@@ -25,7 +25,7 @@ namespace Jellyfin.Converters
                     writer.StoreAsync().GetResults();
                 }
 
-                var image = new BitmapImage();
+                BitmapImage image = new BitmapImage();
                 image.SetSource(ms);
                 return image;
             }

@@ -21,18 +21,19 @@ namespace Jellyfin
         /// </summary>
         public static void RegisterTypes()
         {
-            RegisterServices();
-            RegisterAdapters();
-        }
-
-        public static void RegisterAdapters()
-        {
             IUnityContainer container = Globals.Instance.Container;
 
+            RegisterServices(container);
+            RegisterAdapters(container);
+        }
+
+        public static void RegisterAdapters(IUnityContainer container)
+        {
             container.RegisterType<IAdapter<MovieItem, Movie>, MovieAdapter>();
             container.RegisterType<IAdapter<TvShowItem, TvShow>, TvShowAdapter>();
             container.RegisterType<IAdapter<TvShowDetailsResult, TvShow>, TvShowDetailAdapter>();
             container.RegisterType<IAdapter<TvShowSeasonItem, TvShowSeason>, TvShowSeasonAdapter>();
+            container.RegisterType<IAdapter<TvShowEpisodeItem, TvShowEpisode>, TvShowEpisodeAdapter>();
 
             container.RegisterType<
                 IAdapter<Mediasource, MediaElementPlaybackSource>,
@@ -40,10 +41,8 @@ namespace Jellyfin
             container.RegisterType<IAdapter<MovieDetailsResult, Movie>, MovieDetailAdapter>();
         }
 
-        public static void RegisterServices()
+        public static void RegisterServices(IUnityContainer container)
         {
-            IUnityContainer container = Globals.Instance.Container;
-
             container.RegisterType<IJellyfinNavigationService, JellyfinNavigationService>();
 
             container.RegisterType<IMovieService, MovieService>();

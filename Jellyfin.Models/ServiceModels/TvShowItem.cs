@@ -15,7 +15,7 @@ namespace Jellyfin.Models.ServiceModels
         public string Status { get; set; }
         public DateTime EndDate { get; set; }
 
-        public Userdata UserData { get; set; }
+        public UserData UserData { get; set; }
     }
 
 }

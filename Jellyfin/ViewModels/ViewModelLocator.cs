@@ -1,5 +1,4 @@
-﻿using Jellyfin.Core;
-using Jellyfin.Services.Interfaces;
+﻿using Jellyfin.Services.Interfaces;
 using Unity;
 
 namespace Jellyfin.ViewModels
@@ -45,7 +44,8 @@ namespace Jellyfin.ViewModels
             
             _container.RegisterInstance(new TvShowListViewModel(tvShowService));
             _container.RegisterInstance(new TvShowDetailViewModel(tvShowService, playbackInfoService));
-            
+            _container.RegisterInstance(new TvShowEpisodeDetailViewModel(tvShowService, playbackInfoService));
+
             _container.RegisterInstance(new MediaPlaybackViewModel(reportProgressService));
             _container.RegisterInstance(new LoginViewModel(loginService, settingsService));
         }
@@ -108,6 +108,14 @@ namespace Jellyfin.ViewModels
         public MediaPlaybackViewModel MediaPlaybackPage
         {
             get => _container.Resolve<MediaPlaybackViewModel>();
+        }
+
+        /// <summary>
+        /// Mapping for TV show Episode page - TV show Episode view model.
+        /// </summary>
+        public TvShowEpisodeDetailViewModel TvShowEpisodeDetailPage
+        {
+            get => _container.Resolve<TvShowEpisodeDetailViewModel>();
         }
 
         /// <summary>

@@ -13,7 +13,7 @@ namespace Jellyfin.ViewModels
     /// <summary>
     /// View model for listing the movies available.
     /// </summary>
-    public class MovieListViewModel : MediaElementListViewModelBase
+    public class MovieListViewModel : NavigableMediaElementViewModelBase
     {
         #region Properties
 

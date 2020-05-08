@@ -8,46 +8,19 @@ using Jellyfin.Views;
 
 namespace Jellyfin.ViewModels
 {
-    public class TvShowDetailViewModel : NavigableMediaElementViewModelBase
+    public class TvShowEpisodeDetailViewModel : NavigableMediaElementViewModelBase
     {
         #region Properties
 
-        #region RelatedTvShows
+        /// <summary>
+        /// Reference for the movie service.
+        /// </summary>
+        private readonly ITvShowService _tvShowService;
 
-        private ObservableCollectionEx<TvShow> _relatedTvShows = new ObservableCollectionEx<TvShow>();
-
-        public ObservableCollectionEx<TvShow> RelatedTvShows
-        {
-            get { return _relatedTvShows; }
-            set
-            {
-                _relatedTvShows = value;
-                RaisePropertyChanged(nameof(RelatedTvShows));
-            }
-        }
-
-        #endregion
-
-        #region SelectedSeason
-
-        private TvShowSeason _selectedSeason;
-
-        public TvShowSeason SelectedSeason
-        {
-            get { return _selectedSeason; }
-            set
-            {
-                _selectedSeason = value;
-                RaisePropertyChanged(nameof(SelectedSeason));
-
-                if (value != null)
-                {
-                    SelectedSeasonChanged(value);
-                }
-            }
-        }
-
-        #endregion
+        /// <summary>
+        /// Reference for the playback info service.
+        /// </summary>
+        private readonly IPlaybackInfoService _playbackInfoService;
 
         #region SelectedSeasonEpisodes
 
@@ -65,24 +38,14 @@ namespace Jellyfin.ViewModels
 
         #endregion
 
-        /// <summary>
-        /// Reference for the movie service.
-        /// </summary>
-        private readonly ITvShowService _tvShowService;
-
-        /// <summary>
-        /// Reference for the playback info service.
-        /// </summary>
-        private readonly IPlaybackInfoService _playbackInfoService;
-
         #endregion
 
         #region ctor
 
-        public TvShowDetailViewModel(ITvShowService tvShowService, IPlaybackInfoService playbackInfoService)
+        public TvShowEpisodeDetailViewModel(ITvShowService tvShowService, IPlaybackInfoService playbackInfoService)
         {
             _tvShowService = tvShowService ??
-                            throw new ArgumentNullException(nameof(tvShowService));
+                             throw new ArgumentNullException(nameof(tvShowService));
 
             _playbackInfoService = playbackInfoService ??
                                    throw new ArgumentNullException(nameof(tvShowService));
@@ -111,41 +74,21 @@ namespace Jellyfin.ViewModels
             }
         }
 
-        public async Task GetTvShowDetails(MediaElementBase tvShow)
+        public async Task GetTvShowDetails(MediaElementBase mediaElementBase)
         {
-            RelatedTvShows.Clear();
-            SelectedMediaElement = await _tvShowService.GetTvShowDetails(tvShow.Id);
+            SelectedMediaElement = mediaElementBase;
 
-            TvShow retrievedTvShow = (TvShow) SelectedMediaElement;
-
-            foreach (TvShowSeason season in await _tvShowService.GetSeasonsBy(tvShow.Id))
-            {
-                retrievedTvShow.Seasons.Add(season);
-            }
-
-            SelectedSeason = retrievedTvShow.Seasons[0];
-
-            //foreach (TvShow relatedTvShow in await _tvShowService.GetRelatedTvShows(tvShow.Id))
-            //{
-            //    RelatedTvShows.Add(relatedTvShow);
-            //}
-
-            if (retrievedTvShow.PlaybackInformation == null)
-            {
-                retrievedTvShow.PlaybackInformation = await _playbackInfoService.GetPlaybackInformation(tvShow.Id);
-            }
-        }
-
-        private async Task SelectedSeasonChanged(TvShowSeason season)
-        {
+            TvShowEpisode gotEpisode = (TvShowEpisode) SelectedMediaElement;
             foreach (TvShowEpisode episode in
-                await _tvShowService.GetEpisodesBy(SelectedMediaElement.Id, season.Id))
+                await _tvShowService.GetEpisodesBy(gotEpisode.SeriesId, gotEpisode.SeasonId))
             {
-                season.TvShowEpisodes.Add(episode);
+                SelectedSeasonEpisodes.Add(episode);
             }
 
-            SelectedSeasonEpisodes = season.TvShowEpisodes;
-            RaisePropertyChanged(nameof(SelectedSeasonEpisodes));
+            if (gotEpisode.PlaybackInformation == null)
+            {
+                gotEpisode.PlaybackInformation = await _playbackInfoService.GetPlaybackInformation(gotEpisode.Id);
+            }
         }
 
         private void Play()

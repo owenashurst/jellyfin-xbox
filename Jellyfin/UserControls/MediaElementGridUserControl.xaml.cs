@@ -69,7 +69,7 @@ namespace Jellyfin.UserControls
 
         private void MediaElementGridView_OnItemClick(object sender, ItemClickEventArgs e)
         {
-            MediaElementListViewModelBase dataContext = DataContext as MediaElementListViewModelBase;
+            NavigableMediaElementViewModelBase dataContext = DataContext as NavigableMediaElementViewModelBase;
 
             if (dataContext == null)
             {

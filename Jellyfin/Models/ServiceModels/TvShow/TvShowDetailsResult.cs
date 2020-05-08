@@ -36,7 +36,7 @@ namespace Jellyfin.Models.ServiceModels.TvShow
         public Studio[] Studios { get; set; }
         public Genreitem[] GenreItems { get; set; }
         public int LocalTrailerCount { get; set; }
-        public Userdata UserData { get; set; }
+        public UserData UserData { get; set; }
         public int RecursiveItemCount { get; set; }
         public int ChildCount { get; set; }
         public int SpecialFeatureCount { get; set; }
