@@ -10,6 +10,8 @@
 
         public bool WasPlaybackPopupShown { get; set; }
 
+        public MediaElementBase NextMediaElement { get; set; }
+
         #endregion
     }
 }

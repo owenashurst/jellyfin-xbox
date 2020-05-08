@@ -21,6 +21,17 @@ namespace Jellyfin.UserControls
 
         #endregion
 
+        #region IsProgressBarVisible Dependency Property
+
+        public static readonly DependencyProperty IsProgressBarVisibleDependency = DependencyProperty.Register("IsProgressBarVisible", typeof(bool), typeof(MediaElementItemUserControl), new PropertyMetadata(false));
+
+        public bool IsProgressBarVisible
+        {
+            get => (bool)GetValue(IsProgressBarVisibleDependency);
+            set => SetValue(IsProgressBarVisibleDependency, value);
+        }
+
+        #endregion
 
         #region Properties
 

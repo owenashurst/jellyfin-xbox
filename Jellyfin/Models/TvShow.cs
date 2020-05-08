@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+﻿using Jellyfin.Extensions;
 
 namespace Jellyfin.Models
 {
@@ -11,23 +11,24 @@ namespace Jellyfin.Models
 
         public override string SecondLine
         {
-            get => Year;
+            get { return Year; }
         }
 
         #region Seasons
 
-        private ObservableCollection<TvShowSeason> _seasons;
+        private ObservableCollectionEx<TvShowSeason> _seasons;
 
         /// <summary>
         /// The property for the seasons of this tv show.
         /// </summary>
-        public ObservableCollection<TvShowSeason> Seasons
+        public ObservableCollectionEx<TvShowSeason> Seasons
         {
             get { return _seasons; }
             set
             {
                 _seasons = value;
                 RaisePropertyChanged(nameof(Seasons));
+                RaisePropertyChanged(nameof(SecondLine));
             }
         }
 
@@ -55,11 +56,11 @@ namespace Jellyfin.Models
 
         public TvShow()
         {
-            Seasons = new ObservableCollection<TvShowSeason>();
+            Seasons = new ObservableCollectionEx<TvShowSeason>();
         }
 
         #endregion
-        
+
         #region Overrides
 
         public override string ToString()

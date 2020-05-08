@@ -1,10 +1,10 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.System;
 using Jellyfin.Extensions;
 using Jellyfin.Models;
 using Jellyfin.Services.Interfaces;
-using Jellyfin.Views;
 
 namespace Jellyfin.ViewModels
 {
@@ -38,12 +38,40 @@ namespace Jellyfin.ViewModels
             set
             {
                 _selectedSeason = value;
+                RaisePropertyChanged(nameof(SeasonEpisodesText));
                 RaisePropertyChanged(nameof(SelectedSeason));
 
                 if (value != null)
                 {
                     SelectedSeasonChanged(value);
                 }
+            }
+        }
+
+        #endregion
+
+        #region SeasonEpisodesText
+
+        public string SeasonEpisodesText
+        {
+            get
+            {
+                if (SelectedSeason == null)
+                {
+                    return string.Empty;
+                }
+
+                if (SelectedSeasonEpisodes == null)
+                {
+                    return string.Empty;
+                }
+
+                if (!SelectedSeasonEpisodes.Any())
+                {
+                    return SelectedSeason.Name;
+                }
+
+                return SelectedSeason.Name + " • " + SelectedSeasonEpisodes.Count + " Episodes";
             }
         }
 
@@ -96,15 +124,6 @@ namespace Jellyfin.ViewModels
         {
             switch (commandParameter)
             {
-                case "Play":
-                    Play();
-                    break;
-                case "PlayFromBeginning":
-                    PlayFromBeginning(false);
-                    break;
-                case "PlayFromPosition":
-                    PlayFromPosition();
-                    break;
                 default:
                     base.Execute(commandParameter);
                     break;
@@ -118,7 +137,7 @@ namespace Jellyfin.ViewModels
 
             TvShow retrievedTvShow = (TvShow) SelectedMediaElement;
 
-            foreach (TvShowSeason season in await _tvShowService.GetSeasonsBy(tvShow.Id))
+            foreach (TvShowSeason season in await _tvShowService.GetSeasonsBy((TvShow)tvShow))
             {
                 retrievedTvShow.Seasons.Add(season);
             }
@@ -139,45 +158,17 @@ namespace Jellyfin.ViewModels
         private async Task SelectedSeasonChanged(TvShowSeason season)
         {
             foreach (TvShowEpisode episode in
-                await _tvShowService.GetEpisodesBy(SelectedMediaElement.Id, season.Id))
+                await _tvShowService.GetEpisodesBy((TvShow)SelectedMediaElement, season))
             {
-                season.TvShowEpisodes.Add(episode);
+                if (season.TvShowEpisodes.All(q => q.Id != episode.Id))
+                {
+                    season.TvShowEpisodes.Add(episode);
+                }
             }
 
             SelectedSeasonEpisodes = season.TvShowEpisodes;
             RaisePropertyChanged(nameof(SelectedSeasonEpisodes));
-        }
-
-        private void Play()
-        {
-            if (SelectedMediaElement.PlaybackPosition != TimeSpan.Zero && SelectedMediaElement.PlaybackPosition.TotalMinutes > 2 && SelectedMediaElement.PlaybackRemaining.TotalMinutes > 2)
-            {
-                NavigationService.Navigate(typeof(PlaybackConfirmationView), SelectedMediaElement);
-            }
-            else
-            {
-                PlayFromBeginning(false);
-            }
-        }
-
-        private void PlayFromBeginning(bool isPopupDisplayed)
-        {
-            NavigationService.Navigate(typeof(MediaPlaybackView), new PlaybackViewParameterModel
-            {
-                SelectedMediaElement = SelectedMediaElement,
-                IsPlaybackFromBeginning = true,
-                WasPlaybackPopupShown = isPopupDisplayed
-            });
-        }
-
-        private void PlayFromPosition()
-        {
-            NavigationService.Navigate(typeof(MediaPlaybackView), new PlaybackViewParameterModel
-            {
-                SelectedMediaElement = SelectedMediaElement,
-                IsPlaybackFromBeginning = false,
-                WasPlaybackPopupShown = true
-            });
+            RaisePropertyChanged(nameof(SeasonEpisodesText));
         }
 
         #endregion

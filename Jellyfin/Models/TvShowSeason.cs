@@ -6,6 +6,8 @@ namespace Jellyfin.Models
     {
         #region Properties
 
+        public TvShow TvShow { get; set; }
+
         public override string SecondLine
         {
             get => Year;

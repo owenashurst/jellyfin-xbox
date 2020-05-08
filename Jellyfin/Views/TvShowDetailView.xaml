@@ -89,7 +89,7 @@
 
             
 
-            <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Background="#60000000" Margin="-15, 50, -30, 0" Padding="15, 0, 30, 70">
+            <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Background="#60000000" Margin="-15, 50, -30, 0" Padding="15, 0, 0, 70">
 
                 <!-- Related episodes Grid -->
                 <Grid Margin="0, 50, 0, 0">
@@ -98,8 +98,7 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" Text="EPISODES" FontSize="32" FontWeight="SemiBold" Margin="15, 0, 0, 20" />
-                    <TextBlock Grid.Row="0" Text="{Binding SelectedMediaElement.SelectedSeason}" FontSize="32" FontWeight="SemiBold" Margin="15, 0, 0, 20" />
+                    <TextBlock Grid.Row="0" Text="{Binding SeasonEpisodesText, Converter={StaticResource StringToUpperConverter}}" FontSize="32" FontWeight="SemiBold" Margin="30, 0, 0, 20" />
 
                     <userControls:MediaElementListUserControl Grid.Row="1" IsLong="true"
                         MediaSource="{Binding SelectedSeasonEpisodes}" />
@@ -113,7 +112,7 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" Text="SEASONS" FontSize="32" FontWeight="SemiBold" Margin="15, 0, 0, 20" />
+                    <TextBlock Grid.Row="0" Text="SEASONS" FontSize="32" FontWeight="SemiBold" Margin="30, 0, 0, 20" />
 
                     <userControls:MediaElementListUserControl Grid.Row="1"
                         MediaSource="{Binding SelectedMediaElement.Seasons}" />

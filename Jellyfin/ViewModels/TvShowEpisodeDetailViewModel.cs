@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.System;
 using Jellyfin.Extensions;
@@ -80,7 +81,7 @@ namespace Jellyfin.ViewModels
 
             TvShowEpisode gotEpisode = (TvShowEpisode) SelectedMediaElement;
             foreach (TvShowEpisode episode in
-                await _tvShowService.GetEpisodesBy(gotEpisode.SeriesId, gotEpisode.SeasonId))
+                await _tvShowService.GetEpisodesBy(gotEpisode.TvShow, gotEpisode.Season))
             {
                 SelectedSeasonEpisodes.Add(episode);
             }
@@ -109,7 +110,8 @@ namespace Jellyfin.ViewModels
             {
                 SelectedMediaElement = SelectedMediaElement,
                 IsPlaybackFromBeginning = true,
-                WasPlaybackPopupShown = isPopupDisplayed
+                WasPlaybackPopupShown = isPopupDisplayed,
+                NextMediaElement = GetNextMediaElement().Result
             });
         }
 
@@ -119,11 +121,36 @@ namespace Jellyfin.ViewModels
             {
                 SelectedMediaElement = SelectedMediaElement,
                 IsPlaybackFromBeginning = false,
-                WasPlaybackPopupShown = true
+                WasPlaybackPopupShown = true,
+                NextMediaElement = GetNextMediaElement().Result
             });
         }
 
-        #endregion
+        private async Task<MediaElementBase> GetNextMediaElement()
+        {
+            var episode = (TvShowEpisode) SelectedMediaElement;
+            var episodes = episode.Season.TvShowEpisodes;
+
+            if (episodes.IndexOf(episode) == episodes.Count)
+            {
+                var season = episode.Season;
+                var seasons = episode.TvShow.Seasons;
+                if (seasons.IndexOf(season) == seasons.Count)
+                {
+                    return null;
+                } else
+                {
+                    var nextSeason = seasons[seasons.IndexOf(season) + 1];
+                    var nextSeasonEpisodes = await _tvShowService.GetEpisodesBy(episode.TvShow, nextSeason);
+
+                    return nextSeasonEpisodes.FirstOrDefault();
+                }
+            }
+            else
+            {
+                return episodes[episodes.IndexOf(episode) + 1];
+            }
+        }
 
         public bool HandleKeyPressed(VirtualKey key)
         {
@@ -136,5 +163,7 @@ namespace Jellyfin.ViewModels
                     return false;
             }
         }
+
+        #endregion
     }
 }

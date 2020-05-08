@@ -25,17 +25,17 @@ namespace Jellyfin.Services.Interfaces
         /// <summary>
         /// Retrieves seasons by tv show id.
         /// </summary>
-        /// <param name="tvShowId">The tv show id to requested.</param>
+        /// <param name="tvShow">The tv show id to request.</param>
         /// <returns></returns>
-        Task<IEnumerable<TvShowSeason>> GetSeasonsBy(string tvShowId);
+        Task<IEnumerable<TvShowSeason>> GetSeasonsBy(TvShow tvShow);
 
         /// <summary>
         /// Retrieves episodes by season id.
         /// </summary>
-        /// <param name="tvShowId">The tv show id to requested.</param>
-        /// <param name="seasonId">The season ID of the tv show provided.</param>
+        /// <param name="tvShow">The tv show to request.</param>
+        /// <param name="season">The season of the tv show requested.</param>
         /// <returns></returns>
-        Task<IEnumerable<TvShowEpisode>> GetEpisodesBy(string tvShowId, string seasonId);
+        Task<IEnumerable<TvShowEpisode>> GetEpisodesBy(TvShow tvShow, TvShowSeason season);
 
         /// <summary>
         /// Retrieves tv shows which are related to the provided tv show.

@@ -22,6 +22,7 @@
         <DataTemplate>
                 <local:MediaElementItemUserControl
                     IsLong="{Binding ElementName=UI, Path=IsLong, UpdateSourceTrigger=PropertyChanged}"
+                    IsProgressBarVisible="{Binding ElementName=UI, Path=IsProgressBarVisible, UpdateSourceTrigger=PropertyChanged}"
                     DataContext="{Binding}" />
         </DataTemplate>
         </ListView.ItemTemplate>

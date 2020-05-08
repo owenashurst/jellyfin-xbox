@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Jellyfin.Core;
@@ -153,7 +154,7 @@ namespace Jellyfin.Services
         }
 
         // todo smurancsik: validate input.
-        public async Task<IEnumerable<TvShowSeason>> GetSeasonsBy(string tvShowId)
+        public async Task<IEnumerable<TvShowSeason>> GetSeasonsBy(TvShow tvShow)
         {
             IList<TvShowSeason> seasons = new List<TvShowSeason>();
 
@@ -163,7 +164,7 @@ namespace Jellyfin.Services
                 {
                     cli.AddAuthorizationHeaders();
 
-                    HttpResponseMessage result = await cli.GetAsync(string.Format(GetTvShowSeasonsByTvShowIdEndpoint, tvShowId));
+                    HttpResponseMessage result = await cli.GetAsync(string.Format(GetTvShowSeasonsByTvShowIdEndpoint, tvShow.Id));
 
                     if (!result.IsSuccessStatusCode)
                     {
@@ -178,6 +179,14 @@ namespace Jellyfin.Services
                     {
                         TvShowSeason tvShowSeason = _tvShowSeasonAdapter.Convert(item);
                         seasons.Add(tvShowSeason);
+
+                        tvShowSeason.TvShow = tvShow;
+
+                        if (tvShow.Seasons.All(q => q.Id != tvShowSeason.Id))
+                        {
+                            tvShow.Seasons.Add(tvShowSeason);
+                        }
+
                         ImageDownloadQueue.EnqueueTask(tvShowSeason);
                     }
 
@@ -192,7 +201,7 @@ namespace Jellyfin.Services
             return null;
         }
 
-        public async Task<IEnumerable<TvShowEpisode>> GetEpisodesBy(string tvShowId, string seasonId)
+        public async Task<IEnumerable<TvShowEpisode>> GetEpisodesBy(TvShow tvShow, TvShowSeason season)
         {
             IList<TvShowEpisode> episodes = new List<TvShowEpisode>();
 
@@ -202,7 +211,7 @@ namespace Jellyfin.Services
                 {
                     cli.AddAuthorizationHeaders();
 
-                    HttpResponseMessage result = await cli.GetAsync(string.Format(GetTvShowEpisodesBySeasonEndpoint, tvShowId, seasonId));
+                    HttpResponseMessage result = await cli.GetAsync(string.Format(GetTvShowEpisodesBySeasonEndpoint, tvShow.Id, season.Id));
 
                     if (!result.IsSuccessStatusCode)
                     {
@@ -217,6 +226,15 @@ namespace Jellyfin.Services
                     {
                         TvShowEpisode tvShowEpisode = _tvShowEpisodeAdapter.Convert(item);
                         episodes.Add(tvShowEpisode);
+
+                        tvShowEpisode.Season = season;
+                        tvShowEpisode.TvShow = tvShow;
+
+                        if (season.TvShowEpisodes.All(q => q.Id != tvShowEpisode.Id))
+                        {
+                            season.TvShowEpisodes.Add(tvShowEpisode);
+                        }
+
                         ImageDownloadQueue.EnqueueTask(tvShowEpisode);
                     }
 

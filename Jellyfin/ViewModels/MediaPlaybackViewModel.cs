@@ -7,6 +7,7 @@ using Windows.UI.Xaml.Controls;
 using Jellyfin.Core;
 using Jellyfin.Models;
 using Jellyfin.Services.Interfaces;
+using Jellyfin.Views;
 
 namespace Jellyfin.ViewModels
 {
@@ -263,6 +264,11 @@ namespace Jellyfin.ViewModels
             {
                 NavigationService.GoBack();
             }
+        }
+
+        public void PromptNextEpisode(PlaybackViewParameterModel playbackViewParameterModel)
+        {
+            NavigationService.Navigate(typeof(PlaybackFinishedView), playbackViewParameterModel);
         }
 
         #region Seek implementation

@@ -11,10 +11,16 @@ namespace Jellyfin.Models
             get { return $"{SeasonName}, Episode {IndexNumber}"; }
         }
 
+        public TvShow TvShow { get; set; }
+
         public string SeriesName { get; set; }
 
+        [Obsolete("Use TvShow.Id.")]
         public string SeriesId { get; set; }
 
+        public TvShowSeason Season { get; set; }
+
+        [Obsolete("Use Season.Id.")]
         public string SeasonId { get; set; }
 
         public string SeasonName { get; set; }
