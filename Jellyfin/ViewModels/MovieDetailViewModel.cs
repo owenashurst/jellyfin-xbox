@@ -100,14 +100,14 @@ namespace Jellyfin.ViewModels
                     throw new ArgumentNullException(nameof(movieService));
 
             _playbackInfoService = playbackInfoService ??
-                            throw new ArgumentNullException(nameof(movieService));
+                            throw new ArgumentNullException(nameof(playbackInfoService));
         }
 
         #endregion
 
         #region Additional methods
 
-        protected override void Execute(string commandParameter)
+        public override void Execute(string commandParameter)
         {
             switch (commandParameter)
             {

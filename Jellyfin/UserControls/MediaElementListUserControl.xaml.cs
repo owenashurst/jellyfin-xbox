@@ -45,6 +45,51 @@ namespace Jellyfin.UserControls
 
         #endregion
 
+        #region SelectedMediaElement Dependency Property
+
+        public static readonly DependencyProperty SelectedMediaElementDependency = DependencyProperty.Register("SelectedMediaElement", typeof(ModelBase), typeof(MediaElementListUserControl), new PropertyMetadata(null, SelectedMediaElementPropertyChanged));
+
+        private static void SelectedMediaElementPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.NewValue != null)
+            {
+                MediaElementListUserControl c = d as MediaElementListUserControl;
+                c.itemsContainer.SelectedValue = e.NewValue;
+            }
+        }
+
+        public ModelBase SelectedMediaElement
+        {
+            get => (ModelBase)GetValue(SelectedMediaElementDependency);
+            set => SetValue(SelectedMediaElementDependency, value);
+        }
+
+        #endregion
+
+        #region IsShowSeriesNameAsSecondLine Dependency Property
+
+        public static readonly DependencyProperty IsShowSeriesNameAsSecondLineDependency = DependencyProperty.Register("IsShowSeriesNameAsSecondLine", typeof(bool), typeof(MediaElementListUserControl), new PropertyMetadata(null));
+
+        public bool IsShowSeriesNameAsSecondLine
+        {
+            get => (bool)GetValue(IsShowSeriesNameAsSecondLineDependency);
+            set => SetValue(IsShowSeriesNameAsSecondLineDependency, value);
+        }
+
+        #endregion
+
+        #region IsDirectPlay Dependency Property
+
+        public static readonly DependencyProperty IsDirectPlayDependency = DependencyProperty.Register("IsDirectPlay", typeof(bool), typeof(MediaElementListUserControl), new PropertyMetadata(null));
+
+        public bool IsDirectPlay
+        {
+            get => (bool)GetValue(IsDirectPlayDependency);
+            set => SetValue(IsDirectPlayDependency, value);
+        }
+
+        #endregion
+
         #region IsLong Dependency Property
 
         public static readonly DependencyProperty IsLongDependency = DependencyProperty.Register("IsLong", typeof(bool), typeof(MediaElementListUserControl), new PropertyMetadata(false));
@@ -105,7 +150,15 @@ namespace Jellyfin.UserControls
             }
 
             dataContext.SelectedMediaElement = e.ClickedItem as MediaElementBase;
-            dataContext.NavigateToSelected();
+
+            if (IsDirectPlay)
+            {
+                dataContext.Execute("Play");
+            }
+            else
+            {
+                dataContext.NavigateToSelected();
+            }
         }
         
         private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -137,7 +190,11 @@ namespace Jellyfin.UserControls
                 ListViewItem selectedItem = (ListViewItem)itemsContainer.ContainerFromItem(addedItem);
                 MediaElementItemUserControl result = ItemFromGridViewItem(selectedItem);
 
-                result?.FocusGot();
+                if (result != null)
+                {
+                    result.FocusGot();
+                    SelectedMediaElement = result.DataContext as ModelBase;
+                }
             }
         }
 

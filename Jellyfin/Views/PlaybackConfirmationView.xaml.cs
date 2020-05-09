@@ -1,4 +1,6 @@
 ﻿using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Navigation;
+using Jellyfin.Models;
 using Jellyfin.ViewModels;
 
 namespace Jellyfin.Views
@@ -13,9 +15,23 @@ namespace Jellyfin.Views
             InitializeComponent();
         }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            MediaElementBase selectedMediaElement = e.Parameter as MediaElementBase;
+            MediaElementBase nextMediaElement = null;
+            if (selectedMediaElement == null)
+            {
+                PlaybackViewParameterModel m = e.Parameter as PlaybackViewParameterModel;
+                selectedMediaElement = m.SelectedMediaElement;
+                nextMediaElement = m.NextMediaElement;
+            }
+            (DataContext as PlaybackConfirmationViewModel).SelectedMediaElement = selectedMediaElement;
+            (DataContext as PlaybackConfirmationViewModel).NextMediaElement = nextMediaElement;
+        }
+
         private void PlaybackConfirmationView_OnPreviewKeyDown(object sender, KeyRoutedEventArgs e)
         {
-            if ((DataContext as MovieDetailViewModel).HandleKeyPressed(e.Key))
+            if ((DataContext as PlaybackConfirmationViewModel).HandleKeyPressed(e.Key))
             {
                 e.Handled = true;
             }

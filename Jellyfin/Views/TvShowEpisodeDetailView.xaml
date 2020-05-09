@@ -13,7 +13,7 @@
         <ImageBrush ImageSource="/Assets/Images/background.png" Stretch="UniformToFill"/>
     </Page.Background>
     <ScrollViewer>
-        <Grid Margin="15, 30, 30, 0">
+        <Grid Margin="15, 100, 30, 0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
@@ -21,11 +21,11 @@
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="410" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Margin="0, 0, 0, 60"
+            <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Margin="0, 0, 0, 60" Visibility="Collapsed"
                 Orientation="Horizontal" BorderThickness="2">
                 <Button Command="{Binding ToolCommand}" CommandParameter="Home"
                         Style="{StaticResource DetailHeaderButton}">
@@ -49,8 +49,18 @@
                 </Button>
             </StackPanel>
 
-            <Image Grid.Row="1" Grid.Column="0" Source="{Binding SelectedMediaElement.BackdropImageData, Converter={StaticResource ByteArrayToImageConverter}}" Height="500" Width="400" VerticalAlignment="Top">
-            </Image>
+            <StackPanel Grid.Row="1" Grid.Column="0">
+                <Image Source="{Binding SelectedMediaElement.BackdropImageData, Converter={StaticResource ByteArrayToImageConverter}}" Height="300" Width="400" VerticalAlignment="Top" />
+
+                <Button Command="{Binding ToolCommand}" Width="80" 
+                        FocusVisualPrimaryThickness="2" FocusVisualSecondaryThickness="0"
+                        FocusVisualSecondaryBrush="White" FocusVisualPrimaryBrush="Transparent"
+                        CommandParameter="Play" Style="{StaticResource SelectableButton}" Padding="0, 5, 0, 5">
+                    <Button.Content>
+                        <Image Grid.Row="3" Source="../Assets/Images/play-button.png" Width="30" Height="30" />
+                    </Button.Content>
+                </Button>
+            </StackPanel>
 
             <Grid Grid.Row="1" Grid.Column="1" Margin="30, 0, 0, 0">
                 <Grid.RowDefinitions>
@@ -102,18 +112,10 @@
                     <TextBlock Text="{Binding SelectedMediaElement.Description}" TextWrapping="Wrap" FontSize="{StaticResource FontL}"
                            Margin="0, 20, 0, 20" />
                 </StackPanel>
-
-                <Button Grid.Row="2" Command="{Binding ToolCommand}" Width="80" 
-                FocusVisualPrimaryThickness="2" FocusVisualSecondaryThickness="0"
-                    FocusVisualSecondaryBrush="White" FocusVisualPrimaryBrush="Transparent"
-                CommandParameter="Play" Style="{StaticResource SelectableButton}" Padding="0, 5, 0, 5">
-                    <Button.Content>
-                        <Image Grid.Row="3" Source="../Assets/Images/play-button.png" Width="30" Height="30" />
-                    </Button.Content>
-                </Button>
             </Grid>
 
-            <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Background="#60000000" Margin="-15, 50, -30, 0" Padding="15, 0, 30, 70">
+            <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                Background="#60000000" Margin="-15, 50, -30, 0" Padding="15, 0, 30, 70">
 
                 <!-- Related episodes Grid -->
                 <Grid Margin="0, 50, 0, 0">
@@ -124,8 +126,10 @@
 
                     <TextBlock Grid.Row="0" Text="EPISODES" FontSize="32" FontWeight="SemiBold" Margin="15, 0, 0, 20" />
 
-                    <userControls:MediaElementListUserControl Grid.Row="1" IsLong="true"
-                        MediaSource="{Binding SelectedSeasonEpisodes}" />
+                    <userControls:MediaElementListUserControl Grid.Row="1" IsLong="true" x:Name="episodesList"
+                        MediaSource="{Binding SelectedSeasonEpisodes}"
+                        SelectedMediaElement="{Binding SelectedMediaElement, Mode=TwoWay}"
+                        IsProgressBarVisible="True" IsDirectPlay="True" />
                 </Grid>
             </StackPanel>
         </Grid>

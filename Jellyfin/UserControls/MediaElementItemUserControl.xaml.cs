@@ -1,9 +1,11 @@
-﻿using Windows.Foundation;
+﻿using System;
+using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
+using Jellyfin.Models;
 
 namespace Jellyfin.UserControls
 {
@@ -11,12 +13,24 @@ namespace Jellyfin.UserControls
     {
         #region IsLong Dependency Property
 
-        public static readonly DependencyProperty IsLongDependency = DependencyProperty.Register("IsLong", typeof(bool), typeof(MediaElementItemUserControl), new PropertyMetadata(false, PropertyChangedCallback));
+        public static readonly DependencyProperty IsLongDependency = DependencyProperty.Register("IsLong", typeof(bool), typeof(MediaElementItemUserControl), new PropertyMetadata(false, WideChanged));
         
         public bool IsLong
         {
             get => (bool)GetValue(IsLongDependency);
             set => SetValue(IsLongDependency, value);
+        }
+
+        #endregion
+
+        #region IsShowSeriesNameAsSecondLine Dependency Property
+
+        public static readonly DependencyProperty IsShowSeriesNameAsSecondLineDependency = DependencyProperty.Register("IsShowSeriesNameAsSecondLine", typeof(bool), typeof(MediaElementItemUserControl), new PropertyMetadata(false));
+
+        public bool IsShowSeriesNameAsSecondLine
+        {
+            get => (bool)GetValue(IsShowSeriesNameAsSecondLineDependency);
+            set => SetValue(IsShowSeriesNameAsSecondLineDependency, value);
         }
 
         #endregion
@@ -47,13 +61,34 @@ namespace Jellyfin.UserControls
         public MediaElementItemUserControl()
         {
             InitializeComponent();
+            DataContextChanged += OnDataContextChanged;
         }
 
         #endregion
 
         #region Additional methods
 
-        private static void PropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
+        private void OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs e)
+        {
+            if (e.NewValue == null)
+            {
+                return;
+            }
+
+            MediaElementBase b = e.NewValue as MediaElementBase;
+
+            if (b == null)
+            {
+                return;
+            }
+
+            if (b.PlaybackPosition.Ticks == 0)
+            {
+                watchedProgressBar.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private static void WideChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
         {
             if(e.NewValue != null && (bool)e.NewValue)
             {
@@ -79,6 +114,7 @@ namespace Jellyfin.UserControls
 
             notMovingTextBlock.Opacity = 1;
             yearTextBlock.Opacity = 1;
+            seriesNameTextBlock.Opacity = 1;
         }
 
         public void FocusLost()
@@ -90,7 +126,7 @@ namespace Jellyfin.UserControls
             notMovingTextBlock.Visibility = Visibility.Visible;
 
             notMovingTextBlock.Opacity = .7;
-            yearTextBlock.Opacity = .7;
+            seriesNameTextBlock.Opacity = .7;
 
             if (IsLong)
             {

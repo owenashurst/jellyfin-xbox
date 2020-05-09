@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.System;
@@ -50,13 +51,15 @@ namespace Jellyfin.ViewModels
 
             _playbackInfoService = playbackInfoService ??
                                    throw new ArgumentNullException(nameof(tvShowService));
+
+            PropertyChanged += OnPropertyChanged;
         }
 
         #endregion
 
         #region Additional methods
 
-        protected override void Execute(string commandParameter)
+        public override void Execute(string commandParameter)
         {
             switch (commandParameter)
             {
@@ -66,24 +69,40 @@ namespace Jellyfin.ViewModels
                 case "PlayFromBeginning":
                     PlayFromBeginning(false);
                     break;
-                case "PlayFromPosition":
-                    PlayFromPosition();
-                    break;
                 default:
                     base.Execute(commandParameter);
                     break;
             }
         }
 
-        public async Task GetTvShowDetails(MediaElementBase mediaElementBase)
+        public async Task ConfigureInitialTvShowDetails(MediaElementBase mediaElementBase)
         {
             SelectedMediaElement = mediaElementBase;
+            await GetTvShowDetailsImpl();
+        }
+
+        private async Task GetTvShowDetailsImpl()
+        {
+            if (SelectedMediaElement == null)
+            {
+                return;
+            }
 
             TvShowEpisode gotEpisode = (TvShowEpisode) SelectedMediaElement;
-            foreach (TvShowEpisode episode in
-                await _tvShowService.GetEpisodesBy(gotEpisode.TvShow, gotEpisode.Season))
+
+            if (!gotEpisode.Season.TvShowEpisodes.Any())
             {
-                SelectedSeasonEpisodes.Add(episode);
+                await _tvShowService.GetEpisodesBy(gotEpisode.TvShow, gotEpisode.Season);
+
+                SelectedSeasonEpisodes.Clear();
+                foreach (TvShowEpisode episode in gotEpisode.Season.TvShowEpisodes)
+                {
+                    SelectedSeasonEpisodes.Add(episode);
+                }
+            }
+            else
+            {
+                RaisePropertyChanged(nameof(SelectedSeasonEpisodes));
             }
 
             if (gotEpisode.PlaybackInformation == null)
@@ -92,11 +111,23 @@ namespace Jellyfin.ViewModels
             }
         }
 
+        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(SelectedMediaElement))
+            {
+                GetTvShowDetailsImpl();
+            }
+        }
+
         private void Play()
         {
             if (SelectedMediaElement.PlaybackPosition != TimeSpan.Zero && SelectedMediaElement.PlaybackPosition.TotalMinutes > 2 && SelectedMediaElement.PlaybackRemaining.TotalMinutes > 2)
             {
-                NavigationService.Navigate(typeof(PlaybackConfirmationView), SelectedMediaElement);
+                NavigationService.Navigate(typeof(PlaybackConfirmationView), new PlaybackViewParameterModel
+                {
+                    SelectedMediaElement = SelectedMediaElement,
+                    NextMediaElement = GetNextMediaElement().Result
+                });
             }
             else
             {
@@ -115,32 +146,42 @@ namespace Jellyfin.ViewModels
             });
         }
 
-        private void PlayFromPosition()
-        {
-            NavigationService.Navigate(typeof(MediaPlaybackView), new PlaybackViewParameterModel
-            {
-                SelectedMediaElement = SelectedMediaElement,
-                IsPlaybackFromBeginning = false,
-                WasPlaybackPopupShown = true,
-                NextMediaElement = GetNextMediaElement().Result
-            });
-        }
-
         private async Task<MediaElementBase> GetNextMediaElement()
         {
             var episode = (TvShowEpisode) SelectedMediaElement;
-            var episodes = episode.Season.TvShowEpisodes;
+            var episodes = episode.Season.TvShowEpisodes.OrderBy(q => q.IndexNumber).ToList();
 
-            if (episodes.IndexOf(episode) == episodes.Count)
+            int epNumber = 0;
+            for (; epNumber < episode.Season.TvShowEpisodes.Count; epNumber++)
+            {
+                TvShowEpisode episodeCheck = episode.Season.TvShowEpisodes[epNumber];
+                if (episode.Id == episodeCheck.Id)
+                {
+                    break;
+                }
+            }
+
+            if (epNumber == episodes.Count)
             {
                 var season = episode.Season;
                 var seasons = episode.TvShow.Seasons;
-                if (seasons.IndexOf(season) == seasons.Count)
+
+                int seasonNumber = 0;
+                for (; seasonNumber < episode.TvShow.Seasons.Count; seasonNumber++)
+                {
+                    TvShowSeason seasonCheck = episode.TvShow.Seasons[seasonNumber];
+                    if (season.Id == seasonCheck.Id)
+                    {
+                        break;
+                    }
+                }
+
+                if (seasonNumber == seasons.Count)
                 {
                     return null;
                 } else
                 {
-                    var nextSeason = seasons[seasons.IndexOf(season) + 1];
+                    var nextSeason = seasons[seasonNumber + 1];
                     var nextSeasonEpisodes = await _tvShowService.GetEpisodesBy(episode.TvShow, nextSeason);
 
                     return nextSeasonEpisodes.FirstOrDefault();
@@ -148,7 +189,7 @@ namespace Jellyfin.ViewModels
             }
             else
             {
-                return episodes[episodes.IndexOf(episode) + 1];
+                return episodes[epNumber + 1];
             }
         }
 

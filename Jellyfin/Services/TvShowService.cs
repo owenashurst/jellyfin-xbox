@@ -39,6 +39,15 @@ namespace Jellyfin.Services
             get => $"{Globals.Instance.Host}/Shows/{{0}}/Episodes?seasonId={{1}}&userId={Globals.Instance.User.Id}&Fields=ItemCounts%2CPrimaryImageAspectRatio%2CBasicSyncInfo%2CCanDelete%2CMediaSourceCount%2COverview";
         }
 
+        public string GetContinueWatchingEpisodesEndpoint
+        {
+            get
+            {
+                return
+                    $"{Globals.Instance.Host}/Users/{Globals.Instance.User.Id}/Items?SortBy=DatePlayed&SortOrder=Descending&IncludeItemTypes=Episode&Filters=IsResumable&Limit=6&Recursive=true&Fields=PrimaryImageAspectRatio%2CSeriesInfo%2COverview%2CUserData%2CBasicSyncInfo&ExcludeLocationTypes=Virtual&ImageTypeLimit=1&EnableImageTypes=Primary%2CBackdrop%2CThumb&EnableTotalRecordCount=false";
+            }
+        }
+
         public string GetRelatedTvShowsEndpoint
         {
             get => $"{Globals.Instance.Host}/Items/{{0}}/Similar?userId={Globals.Instance.User.Id}&limit=12&fields=PrimaryImageAspectRatio";
@@ -234,6 +243,54 @@ namespace Jellyfin.Services
                         {
                             season.TvShowEpisodes.Add(tvShowEpisode);
                         }
+
+                        ImageDownloadQueue.EnqueueTask(tvShowEpisode);
+                    }
+
+                    return episodes;
+                }
+            }
+            catch (Exception xc)
+            {
+                // TODO smurancsik add correct logging
+            }
+
+            return null;
+        }
+
+        public async Task<IEnumerable<TvShowEpisode>> GetContinueWatchingEpisodes()
+        {
+            IList<TvShowEpisode> episodes = new List<TvShowEpisode>();
+
+            try
+            {
+                using (HttpClient cli = new HttpClient())
+                {
+                    cli.AddAuthorizationHeaders();
+
+                    HttpResponseMessage result = await cli.GetAsync(GetContinueWatchingEpisodesEndpoint);
+
+                    if (!result.IsSuccessStatusCode)
+                    {
+                        return null;
+                    }
+
+                    string jsonResult = await result.Content.ReadAsStringAsync();
+
+                    TvShowEpisodeResult resultSet = JsonConvert.DeserializeObject<TvShowEpisodeResult>(jsonResult);
+
+                    foreach (TvShowEpisodeItem item in resultSet.Items)
+                    {
+                        TvShowEpisode tvShowEpisode = _tvShowEpisodeAdapter.Convert(item);
+                        episodes.Add(tvShowEpisode);
+
+                        //tvShowEpisode.Season = season;
+                        //tvShowEpisode.TvShow = tvShow;
+
+                        //if (season.TvShowEpisodes.All(q => q.Id != tvShowEpisode.Id))
+                        //{
+                        //    season.TvShowEpisodes.Add(tvShowEpisode);
+                        //}
 
                         ImageDownloadQueue.EnqueueTask(tvShowEpisode);
                     }

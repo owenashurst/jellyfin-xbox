@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.Globalization;
 using Jellyfin.Extensions;
 using Jellyfin.Models;
+using Jellyfin.Services;
 using Jellyfin.Services.Interfaces;
 
 namespace Jellyfin.ViewModels
@@ -27,28 +28,22 @@ namespace Jellyfin.ViewModels
             {
                 _tvShows = value;
                 RaisePropertyChanged(nameof(TvShows));
-                RaisePropertyChanged(nameof(ContinueWatchingTvShows));
             }
         }
 
         #endregion
 
-        #region ContinueWatchingTvShows
+        #region ContinueWatchingEpisodes
 
-        /// <summary>
-        /// List of tv shows which has already been started.
-        /// </summary>
-        public ObservableCollectionEx<TvShow> ContinueWatchingTvShows
+        private ObservableCollectionEx<TvShowEpisode> _continueWatchingEpisodes = new ObservableCollectionEx<TvShowEpisode>();
+
+        public ObservableCollectionEx<TvShowEpisode> ContinueWatchingEpisodes
         {
-            get
+            get { return _continueWatchingEpisodes; }
+            set
             {
-                if (TvShows == null)
-                {
-                    return new ObservableCollectionEx<TvShow>();
-                }
-
-                List<TvShow> tvShows = TvShows.Where(q => q.PlaybackPosition.Ticks > 0).ToList();
-                return new ObservableCollectionEx<TvShow>(tvShows);
+                _continueWatchingEpisodes = value;
+                RaisePropertyChanged(nameof(ContinueWatchingEpisodes));
             }
         }
 
@@ -92,7 +87,7 @@ namespace Jellyfin.ViewModels
 
         #region Additional methods
 
-        protected override void Execute(string commandParameter)
+        public override void Execute(string commandParameter)
         {
             switch (commandParameter)
             {
@@ -132,7 +127,7 @@ namespace Jellyfin.ViewModels
         /// Loads all the tv shows available.
         /// </summary>
         public async Task Load()
-        {
+        { 
             if (!TvShows.Any())
             {
                 IList<TvShow> tvShows = (await _tvShowService.GetTvShows()).ToList();
@@ -140,8 +135,41 @@ namespace Jellyfin.ViewModels
                 {
                     TvShows.Add(tvShow);
                 }
+            }
 
-                RaisePropertyChanged(nameof(ContinueWatchingTvShows));
+            IList<TvShowEpisode> tvShowEpisodes = (await _tvShowService.GetContinueWatchingEpisodes()).ToList();
+            foreach (TvShowEpisode tvShowEpisode in tvShowEpisodes)
+            {
+                if (ContinueWatchingEpisodes.All(q => q.Id != tvShowEpisode.Id))
+                {
+                    ContinueWatchingEpisodes.Add(tvShowEpisode);
+
+                    TvShow correspondingTvShow = TvShows.FirstOrDefault(q => q.Id == tvShowEpisode.SeriesId);
+                    if (correspondingTvShow != null)
+                    {
+                        tvShowEpisode.TvShow = correspondingTvShow;
+
+                        TvShowSeason correspondingSeason =
+                            correspondingTvShow.Seasons.FirstOrDefault(q => q.Id == tvShowEpisode.SeasonId);
+
+                        if (correspondingSeason != null)
+                        {
+                            tvShowEpisode.Season = correspondingSeason;
+                        }
+                        else
+                        {
+                            IEnumerable<TvShowSeason> seasons = await _tvShowService.GetSeasonsBy(correspondingTvShow);
+
+                            correspondingSeason =
+                                seasons.FirstOrDefault(q => q.Id == tvShowEpisode.SeasonId);
+
+                            tvShowEpisode.Season = correspondingSeason;
+
+                            // It performs creating the graph, I am still in doubt if it's a good idea or not.
+                            await _tvShowService.GetEpisodesBy(correspondingTvShow, correspondingSeason);
+                        }
+                    }
+                }
             }
         }
 

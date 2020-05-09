@@ -14,6 +14,8 @@ namespace Jellyfin.Models.ServiceModels
 
         public int IndexNumber { get; set; }
 
+        public int ParentIndexNumber { get; set; }
+
         public string ParentBackdropItemId { get; set; }
 
         public string[] ParentBackdropImageTags { get; set; }

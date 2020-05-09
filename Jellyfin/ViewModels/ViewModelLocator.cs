@@ -47,6 +47,8 @@ namespace Jellyfin.ViewModels
             _container.RegisterInstance(new TvShowEpisodeDetailViewModel(tvShowService, playbackInfoService));
 
             _container.RegisterInstance(new MediaPlaybackViewModel(reportProgressService));
+            _container.RegisterInstance(new PlaybackConfirmationViewModel());
+            _container.RegisterInstance(new PlaybackFinishedViewModel(tvShowService));
             _container.RegisterInstance(new LoginViewModel(loginService, settingsService));
         }
 
@@ -81,10 +83,20 @@ namespace Jellyfin.ViewModels
         /// <summary>
         /// Mapping for Playback confirmation page - Movie Details View model.
         /// </summary>
-        public MovieDetailViewModel PlaybackConfirmationPage
+        public PlaybackConfirmationViewModel PlaybackConfirmationPage
         {
-            get => _container.Resolve<MovieDetailViewModel>();
+            get => _container.Resolve<PlaybackConfirmationViewModel>();
         }
+
+        /// <summary>
+        /// Mapping for Playback finished page - Playback finished View model.
+        /// </summary>
+        public PlaybackFinishedViewModel PlaybackFinishedPage
+        {
+            get => _container.Resolve<PlaybackFinishedViewModel>();
+        }
+
+        
         
         /// <summary>
         /// Mapping for Movie List Page - Movie list View Model.

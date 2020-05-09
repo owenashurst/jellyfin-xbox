@@ -10,11 +10,14 @@
     <StackPanel x:Name="stackPanel" Orientation="Vertical" Margin="11, 0, 11, 25" Width="250">
         <Border CornerRadius="5" Width="192" Padding="4" x:Name="ImageBorder">
             <StackPanel>
-                <!--<userControls:NewMediaIndicator Visibility="{Binding UnplayedItemCount, Converter={StaticResource GreaterThanZeroToVisibilityConverter}}" HorizontalAlignment="Right" />-->
-                
                 <Image Visibility="{Binding ElementName=UI, Path=IsLong, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=false}" Source="{Binding ImageData, Converter={StaticResource ByteArrayToImageConverter}}" Height="280" />
 
                 <Image Visibility="{Binding ElementName=UI, Path=IsLong, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}, TargetNullValue=Collapsed, FallbackValue=Collapsed}"  Source="{Binding BackdropImageData, Converter={StaticResource ByteArrayToImageConverter}}" Height="265"  />
+
+                <userControls:NewMediaIndicator
+                    Visibility="{Binding IsPlayed, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=false}"
+                    Margin="0, -265, 0, 0" Height="30" Width="50"
+                    HorizontalAlignment="Right" VerticalAlignment="Top" />
             </StackPanel>
         </Border>
 
@@ -41,6 +44,12 @@
         
         <TextBlock Text="{Binding Name}" FontSize="30" x:Name="notMovingTextBlock"
                    Foreground="White" HorizontalAlignment="Center" Opacity=".7" />
+
+        <TextBlock x:Name="seriesNameTextBlock" Opacity=".7"
+                   Visibility="{Binding ElementName=UI, Path=IsShowSeriesNameAsSecondLine, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}"
+                   FontSize="30" Foreground="White" HorizontalAlignment="Center">
+            <Run Text="{Binding SeriesName}" />
+        </TextBlock>
 
         <TextBlock Text="{Binding SecondLine}" x:Name="yearTextBlock" Opacity=".7"
                    FontSize="30" Foreground="White" HorizontalAlignment="Center"/>

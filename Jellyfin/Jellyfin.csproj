@@ -211,6 +211,9 @@
     <Compile Include="UserControls\MediaElementItemUserControl.xaml.cs">
       <DependentUpon>MediaElementItemUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\TvShowRecommendationsUserControl.xaml.cs">
+      <DependentUpon>TvShowRecommendationsUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\TvShowListUserControl.xaml.cs">
       <DependentUpon>TvShowListUserControl.xaml</DependentUpon>
     </Compile>
@@ -231,6 +234,8 @@
     <Compile Include="ViewModels\MediaPlaybackViewModel.cs" />
     <Compile Include="ViewModels\MovieDetailViewModel.cs" />
     <Compile Include="ViewModels\MovieListViewModel.cs" />
+    <Compile Include="ViewModels\PlaybackConfirmationViewModel.cs" />
+    <Compile Include="ViewModels\PlaybackFinishedViewModel.cs" />
     <Compile Include="ViewModels\TvShowDetailViewModel.cs" />
     <Compile Include="ViewModels\TvShowEpisodeDetailViewModel.cs" />
     <Compile Include="ViewModels\TvShowListViewModel.cs" />
@@ -354,6 +359,10 @@
     <Page Include="UserControls\MediaElementItemUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\TvShowRecommendationsUserControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="UserControls\TvShowListUserControl.xaml">
       <Generator>MSBuild:Compile</Generator>

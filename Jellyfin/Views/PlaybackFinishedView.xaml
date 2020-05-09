@@ -1,14 +1,10 @@
 ﻿<Page
     x:Class="Jellyfin.Views.PlaybackFinishedView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewModels="using:Jellyfin.ViewModels"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:uwp="using:FontAwesome.UWP"
-    mc:Ignorable="d"
     PreviewKeyDown="PlaybackFinishedView_OnPreviewKeyDown"
-    DataContext="{Binding PlaybackConfirmationPage, Source={StaticResource ViewModelLocator}}"
-    d:DataContext="{d:DesignInstance viewModels:MovieDetailViewModel}">
+    DataContext="{Binding PlaybackFinishedPage, Source={StaticResource ViewModelLocator}}">
     <Page.Background>
         <ImageBrush ImageSource="/Assets/Images/background.png" Stretch="UniformToFill"/>
     </Page.Background>
@@ -27,12 +23,33 @@
         <Border Grid.Row="1" Background="White" Height="2" Margin="0, 50" />
         
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Content="Return"
+            <StackPanel Margin="0, 0, 120, 0">
+                <TextBlock Text="PREVIOUS" FontSize="{StaticResource FontL}" />
+                <Button
+                    Margin="0, 30, 0, 30"
                     Style="{StaticResource PlaybackConfirmationButton}"
-                    Command="{Binding ToolCommand}" CommandParameter="PlayFromPosition" />
-            <Button Content="Play next"
+                    Command="{Binding ToolCommand}" CommandParameter="PlayFromPosition">
+                    <Button.Content>
+                        <Image Source="{Binding SelectedMediaElement.ImageData}" Height="250" />
+                    </Button.Content>
+                </Button>
+                <TextBlock Text="{Binding SelectedMediaElement.Name}" FontSize="{StaticResource FontL}" />
+                <TextBlock Text="{Binding SelectedMediaElement.TvShow.Name}" FontSize="{StaticResource FontL}" Opacity=".7" />
+                <TextBlock Text="{Binding SelectedMediaElement.SecondLine}" FontSize="{StaticResource FontL}" Opacity=".7" />
+            </StackPanel>
+
+            <StackPanel>
+                <Button
                     Style="{StaticResource PlaybackConfirmationButton}"
-                    Command="{Binding ToolCommand}" CommandParameter="PlayFromBeginning" />
+                    Command="{Binding ToolCommand}" CommandParameter="PlayFromBeginning">
+                    <Button.Content>
+                        <Image Source="{Binding SelectedMediaElement.ImageData}" Height="330" />
+                    </Button.Content>
+                </Button>
+                <TextBlock Text="{Binding NextMediaElement.Name}" FontSize="{StaticResource FontL}" />
+                <TextBlock Text="{Binding NextMediaElement.TvShow.Name}" FontSize="{StaticResource FontL}" Opacity=".7" />
+                <TextBlock Text="{Binding NextMediaElement.SecondLine}" FontSize="{StaticResource FontL}" Opacity=".7" />
+            </StackPanel>
         </StackPanel>
     </Grid>
 </Page>

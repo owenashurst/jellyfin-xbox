@@ -3,12 +3,10 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewModels="using:Jellyfin.ViewModels"
     xmlns:uwp="using:FontAwesome.UWP"
     mc:Ignorable="d"
     PreviewKeyDown="PlaybackConfirmationView_OnPreviewKeyDown"
-    DataContext="{Binding PlaybackConfirmationPage, Source={StaticResource ViewModelLocator}}"
-    d:DataContext="{d:DesignInstance viewModels:MovieDetailViewModel}">
+    DataContext="{Binding PlaybackConfirmationPage, Source={StaticResource ViewModelLocator}}">
     <Page.Background>
         <ImageBrush ImageSource="/Assets/Images/background.png" Stretch="UniformToFill"/>
     </Page.Background>

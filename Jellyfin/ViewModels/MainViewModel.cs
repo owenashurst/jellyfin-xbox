@@ -86,7 +86,7 @@ namespace Jellyfin.ViewModels
 
         #region Additional methods
 
-        protected override void Execute(string commandParameter)
+        public override void Execute(string commandParameter)
         {
             switch (commandParameter)
             {

@@ -8,7 +8,7 @@
             ScrollViewer.HorizontalScrollBarVisibility="Auto"
             ScrollViewer.HorizontalScrollMode="Enabled"                  
             ScrollViewer.VerticalScrollMode="Disabled"
-            x:Name="itemsContainer" GotFocus="ItemsContainer_OnGotFocus"
+            x:Name="itemsContainer" x:FieldModifier="public" GotFocus="ItemsContainer_OnGotFocus"
             ItemsSource="{Binding ElementName=UI, Path=MediaSource, UpdateSourceTrigger=PropertyChanged}"
         Margin="0, 30, 0, 0" IsItemClickEnabled="True"
         SelectionChanged="Selector_OnSelectionChanged"
@@ -23,6 +23,7 @@
                 <local:MediaElementItemUserControl
                     IsLong="{Binding ElementName=UI, Path=IsLong, UpdateSourceTrigger=PropertyChanged}"
                     IsProgressBarVisible="{Binding ElementName=UI, Path=IsProgressBarVisible, UpdateSourceTrigger=PropertyChanged}"
+                    IsShowSeriesNameAsSecondLine="{Binding ElementName=UI, Path=IsShowSeriesNameAsSecondLine, UpdateSourceTrigger=PropertyChanged}"
                     DataContext="{Binding}" />
         </DataTemplate>
         </ListView.ItemTemplate>

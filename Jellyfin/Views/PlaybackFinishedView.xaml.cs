@@ -1,4 +1,6 @@
 ﻿using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Navigation;
+using Jellyfin.Models;
 using Jellyfin.ViewModels;
 
 namespace Jellyfin.Views
@@ -13,9 +15,19 @@ namespace Jellyfin.Views
             InitializeComponent();
         }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            var vpm = e.Parameter as PlaybackViewParameterModel;
+
+            if (vpm != null)
+            {
+                (DataContext as PlaybackFinishedViewModel).Update(vpm);
+            }
+        }
+
         private void PlaybackFinishedView_OnPreviewKeyDown(object sender, KeyRoutedEventArgs e)
         {
-            if ((DataContext as MovieDetailViewModel).HandleKeyPressed(e.Key))
+            if ((DataContext as PlaybackFinishedViewModel).HandleKeyPressed(e.Key))
             {
                 e.Handled = true;
             }

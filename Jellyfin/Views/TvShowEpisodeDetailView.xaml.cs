@@ -35,7 +35,7 @@ namespace Jellyfin.Views
             MediaElementBase mediaElement = e.Parameter as MediaElementBase;
             if (mediaElement != null)
             {
-                (DataContext as TvShowEpisodeDetailViewModel).GetTvShowDetails(mediaElement);
+                (DataContext as TvShowEpisodeDetailViewModel).ConfigureInitialTvShowDetails(mediaElement);
             }
         }
     }

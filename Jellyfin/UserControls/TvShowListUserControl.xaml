@@ -39,8 +39,8 @@
             Visibility="{Binding IsRecommendationsOpened, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=false}"
         />
 
-        <userControls:MovieRecommendationsUserControl Grid.Row="2"
+        <userControls:TvShowRecommendationsUserControl Grid.Row="2"
             Visibility="{Binding IsRecommendationsOpened, Converter={StaticResource BooleanToVisibilityConverter}}"
-            MediaSource="{Binding TvShows}" />
+            />
     </Grid>
 </Frame>

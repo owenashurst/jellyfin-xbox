@@ -38,6 +38,12 @@ namespace Jellyfin.Services.Interfaces
         Task<IEnumerable<TvShowEpisode>> GetEpisodesBy(TvShow tvShow, TvShowSeason season);
 
         /// <summary>
+        /// Retrieves episodes for Continue Watching.. box.
+        /// </summary>
+        /// <returns></returns>
+        Task<IEnumerable<TvShowEpisode>> GetContinueWatchingEpisodes();
+
+        /// <summary>
         /// Retrieves tv shows which are related to the provided tv show.
         /// </summary>
         /// <param name="tvShowId">the ID of the tv show for finding similar media elements.</param>

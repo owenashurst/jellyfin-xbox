@@ -86,7 +86,7 @@ namespace Jellyfin.Core
 
         #region Additional methods
 
-        protected virtual void Execute(string commandParameter)
+        public virtual void Execute(string commandParameter)
         {
             //throw new NotImplementedException();
             // TODO smurancsik: log error
