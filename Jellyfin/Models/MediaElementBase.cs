@@ -160,7 +160,12 @@ namespace Jellyfin.Models
                     return " • Unplayed";
                 }
 
-                return $" • {PlaybackRemaining.Hours} hr {PlaybackRemaining.Minutes} min remaining";
+                if (PlaybackRemaining.TotalHours > 1)
+                {
+                    return $" • {PlaybackRemaining.Hours} hr {PlaybackRemaining.Minutes} min remaining";
+                }
+
+                return $" • {PlaybackRemaining.Minutes} min remaining";
             }
         }
 

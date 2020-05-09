@@ -93,16 +93,13 @@ namespace Jellyfin.ViewModels
             if (!gotEpisode.Season.TvShowEpisodes.Any())
             {
                 await _tvShowService.GetEpisodesBy(gotEpisode.TvShow, gotEpisode.Season);
-
-                SelectedSeasonEpisodes.Clear();
+            }
+            else
+            {
                 foreach (TvShowEpisode episode in gotEpisode.Season.TvShowEpisodes)
                 {
                     SelectedSeasonEpisodes.Add(episode);
                 }
-            }
-            else
-            {
-                RaisePropertyChanged(nameof(SelectedSeasonEpisodes));
             }
 
             if (gotEpisode.PlaybackInformation == null)
