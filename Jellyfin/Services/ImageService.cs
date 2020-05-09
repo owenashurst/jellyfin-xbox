@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Jellyfin.Extensions;
 using Jellyfin.Models;
 using Jellyfin.Services.Interfaces;
-using Newtonsoft.Json;
 
 namespace Jellyfin.Services
 {
@@ -14,11 +12,9 @@ namespace Jellyfin.Services
     {
         #region Properties
 
-        private readonly ISettingsService _settingsService;
+        private readonly ILocalCacheService _localCacheService;
 
-        private bool isCacheEnabled = false;
-
-        private List<ImageCacheItem> ImageCache;
+        private bool isCacheEnabled = true;
 
         public string GetImageEndpoint
         {
@@ -33,34 +29,10 @@ namespace Jellyfin.Services
 
         #region ctor
 
-        public ImageService(ISettingsService settingsService)
+        public ImageService(ILocalCacheService localCacheService)
         {
-            _settingsService = settingsService ??
-                               throw new ArgumentNullException(nameof(settingsService));
-
-
-            if (!isCacheEnabled)
-            {
-                return;
-            }
-
-            string imageCacheJson = _settingsService.GetProperty<string>("ImageCache");
-
-            try
-            {
-                ImageCache = JsonConvert.DeserializeObject<List<ImageCacheItem>>(imageCacheJson);
-
-                if (ImageCache == null)
-                {
-                    ImageCache = new List<ImageCacheItem>();
-                    SaveImageCache();
-                }
-            }
-            catch (Exception xc)
-            {
-                ImageCache = new List<ImageCacheItem>();
-                SaveImageCache();
-            }
+            _localCacheService = localCacheService ??
+                throw new ArgumentNullException(nameof(localCacheService));
         }
 
         #endregion
@@ -85,13 +57,20 @@ namespace Jellyfin.Services
                 return null;
             }
 
+            ImageCacheItem cacheItem = new ImageCacheItem
+            {
+                Id = imageId,
+                ImageType = imageType.ToString(),
+                MediaElementId = id
+            };
+
             if (isCacheEnabled)
             {
-                ImageCacheItem image = ImageCache.FirstOrDefault(q =>
-                    q.Id == imageId && q.ImageType == imageType.ToString() && q.MediaElementId == id);
-                if (image != null)
+                ImageCacheItem retrievedItem = await _localCacheService.Get<ImageCacheItem>(cacheItem.GetFileName());
+
+                if (retrievedItem != null)
                 {
-                    return image.Image;
+                    return retrievedItem.Image;
                 }
             }
 
@@ -106,26 +85,12 @@ namespace Jellyfin.Services
 
                 if (isCacheEnabled)
                 {
-                    ImageCacheItem cacheItem = new ImageCacheItem
-                    {
-                        Id = imageId,
-                        Image = retrievedImage,
-                        ImageType = imageType.ToString(),
-                        MediaElementId = id
-                    };
-
-                    ImageCache.Add(cacheItem);
-                    SaveImageCache();
+                    cacheItem.Image = retrievedImage;
+                    _localCacheService.Set(cacheItem.GetFileName(), cacheItem);
                 }
 
                 return retrievedImage;
             }
-        }
-
-        private void SaveImageCache()
-        {
-            string json = JsonConvert.SerializeObject(ImageCache);
-            _settingsService.SetProperty("ImageCache", json);
         }
 
         #endregion

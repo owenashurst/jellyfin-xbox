@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jellyfin.Models", "Jellyfin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jellyfin.Core", "Jellyfin.Core\Jellyfin.Core.csproj", "{54407F8E-FB53-4123-9538-316C2912066E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jellyfin.Logging", "Jellyfin.Logging\Jellyfin.Logging.csproj", "{3EEFB895-5ADA-4F95-A141-90CF00E8AD73}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -94,6 +96,26 @@ Global
 		{54407F8E-FB53-4123-9538-316C2912066E}.Release|x64.Build.0 = Release|x64
 		{54407F8E-FB53-4123-9538-316C2912066E}.Release|x86.ActiveCfg = Release|x86
 		{54407F8E-FB53-4123-9538-316C2912066E}.Release|x86.Build.0 = Release|x86
+		{3EEFB895-5ADA-4F95-A141-90CF00E8AD73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EEFB895-5ADA-4F95-A141-90CF00E8AD73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EEFB895-5ADA-4F95-A141-90CF00E8AD73}.Debug|ARM.ActiveCfg = Debug|ARM
+		{3EEFB895-5ADA-4F95-A141-90CF00E8AD73}.Debug|ARM.Build.0 = Debug|ARM
+		{3EEFB895-5ADA-4F95-A141-90CF00E8AD73}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{3EEFB895-5ADA-4F95-A141-90CF00E8AD73}.Debug|ARM64.Build.0 = Debug|ARM64
+		{3EEFB895-5ADA-4F95-A141-90CF00E8AD73}.Debug|x64.ActiveCfg = Debug|x64
+		{3EEFB895-5ADA-4F95-A141-90CF00E8AD73}.Debug|x64.Build.0 = Debug|x64
+		{3EEFB895-5ADA-4F95-A141-90CF00E8AD73}.Debug|x86.ActiveCfg = Debug|x86
+		{3EEFB895-5ADA-4F95-A141-90CF00E8AD73}.Debug|x86.Build.0 = Debug|x86
+		{3EEFB895-5ADA-4F95-A141-90CF00E8AD73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EEFB895-5ADA-4F95-A141-90CF00E8AD73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EEFB895-5ADA-4F95-A141-90CF00E8AD73}.Release|ARM.ActiveCfg = Release|ARM
+		{3EEFB895-5ADA-4F95-A141-90CF00E8AD73}.Release|ARM.Build.0 = Release|ARM
+		{3EEFB895-5ADA-4F95-A141-90CF00E8AD73}.Release|ARM64.ActiveCfg = Release|ARM64
+		{3EEFB895-5ADA-4F95-A141-90CF00E8AD73}.Release|ARM64.Build.0 = Release|ARM64
+		{3EEFB895-5ADA-4F95-A141-90CF00E8AD73}.Release|x64.ActiveCfg = Release|x64
+		{3EEFB895-5ADA-4F95-A141-90CF00E8AD73}.Release|x64.Build.0 = Release|x64
+		{3EEFB895-5ADA-4F95-A141-90CF00E8AD73}.Release|x86.ActiveCfg = Release|x86
+		{3EEFB895-5ADA-4F95-A141-90CF00E8AD73}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
