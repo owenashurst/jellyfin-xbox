@@ -11,6 +11,7 @@ using Jellyfin.Core;
 using Jellyfin.Services.Interfaces;
 using Jellyfin.Utils;
 using Jellyfin.Views;
+using NLog;
 using Unity;
 
 namespace Jellyfin

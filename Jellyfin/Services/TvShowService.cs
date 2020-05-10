@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Jellyfin.Core;
 using Jellyfin.Extensions;
+using Jellyfin.Logging;
 using Jellyfin.Models;
 using Jellyfin.Models.ServiceModels;
 using Jellyfin.Models.ServiceModels.TvShow;
@@ -100,6 +101,7 @@ namespace Jellyfin.Services
 
         #region Additional methods
 
+        [LogMethod]
         public async Task<IEnumerable<TvShow>> GetTvShows()
         {
             List<TvShow> tvShowList = new List<TvShow>();
@@ -130,6 +132,7 @@ namespace Jellyfin.Services
             return tvShowList;
         }
 
+        [LogMethod]
         public async Task<TvShow> GetTvShowDetails(string tvShowId)
         {
             try
@@ -163,6 +166,7 @@ namespace Jellyfin.Services
         }
 
         // todo smurancsik: validate input.
+        [LogMethod]
         public async Task<IEnumerable<TvShowSeason>> GetSeasonsBy(TvShow tvShow)
         {
             IList<TvShowSeason> seasons = new List<TvShowSeason>();
@@ -210,6 +214,7 @@ namespace Jellyfin.Services
             return null;
         }
 
+        [LogMethod]
         public async Task<IEnumerable<TvShowEpisode>> GetEpisodesBy(TvShow tvShow, TvShowSeason season)
         {
             IList<TvShowEpisode> episodes = new List<TvShowEpisode>();
@@ -258,6 +263,7 @@ namespace Jellyfin.Services
             return null;
         }
 
+        [LogMethod]
         public async Task<IEnumerable<TvShowEpisode>> GetContinueWatchingEpisodes()
         {
             IList<TvShowEpisode> episodes = new List<TvShowEpisode>();
@@ -306,6 +312,7 @@ namespace Jellyfin.Services
             return null;
         }
 
+        [LogMethod]
         public async Task<IEnumerable<TvShow>> GetRelatedTvShows(string tvShowId)
         {
             //List<TvShow> tvShowList = new List<TvShow>();

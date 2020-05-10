@@ -1,4 +1,5 @@
 ﻿using Jellyfin.Core;
+using Jellyfin.Logging;
 using Jellyfin.Models;
 using Jellyfin.Models.Adapters;
 using Jellyfin.Models.ServiceModels;
@@ -43,6 +44,7 @@ namespace Jellyfin
 
         public static void RegisterServices(IUnityContainer container)
         {
+            container.RegisterType<ILogManager, NLogManager>();
             container.RegisterType<IJellyfinNavigationService, JellyfinNavigationService>();
 
             container.RegisterType<IMovieService, MovieService>();

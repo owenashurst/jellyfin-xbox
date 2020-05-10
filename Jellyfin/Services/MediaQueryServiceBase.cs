@@ -1,5 +1,6 @@
 ﻿using System;
 using Jellyfin.Core;
+using Jellyfin.Logging;
 using Jellyfin.Models;
 using Jellyfin.Services.Interfaces;
 
@@ -35,6 +36,7 @@ namespace Jellyfin.Services
 
         #region Additional methods
 
+        [LogMethod]
         private void ProcessTvShowImages(MediaElementBase mediaElementBase)
         {
             // TODO smurancsik: to fix up this workaround

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Jellyfin.Extensions;
+using Jellyfin.Logging;
 using Jellyfin.Models;
 using Jellyfin.Services.Interfaces;
 

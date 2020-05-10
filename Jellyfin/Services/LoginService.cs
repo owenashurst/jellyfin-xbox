@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Jellyfin.Core;
 using Jellyfin.Extensions;
+using Jellyfin.Logging;
 using Jellyfin.Models;
 using Jellyfin.Services.Interfaces;
 using Newtonsoft.Json;
@@ -22,6 +23,7 @@ namespace Jellyfin.Services
 
         #region Additional methods
 
+        [LogMethod]
         public async Task<bool> CheckUrl(string host)
         {
             // also do a check for valid url
@@ -65,6 +67,7 @@ namespace Jellyfin.Services
             return true;
         }
 
+        [LogMethod]
         public async Task<bool> Login(string host, LoginModel loginModel)
         {
             try

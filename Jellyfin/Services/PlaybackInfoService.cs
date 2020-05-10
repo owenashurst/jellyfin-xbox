@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Jellyfin.Core;
 using Jellyfin.Extensions;
+using Jellyfin.Logging;
 using Jellyfin.Models;
 using Jellyfin.Models.Adapters;
 using Jellyfin.Models.ServiceModels.PlaybackInformation;
@@ -40,7 +41,6 @@ namespace Jellyfin.Services
 
         #endregion
 
-
         #region Additional methods
 
         /// <summary>
@@ -48,6 +48,7 @@ namespace Jellyfin.Services
         /// </summary>
         /// <param name="id">The media element ID to be played back.</param>
         /// <returns></returns>
+        [LogMethod]
         public async Task<IEnumerable<MediaElementPlaybackSource>> GetPlaybackInformation(string id)
         {
             if (string.IsNullOrEmpty(id))
