@@ -10,8 +10,10 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
+using Jellyfin.Logging;
 using Jellyfin.Models;
 using Jellyfin.ViewModels;
+using Unity;
 
 namespace Jellyfin.Views
 {
@@ -29,6 +31,8 @@ namespace Jellyfin.Views
 
         private PlaybackViewParameterModel playbackViewParameterModel { get; set; }
 
+        private ILogManager _logManager;
+
         #endregion
 
         #region ctor
@@ -37,6 +41,7 @@ namespace Jellyfin.Views
         {
             InitializeComponent();
 
+            _logManager = Globals.Instance.Container.Resolve<ILogManager>();
             _dataContext.MediaPlayer = mediaPlayerElement;
         }
 
@@ -96,6 +101,16 @@ namespace Jellyfin.Views
             playbackMenuView.VisibilityChanged(interval);
         }
 
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            if (mediaPlayerElement.MediaPlayer != null)
+            {
+                mediaPlayerElement.MediaPlayer.Pause();
+            }
+
+            //base.OnNavigatedFrom(e);
+        }
+
         /// <summary>
         /// Handles to start playing back the media element passed from the previous frame.
         /// </summary>
@@ -107,10 +122,12 @@ namespace Jellyfin.Views
             _dataContext.SelectedMediaElement = playbackViewParameterModel.SelectedMediaElement;
             _dataContext.WasPlaybackPopupShown = playbackViewParameterModel.WasPlaybackPopupShown;
 
-            StartPrelude(playbackViewParameterModel);
+            Prelude(playbackViewParameterModel);
+
+            base.OnNavigatedTo(e);
         }
 
-        public async Task StartPrelude(PlaybackViewParameterModel playbackViewParameterModel)
+        public async Task Prelude(PlaybackViewParameterModel playbackViewParameterModel)
         {
             MediaElementBase mediaElement = playbackViewParameterModel?.SelectedMediaElement;
             if (mediaElement?.PlaybackInformation == null || !mediaElement.PlaybackInformation.Any())
@@ -123,6 +140,8 @@ namespace Jellyfin.Views
             MediaElementPlaybackSource playbackInformation = mediaElement.PlaybackInformation.ToList()[0];
             if (!string.IsNullOrEmpty(playbackInformation.TranscodingUrl))
             {
+                _logManager.LogDebug(mediaElement + " playback: AMS mode. Transcoding URL: " + playbackInformation.TranscodingUrl);
+
                 AdaptiveMediaSource ams;
 
                 Uri uri = new Uri(Globals.Instance.Host + playbackInformation.TranscodingUrl);
@@ -146,6 +165,8 @@ namespace Jellyfin.Views
             }
             else
             {
+                _logManager.LogDebug(mediaElement + " playback: direct play.");
+
                 // Regular streaming
                 StartDirectPlayback(playbackViewParameterModel);
 
@@ -157,7 +178,6 @@ namespace Jellyfin.Views
         private void SubscribeToEvents(MediaPlayer mediaPlayer, PlaybackViewParameterModel vm)
         {
             mediaPlayer.PlaybackSession.PlaybackStateChanged += PlaybackSession_PlaybackStateChanged;
-
             mediaPlayer.MediaEnded += MediaPlayerOnMediaEnded;
 
             if (!vm.IsPlaybackFromBeginning)

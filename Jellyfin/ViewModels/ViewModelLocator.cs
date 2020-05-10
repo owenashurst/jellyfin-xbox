@@ -1,4 +1,5 @@
-﻿using Jellyfin.Services.Interfaces;
+﻿using Jellyfin.Logging;
+using Jellyfin.Services.Interfaces;
 using Unity;
 
 namespace Jellyfin.ViewModels
@@ -29,6 +30,7 @@ namespace Jellyfin.ViewModels
         {
             _container = Globals.Instance.Container;
 
+            ILogManager logManager = _container.Resolve<ILogManager>();
             IMovieService movieService = _container.Resolve<IMovieService>();
             ITvShowService tvShowService = _container.Resolve<ITvShowService>();
             IPlaybackInfoService playbackInfoService = _container.Resolve<IPlaybackInfoService>();
@@ -47,8 +49,7 @@ namespace Jellyfin.ViewModels
             _container.RegisterInstance(new TvShowEpisodeDetailViewModel(tvShowService, playbackInfoService));
 
             _container.RegisterInstance(new MediaPlaybackViewModel(reportProgressService));
-            _container.RegisterInstance(new PlaybackConfirmationViewModel());
-            _container.RegisterInstance(new PlaybackFinishedViewModel(tvShowService));
+            _container.RegisterInstance(new PlaybackConfirmationViewModel(tvShowService, playbackInfoService, logManager));
             _container.RegisterInstance(new LoginViewModel(loginService, settingsService));
         }
 
@@ -88,16 +89,6 @@ namespace Jellyfin.ViewModels
             get => _container.Resolve<PlaybackConfirmationViewModel>();
         }
 
-        /// <summary>
-        /// Mapping for Playback finished page - Playback finished View model.
-        /// </summary>
-        public PlaybackFinishedViewModel PlaybackFinishedPage
-        {
-            get => _container.Resolve<PlaybackFinishedViewModel>();
-        }
-
-        
-        
         /// <summary>
         /// Mapping for Movie List Page - Movie list View Model.
         /// </summary>

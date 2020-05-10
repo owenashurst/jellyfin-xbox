@@ -15,8 +15,20 @@ namespace Jellyfin.Views
             InitializeComponent();
         }
 
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            (DataContext as PlaybackConfirmationViewModel).StopTimer();
+        }
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            if (e.Parameter == null)
+            {
+                // If it was null, it means it comes from the medis playback view, and it's already been configured.
+                // TODO smurancsik: to channel that call to there too
+                return;
+            }
+
             MediaElementBase selectedMediaElement = e.Parameter as MediaElementBase;
             MediaElementBase nextMediaElement = null;
             if (selectedMediaElement == null)
@@ -25,6 +37,7 @@ namespace Jellyfin.Views
                 selectedMediaElement = m.SelectedMediaElement;
                 nextMediaElement = m.NextMediaElement;
             }
+
             (DataContext as PlaybackConfirmationViewModel).SelectedMediaElement = selectedMediaElement;
             (DataContext as PlaybackConfirmationViewModel).NextMediaElement = nextMediaElement;
         }

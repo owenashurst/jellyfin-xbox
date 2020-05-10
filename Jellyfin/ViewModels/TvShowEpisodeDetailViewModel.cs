@@ -98,6 +98,11 @@ namespace Jellyfin.ViewModels
             {
                 foreach (TvShowEpisode episode in gotEpisode.Season.TvShowEpisodes)
                 {
+                    if (SelectedSeasonEpisodes.Any(q => q.Id == episode.Id))
+                    {
+                        continue;
+                    }
+
                     SelectedSeasonEpisodes.Add(episode);
                 }
             }
@@ -116,14 +121,20 @@ namespace Jellyfin.ViewModels
             }
         }
 
-        private void Play()
+        private async Task Play()
         {
             if (SelectedMediaElement.PlaybackPosition != TimeSpan.Zero && SelectedMediaElement.PlaybackPosition.TotalMinutes > 2 && SelectedMediaElement.PlaybackRemaining.TotalMinutes > 2)
             {
+                MediaElementBase nextMediaElement = await GetNextMediaElement(SelectedMediaElement as TvShowEpisode);
+                if (nextMediaElement != null)
+                {
+                    nextMediaElement.PlaybackInformation = await _playbackInfoService.GetPlaybackInformation(nextMediaElement.Id);
+                }
+
                 NavigationService.Navigate(typeof(PlaybackConfirmationView), new PlaybackViewParameterModel
                 {
                     SelectedMediaElement = SelectedMediaElement,
-                    NextMediaElement = GetNextMediaElement().Result
+                    NextMediaElement = nextMediaElement
                 });
             }
             else
@@ -132,62 +143,21 @@ namespace Jellyfin.ViewModels
             }
         }
 
-        private void PlayFromBeginning(bool isPopupDisplayed)
+        private async Task PlayFromBeginning(bool isPopupDisplayed)
         {
+            MediaElementBase nextMediaElement = await GetNextMediaElement(SelectedMediaElement as TvShowEpisode);
+            if (nextMediaElement != null)
+            {
+                nextMediaElement.PlaybackInformation = await _playbackInfoService.GetPlaybackInformation(nextMediaElement.Id);
+            }
+
             NavigationService.Navigate(typeof(MediaPlaybackView), new PlaybackViewParameterModel
             {
                 SelectedMediaElement = SelectedMediaElement,
                 IsPlaybackFromBeginning = true,
                 WasPlaybackPopupShown = isPopupDisplayed,
-                NextMediaElement = GetNextMediaElement().Result
+                NextMediaElement = nextMediaElement
             });
-        }
-
-        private async Task<MediaElementBase> GetNextMediaElement()
-        {
-            var episode = (TvShowEpisode) SelectedMediaElement;
-            var episodes = episode.Season.TvShowEpisodes.OrderBy(q => q.IndexNumber).ToList();
-
-            int epNumber = 0;
-            for (; epNumber < episode.Season.TvShowEpisodes.Count; epNumber++)
-            {
-                TvShowEpisode episodeCheck = episode.Season.TvShowEpisodes[epNumber];
-                if (episode.Id == episodeCheck.Id)
-                {
-                    break;
-                }
-            }
-
-            if (epNumber == episodes.Count)
-            {
-                var season = episode.Season;
-                var seasons = episode.TvShow.Seasons;
-
-                int seasonNumber = 0;
-                for (; seasonNumber < episode.TvShow.Seasons.Count; seasonNumber++)
-                {
-                    TvShowSeason seasonCheck = episode.TvShow.Seasons[seasonNumber];
-                    if (season.Id == seasonCheck.Id)
-                    {
-                        break;
-                    }
-                }
-
-                if (seasonNumber == seasons.Count)
-                {
-                    return null;
-                } else
-                {
-                    var nextSeason = seasons[seasonNumber + 1];
-                    var nextSeasonEpisodes = await _tvShowService.GetEpisodesBy(episode.TvShow, nextSeason);
-
-                    return nextSeasonEpisodes.FirstOrDefault();
-                }
-            }
-            else
-            {
-                return episodes[epNumber + 1];
-            }
         }
 
         public bool HandleKeyPressed(VirtualKey key)

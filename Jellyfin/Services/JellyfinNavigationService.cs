@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
@@ -44,6 +45,14 @@ namespace Jellyfin.Services
         {
             // Frame.CanGoBack()?
             Go(false);
+        }
+
+        public Type GetPreviousPage()
+        {
+            Frame frame = (Frame)Window.Current.Content;
+
+            var backStack = frame.BackStack.ToList();
+            return backStack.LastOrDefault().SourcePageType;
         }
 
         private static void Go(bool isForward)

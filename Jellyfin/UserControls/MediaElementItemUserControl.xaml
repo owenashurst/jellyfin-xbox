@@ -38,7 +38,7 @@
             <TextBlock x:Name="movingTextBlock"
                        Text="{Binding Name}" FontSize="30" Foreground="White" HorizontalAlignment="Center" TextAlignment="Center" />
         </Canvas>
-        <ProgressBar x:Name="watchedProgressBar" Margin="17, -20, 17, 0" HorizontalAlignment="Stretch" Height="10" Minimum="0" Maximum="{Binding Runtime.Ticks}" Foreground="{StaticResource PrimaryColor}" Background="{StaticResource PrimaryBackgroundColor}"
+        <ProgressBar x:Name="watchedProgressBar" Margin="17, -20, 17, 0" HorizontalAlignment="Stretch" Height="10" Minimum="0" Maximum="{Binding Runtime.Ticks}" Foreground="{StaticResource PrimaryColor}" Background="#80000000"
             Visibility="{Binding ElementName=UI, Path=IsProgressBarVisible, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}" 
             Value="{Binding PlaybackPosition.Ticks}" />
         

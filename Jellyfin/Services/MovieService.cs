@@ -73,7 +73,6 @@ namespace Jellyfin.Services
 
         #region Additional methods
 
-        [LogMethod]
         public async Task<IEnumerable<Movie>> GetMovies()
         {
             List<Movie> movieList = new List<Movie>();
@@ -104,7 +103,6 @@ namespace Jellyfin.Services
             return movieList;
         }
 
-        [LogMethod]
         public async Task<Movie> GetMovieDetails(string movieId)
         {
             try
@@ -137,7 +135,6 @@ namespace Jellyfin.Services
             return null;
         }
 
-        [LogMethod]
         public async Task<IEnumerable<Movie>> GetRelatedMovies(string movieId)
         {
             List<Movie> movieList = new List<Movie>();

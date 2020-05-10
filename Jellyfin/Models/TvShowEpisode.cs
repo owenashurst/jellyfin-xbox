@@ -44,5 +44,14 @@ namespace Jellyfin.Models
         public bool IsPlayed { get; set; }
 
         #endregion
+
+        #region Overrides
+
+        public override string ToString()
+        {
+            return $"<{Id}> {Name} <- {SeriesName}, {SeasonName}, E{IndexNumber}";
+        }
+
+        #endregion
     }
 }

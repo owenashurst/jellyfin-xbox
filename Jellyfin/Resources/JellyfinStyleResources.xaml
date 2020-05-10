@@ -274,6 +274,47 @@
         </Setter>
     </Style>
 
+    <Style x:Key="PlaybackFinishedButton" TargetType="Button">
+        <Setter Property="Margin" Value="0, 0, 0, 40"/>
+        <Setter Property="FontSize" Value="{StaticResource FontM}"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="Background"  Value="Gray"/>
+        <Setter Property="Padding" Value="3"/>
+        <Setter Property="FocusVisualPrimaryBrush" Value="{StaticResource PrimaryColor}" />
+        <Setter Property="FocusVisualSecondaryBrush" Value="{StaticResource PrimaryColor}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="RootGrid" Background="{TemplateBinding Background}" CornerRadius="4">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="Focused">
+                                    <VisualState.Setters>
+                                        <Setter Target="RootGrid.(Border.Background)"
+                                                Value="{StaticResource PrimaryColor}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Pressed" />
+                                <VisualState x:Name="Disabled" />
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <ContentPresenter x:Name="ContentPresenter"
+                                          BorderBrush="{TemplateBinding BorderBrush}"
+                                          BorderThickness="{TemplateBinding BorderThickness}"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTransitions="{TemplateBinding ContentTransitions}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          Padding="{TemplateBinding Padding}"
+                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          AutomationProperties.AccessibilityView="Raw" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <ControlTemplate x:Name="SelectableToggleButtonControlTemplate" TargetType="ToggleButton">
         <Border x:Name="Border" BorderBrush="Transparent"
                 BorderThickness="0, 0, 0, 6" Padding="10">

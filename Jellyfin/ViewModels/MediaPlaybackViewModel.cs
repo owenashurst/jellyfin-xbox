@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using System.Timers;
 using Windows.Media.Playback;
 using Windows.System;
@@ -8,6 +9,7 @@ using Jellyfin.Core;
 using Jellyfin.Models;
 using Jellyfin.Services.Interfaces;
 using Jellyfin.Views;
+using Unity;
 
 namespace Jellyfin.ViewModels
 {
@@ -259,16 +261,28 @@ namespace Jellyfin.ViewModels
             Pause();
             NavigationService.GoBack();
 
-            // to skip the "resume playback" screen
             if (WasPlaybackPopupShown)
             {
                 NavigationService.GoBack();
             }
         }
 
-        public void PromptNextEpisode(PlaybackViewParameterModel playbackViewParameterModel)
+        public async Task PromptNextEpisode(PlaybackViewParameterModel playbackViewParameterModel)
         {
-            NavigationService.Navigate(typeof(PlaybackFinishedView), playbackViewParameterModel);
+            IUnityContainer container = Globals.Instance.Container;
+            PlaybackConfirmationViewModel confirmationVm =
+                container.Resolve<PlaybackConfirmationViewModel>();
+            await confirmationVm.PrepareNextEpisode(playbackViewParameterModel);
+
+            if (NavigationService.GetPreviousPage() == typeof(PlaybackConfirmationView))
+            {
+                NavigationService.GoBack();
+            }
+            else
+            {
+                NavigationService.Navigate(typeof(PlaybackConfirmationView));
+            }
+            
         }
 
         #region Seek implementation

@@ -238,16 +238,12 @@
     <Compile Include="ViewModels\MovieDetailViewModel.cs" />
     <Compile Include="ViewModels\MovieListViewModel.cs" />
     <Compile Include="ViewModels\PlaybackConfirmationViewModel.cs" />
-    <Compile Include="ViewModels\PlaybackFinishedViewModel.cs" />
     <Compile Include="ViewModels\TvShowDetailViewModel.cs" />
     <Compile Include="ViewModels\TvShowEpisodeDetailViewModel.cs" />
     <Compile Include="ViewModels\TvShowListViewModel.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
     <Compile Include="Views\MediaPlaybackView.xaml.cs">
       <DependentUpon>MediaPlaybackView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PlaybackFinishedView.xaml.cs">
-      <DependentUpon>PlaybackFinishedView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TvShowEpisodeDetailView.xaml.cs">
       <DependentUpon>TvShowEpisodeDetailView.xaml</DependentUpon>
@@ -391,10 +387,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MediaPlaybackView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\PlaybackFinishedView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

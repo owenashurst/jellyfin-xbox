@@ -24,9 +24,9 @@
         <Grid Grid.Row="1" Background="#80000000" CornerRadius="5"
           BorderThickness="2" Padding="30" Margin="70, 0, 70, 70">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="250" />
+                <ColumnDefinition Width="350" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="250" />
+                <ColumnDefinition Width="350" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />

@@ -48,7 +48,6 @@ namespace Jellyfin.Services
         /// </summary>
         /// <param name="id">The media element ID to be played back.</param>
         /// <returns></returns>
-        [LogMethod]
         public async Task<IEnumerable<MediaElementPlaybackSource>> GetPlaybackInformation(string id)
         {
             if (string.IsNullOrEmpty(id))

@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Jellyfin.Core;
 using Jellyfin.Models;
+using Jellyfin.Services.Interfaces;
 using Jellyfin.Views;
+using Unity;
 
 namespace Jellyfin.ViewModels
 {
@@ -87,6 +91,53 @@ namespace Jellyfin.ViewModels
             if (view != null)
             {
                 NavigationService.Navigate(view, SelectedMediaElement);
+            }
+        }
+
+        protected async Task<MediaElementBase> GetNextMediaElement(TvShowEpisode episode)
+        {
+            var episodes = episode.Season.TvShowEpisodes.OrderBy(q => q.IndexNumber).ToList();
+
+            int epNumber = 0;
+            for (; epNumber < episode.Season.TvShowEpisodes.Count; epNumber++)
+            {
+                TvShowEpisode episodeCheck = episode.Season.TvShowEpisodes[epNumber];
+                if (episode.Id == episodeCheck.Id)
+                {
+                    break;
+                }
+            }
+
+            if (epNumber == episodes.Count)
+            {
+                var season = episode.Season;
+                var seasons = episode.TvShow.Seasons;
+
+                int seasonNumber = 0;
+                for (; seasonNumber < episode.TvShow.Seasons.Count; seasonNumber++)
+                {
+                    TvShowSeason seasonCheck = episode.TvShow.Seasons[seasonNumber];
+                    if (season.Id == seasonCheck.Id)
+                    {
+                        break;
+                    }
+                }
+
+                if (seasonNumber == seasons.Count)
+                {
+                    return null;
+                }
+
+                var nextSeason = seasons[seasonNumber + 1];
+                IUnityContainer container = Globals.Instance.Container;
+                var tvShowService = container.Resolve<ITvShowService>();
+                var nextSeasonEpisodes = await tvShowService.GetEpisodesBy(episode.TvShow, nextSeason);
+
+                return nextSeasonEpisodes.FirstOrDefault();
+            }
+            else
+            {
+                return episodes[epNumber + 1];
             }
         }
 

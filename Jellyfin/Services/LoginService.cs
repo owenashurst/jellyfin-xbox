@@ -23,7 +23,6 @@ namespace Jellyfin.Services
 
         #region Additional methods
 
-        [LogMethod]
         public async Task<bool> CheckUrl(string host)
         {
             // also do a check for valid url
@@ -67,7 +66,6 @@ namespace Jellyfin.Services
             return true;
         }
 
-        [LogMethod]
         public async Task<bool> Login(string host, LoginModel loginModel)
         {
             try

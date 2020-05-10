@@ -14,6 +14,8 @@ namespace Jellyfin.Services.Interfaces
 
         void GoBack();
 
+        Type GetPreviousPage();
+
         void GoForward();
     }
 }
