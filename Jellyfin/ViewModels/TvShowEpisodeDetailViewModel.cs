@@ -64,10 +64,9 @@ namespace Jellyfin.ViewModels
             switch (commandParameter)
             {
                 case "Play":
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     Play();
-                    break;
-                case "PlayFromBeginning":
-                    PlayFromBeginning(false);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     break;
                 default:
                     base.Execute(commandParameter);
@@ -117,46 +116,24 @@ namespace Jellyfin.ViewModels
         {
             if (e.PropertyName == nameof(SelectedMediaElement))
             {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 GetTvShowDetailsImpl();
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             }
         }
 
         private async Task Play()
         {
-            if (SelectedMediaElement.PlaybackPosition != TimeSpan.Zero && SelectedMediaElement.PlaybackPosition.TotalMinutes > 2 && SelectedMediaElement.PlaybackRemaining.TotalMinutes > 2)
-            {
-                MediaElementBase nextMediaElement = await GetNextMediaElement(SelectedMediaElement as TvShowEpisode);
-                if (nextMediaElement != null)
-                {
-                    nextMediaElement.PlaybackInformation = await _playbackInfoService.GetPlaybackInformation(nextMediaElement.Id);
-                }
+            int currentSelectedNumber = ((TvShowEpisode) SelectedMediaElement).IndexNumber;
+            IOrderedEnumerable<TvShowEpisode> remainingSeasonEpisodes =
+                ((TvShowEpisode) SelectedMediaElement).Season.TvShowEpisodes
+                    .Where(q => q.IndexNumber >= currentSelectedNumber)
+                    .OrderBy(q => q.IndexNumber);
 
-                NavigationService.Navigate(typeof(PlaybackConfirmationView), new PlaybackViewParameterModel
-                {
-                    SelectedMediaElement = SelectedMediaElement,
-                    NextMediaElement = nextMediaElement
-                });
-            }
-            else
-            {
-                PlayFromBeginning(false);
-            }
-        }
-
-        private async Task PlayFromBeginning(bool isPopupDisplayed)
-        {
-            MediaElementBase nextMediaElement = await GetNextMediaElement(SelectedMediaElement as TvShowEpisode);
-            if (nextMediaElement != null)
-            {
-                nextMediaElement.PlaybackInformation = await _playbackInfoService.GetPlaybackInformation(nextMediaElement.Id);
-            }
-
-            NavigationService.Navigate(typeof(MediaPlaybackView), new PlaybackViewParameterModel
+            NavigationService.Navigate(typeof(PlaybackConfirmationView), new PlaybackViewParameterModel
             {
                 SelectedMediaElement = SelectedMediaElement,
-                IsPlaybackFromBeginning = true,
-                WasPlaybackPopupShown = isPopupDisplayed,
-                NextMediaElement = nextMediaElement
+                Playlist = remainingSeasonEpisodes.ToArray(),
             });
         }
 

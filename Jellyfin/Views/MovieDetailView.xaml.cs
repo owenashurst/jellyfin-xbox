@@ -32,7 +32,9 @@ namespace Jellyfin.Views
             Movie movie = e.Parameter as Movie;
             if (movie != null)
             {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 (DataContext as MovieDetailViewModel).GetMovieDetails(movie);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             }
         }
     }

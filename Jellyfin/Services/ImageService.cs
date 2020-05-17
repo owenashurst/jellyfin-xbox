@@ -87,7 +87,9 @@ namespace Jellyfin.Services
                 if (isCacheEnabled)
                 {
                     cacheItem.Image = retrievedImage;
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     _localCacheService.Set(cacheItem.GetFileName(), cacheItem);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 }
 
                 return retrievedImage;

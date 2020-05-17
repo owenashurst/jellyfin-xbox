@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
 using Windows.Media.Playback;
@@ -188,6 +189,25 @@ namespace Jellyfin.ViewModels
 
         #endregion
 
+        #region PlaybackViewParameters
+
+        private PlaybackViewParameterModel _playbackViewParameters;
+
+        public PlaybackViewParameterModel PlaybackViewParameters
+        {
+            get { return _playbackViewParameters; }
+            set
+            {
+                if (_playbackViewParameters != value)
+                {
+                    _playbackViewParameters = value;
+                    RaisePropertyChanged(nameof(PlaybackViewParameters));
+                }
+            }
+        }
+
+        #endregion
+
         #endregion
 
         #region ctor
@@ -267,22 +287,26 @@ namespace Jellyfin.ViewModels
             }
         }
 
-        public async Task PromptNextEpisode(PlaybackViewParameterModel playbackViewParameterModel)
+        public async Task PromptNextEpisode()
         {
-            IUnityContainer container = Globals.Instance.Container;
-            PlaybackConfirmationViewModel confirmationVm =
-                container.Resolve<PlaybackConfirmationViewModel>();
-            await confirmationVm.PrepareNextEpisode(playbackViewParameterModel);
-
-            if (NavigationService.GetPreviousPage() == typeof(PlaybackConfirmationView))
+            if (PlaybackViewParameters.Playlist.Any())
             {
+                IUnityContainer container = Globals.Instance.Container;
+                PlaybackConfirmationViewModel confirmationVm =
+                    container.Resolve<PlaybackConfirmationViewModel>();
+
+                confirmationVm.PlaybackViewParameters = new PlaybackViewParameterModel
+                {
+                    SelectedMediaElement = SelectedMediaElement,
+                    Playlist = PlaybackViewParameters.Playlist,
+                };
+
                 NavigationService.GoBack();
             }
             else
             {
-                NavigationService.Navigate(typeof(PlaybackConfirmationView));
+                Return();
             }
-            
         }
 
         #region Seek implementation

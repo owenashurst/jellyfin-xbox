@@ -10,6 +10,15 @@ namespace Jellyfin.Views
     /// </summary>
     public sealed partial class PlaybackConfirmationView
     {
+        #region Properties
+
+        public PlaybackConfirmationViewModel _dc
+        {
+            get => DataContext as PlaybackConfirmationViewModel;
+        }
+
+        #endregion
+
         public PlaybackConfirmationView()
         {
             InitializeComponent();
@@ -20,26 +29,20 @@ namespace Jellyfin.Views
             (DataContext as PlaybackConfirmationViewModel).StopTimer();
         }
 
+        
+        /// <summary>
+        /// Retrieves the playback navigation model, and passes to the view model.
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             if (e.Parameter == null)
             {
-                // If it was null, it means it comes from the medis playback view, and it's already been configured.
-                // TODO smurancsik: to channel that call to there too
                 return;
             }
 
-            MediaElementBase selectedMediaElement = e.Parameter as MediaElementBase;
-            MediaElementBase nextMediaElement = null;
-            if (selectedMediaElement == null)
-            {
-                PlaybackViewParameterModel m = e.Parameter as PlaybackViewParameterModel;
-                selectedMediaElement = m.SelectedMediaElement;
-                nextMediaElement = m.NextMediaElement;
-            }
-
-            (DataContext as PlaybackConfirmationViewModel).SelectedMediaElement = selectedMediaElement;
-            (DataContext as PlaybackConfirmationViewModel).NextMediaElement = nextMediaElement;
+            PlaybackViewParameterModel m = e.Parameter as PlaybackViewParameterModel;
+            _dc.PlaybackViewParameters = m;
         }
 
         private void PlaybackConfirmationView_OnPreviewKeyDown(object sender, KeyRoutedEventArgs e)

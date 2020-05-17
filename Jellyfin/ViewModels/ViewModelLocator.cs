@@ -49,7 +49,7 @@ namespace Jellyfin.ViewModels
             _container.RegisterInstance(new TvShowEpisodeDetailViewModel(tvShowService, playbackInfoService));
 
             _container.RegisterInstance(new MediaPlaybackViewModel(reportProgressService));
-            _container.RegisterInstance(new PlaybackConfirmationViewModel(tvShowService, playbackInfoService, logManager));
+            _container.RegisterInstance(new PlaybackConfirmationViewModel(playbackInfoService, logManager));
             _container.RegisterInstance(new LoginViewModel(loginService, settingsService));
         }
 

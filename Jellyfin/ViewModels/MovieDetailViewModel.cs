@@ -1,5 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.System;
@@ -114,12 +115,12 @@ namespace Jellyfin.ViewModels
                 case "Play":
                     Play();
                     break;
-                case "PlayFromBeginning":
-                    PlayFromBeginning(false);
-                    break;
-                case "PlayFromPosition":
-                    PlayFromPosition();
-                    break;
+                //case "PlayFromBeginning":
+                //    PlayFromBeginning(false);
+                //    break;
+                //case "PlayFromPosition":
+                //    PlayFromPosition();
+                //    break;
                 default:
                     base.Execute(commandParameter);
                     break;
@@ -144,35 +145,27 @@ namespace Jellyfin.ViewModels
 
         private void Play()
         {
-            if (SelectedMovie.PlaybackPosition != TimeSpan.Zero && SelectedMovie.PlaybackPosition.TotalMinutes > 2 && SelectedMovie.PlaybackRemaining.TotalMinutes > 2)
-            {
-                NavigationService.Navigate(typeof(PlaybackConfirmationView), SelectedMovie);
-            }
-            else
-            {
-                PlayFromBeginning(false);
-            }
-        }
-
-        private void PlayFromBeginning(bool isPopupDisplayed)
-        {
-            NavigationService.Navigate(typeof(MediaPlaybackView), new PlaybackViewParameterModel
+            NavigationService.Navigate(typeof(PlaybackConfirmationView), new PlaybackViewParameterModel
             {
                 SelectedMediaElement = SelectedMovie,
-                IsPlaybackFromBeginning = true,
-                WasPlaybackPopupShown = isPopupDisplayed
+                Playlist = RelatedMovies.ToArray()
             });
         }
 
-        private void PlayFromPosition()
-        {
-            NavigationService.Navigate(typeof(MediaPlaybackView), new PlaybackViewParameterModel
-            {
-                SelectedMediaElement = SelectedMovie,
-                IsPlaybackFromBeginning = false,
-                WasPlaybackPopupShown = true
-            });
-        }
+        //private void PlayFromBeginning(bool isPopupDisplayed)
+        //{
+        //    NavigationService.Navigate(typeof(MediaPlaybackView), );
+        //}
+
+        //private void PlayFromPosition()
+        //{
+        //    NavigationService.Navigate(typeof(MediaPlaybackView), new PlaybackViewParameterModel
+        //    {
+        //        SelectedMediaElement = SelectedMovie,
+        //        IsPlaybackFromBeginning = false,
+        //        Playlist = RelatedMovies.ToArray()
+        //    });
+        //}
 
         #endregion
 
