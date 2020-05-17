@@ -11,6 +11,8 @@ namespace Jellyfin.Models
 
         public bool IsPlaybackFromBeginning { get; set; }
 
+        public bool IsInvalidated { get; set; }
+
         /// <summary>
         /// Indicates whether the playback is just returned from playing.
         /// </summary>

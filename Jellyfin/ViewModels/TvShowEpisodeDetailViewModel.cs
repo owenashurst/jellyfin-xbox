@@ -125,15 +125,15 @@ namespace Jellyfin.ViewModels
         private async Task Play()
         {
             int currentSelectedNumber = ((TvShowEpisode) SelectedMediaElement).IndexNumber;
-            IOrderedEnumerable<TvShowEpisode> remainingSeasonEpisodes =
+            TvShowEpisode[] remainingSeasonEpisodes =
                 ((TvShowEpisode) SelectedMediaElement).Season.TvShowEpisodes
-                    .Where(q => q.IndexNumber >= currentSelectedNumber)
-                    .OrderBy(q => q.IndexNumber);
+                    .Where(q => q.IndexNumber > currentSelectedNumber)
+                    .OrderBy(q => q.IndexNumber).ToArray();
 
             NavigationService.Navigate(typeof(PlaybackConfirmationView), new PlaybackViewParameterModel
             {
                 SelectedMediaElement = SelectedMediaElement,
-                Playlist = remainingSeasonEpisodes.ToArray(),
+                Playlist = remainingSeasonEpisodes,
             });
         }
 

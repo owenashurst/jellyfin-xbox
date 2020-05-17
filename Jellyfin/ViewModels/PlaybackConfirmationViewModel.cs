@@ -76,9 +76,6 @@ namespace Jellyfin.ViewModels
                 {
                     _playbackViewParameters = value;
                     RaisePropertyChanged(nameof(PlaybackViewParameters));
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    PlaybackViewParametersChanged();
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 }
             }
         }
@@ -159,21 +156,35 @@ namespace Jellyfin.ViewModels
             }
         }
 
-        private void PlayFromBeginning()
+        private async Task PlayFromBeginning()
         {
+            if (SelectedMediaElement.PlaybackInformation == null)
+            {
+                SelectedMediaElement.PlaybackInformation =
+                    await _playbackInfoService.GetPlaybackInformation(SelectedMediaElement.Id);
+            }
+
             NavigationService.Navigate(typeof(MediaPlaybackView), new PlaybackViewParameterModel
             {
                 SelectedMediaElement = SelectedMediaElement,
                 IsPlaybackFromBeginning = true,
+                Playlist = PlaybackViewParameters.Playlist
             });
         }
 
-        private void PlayFromPosition()
+        private async Task PlayFromPosition()
         {
+            if (SelectedMediaElement.PlaybackInformation == null)
+            {
+                SelectedMediaElement.PlaybackInformation =
+                    await _playbackInfoService.GetPlaybackInformation(SelectedMediaElement.Id);
+            }
+
             NavigationService.Navigate(typeof(MediaPlaybackView), new PlaybackViewParameterModel
             {
                 SelectedMediaElement = SelectedMediaElement,
                 IsPlaybackFromBeginning = false,
+                Playlist = PlaybackViewParameters.Playlist
             });
         }
 
@@ -182,7 +193,8 @@ namespace Jellyfin.ViewModels
             NavigationService.Navigate(typeof(MediaPlaybackView), new PlaybackViewParameterModel
             {
                 SelectedMediaElement = NextMediaElement,
-                IsPlaybackFromBeginning = true
+                IsPlaybackFromBeginning = true,
+                Playlist = PlaybackViewParameters.Playlist
             });
         }
 
@@ -236,42 +248,37 @@ namespace Jellyfin.ViewModels
         /// 2) The playback information is available and more than 2 min, so let the user decide what they want
         /// 3) IsJustFinished is set, display the boxed screen shot layout to the user to let them decide
         /// </summary>
-        private async Task PlaybackViewParametersChanged()
+        public async Task PlaybackViewParametersChanged(PlaybackViewParameterModel p)
         {
             _logManager.LogDebug("Playback View Parameters Changed raised, obj = " + PlaybackViewParameters);
 
             // Does it come from movie / episode chooser?
-            if (!PlaybackViewParameters.IsJustFinishedPlaying)
+            if (!p.IsJustFinishedPlaying)
             {
-                MediaElementBase selectedMedia = PlaybackViewParameters.SelectedMediaElement;
-                if (selectedMedia.PlaybackPosition.TotalMinutes > 2 &&
-                    selectedMedia.PlaybackRemaining.TotalMinutes > 2)
+                SelectedMediaElement = p.SelectedMediaElement;
+                if (SelectedMediaElement.PlaybackPosition.TotalMinutes > 2 &&
+                    SelectedMediaElement.PlaybackRemaining.TotalMinutes < 2)
                 {
                     // Let the user decide what they want, aka let the view model
                     // render fully and show the action buttons
                 }
-                else if (selectedMedia.PlaybackPosition.TotalMinutes <= 2)
+                else if (SelectedMediaElement.PlaybackPosition.TotalMinutes <= 2)
                 {
                     PlayFromBeginning();
                 }
-                else if (selectedMedia.PlaybackRemaining.TotalMinutes <= 2)
+                else if (SelectedMediaElement.PlaybackRemaining.TotalMinutes <= 2)
                 {
                     PlayFromBeginning();
                 }
             }
             else
             {
+                
                 // go to the next element on the playlist, then play that from the beginning.
                 SelectedMediaElement = PlaybackViewParameters.Playlist[0];
                 PlaybackViewParameters.Playlist = PlaybackViewParameters.Playlist.Skip(1).ToArray();
 
-                if (SelectedMediaElement.PlaybackInformation == null)
-                {
-                    SelectedMediaElement.PlaybackInformation =
-                        await _playbackInfoService.GetPlaybackInformation(SelectedMediaElement.Id);
-                }
-
-                PlayFromBeginning();
+                IsShowConfirmation = true;
             }
         }
     }

@@ -280,11 +280,7 @@ namespace Jellyfin.ViewModels
         {
             Pause();
             NavigationService.GoBack();
-
-            if (WasPlaybackPopupShown)
-            {
-                NavigationService.GoBack();
-            }
+            NavigationService.GoBack();
         }
 
         public async Task PromptNextEpisode()
@@ -295,13 +291,15 @@ namespace Jellyfin.ViewModels
                 PlaybackConfirmationViewModel confirmationVm =
                     container.Resolve<PlaybackConfirmationViewModel>();
 
-                confirmationVm.PlaybackViewParameters = new PlaybackViewParameterModel
+                var pvpm =  new PlaybackViewParameterModel
                 {
                     SelectedMediaElement = SelectedMediaElement,
+                    IsJustFinishedPlaying = true,
                     Playlist = PlaybackViewParameters.Playlist,
                 };
 
                 NavigationService.GoBack();
+                confirmationVm.PlaybackViewParametersChanged(pvpm);
             }
             else
             {
@@ -354,6 +352,11 @@ namespace Jellyfin.ViewModels
                 {
                     MediaPlayer.MediaPlayer.PlaybackSession.Position =
                         MediaPlayer.MediaPlayer.PlaybackSession.Position + TimeSpan.FromSeconds(seconds);
+
+                    if (PlaybackMode == "DirectStream")
+                    {
+                        IsLoading = false;
+                    }
                 }
             });
             #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed

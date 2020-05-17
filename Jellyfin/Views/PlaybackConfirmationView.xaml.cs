@@ -1,4 +1,7 @@
-﻿using Windows.UI.Xaml.Input;
+﻿using System.Threading.Tasks;
+using Windows.UI.Core;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using Jellyfin.Models;
 using Jellyfin.ViewModels;
@@ -22,11 +25,17 @@ namespace Jellyfin.Views
         public PlaybackConfirmationView()
         {
             InitializeComponent();
+            Loaded += OnLoaded;
+        }
+        
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            //_dc.PlaybackViewParametersChanged(_dc.PlaybackViewParameters);
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            (DataContext as PlaybackConfirmationViewModel).StopTimer();
+            _dc.StopTimer();
         }
 
         
@@ -42,12 +51,26 @@ namespace Jellyfin.Views
             }
 
             PlaybackViewParameterModel m = e.Parameter as PlaybackViewParameterModel;
+            if (m.IsInvalidated)
+            {
+                return;
+            }
+
+            m.IsInvalidated = true;
             _dc.PlaybackViewParameters = m;
+
+            Task.Delay(100).ContinueWith((task) =>
+            {
+                Globals.Instance.UIDispatcher.RunAsync(CoreDispatcherPriority.High, () =>
+                    {
+                        _dc.PlaybackViewParametersChanged(m);
+                    });
+            });
         }
 
         private void PlaybackConfirmationView_OnPreviewKeyDown(object sender, KeyRoutedEventArgs e)
         {
-            if ((DataContext as PlaybackConfirmationViewModel).HandleKeyPressed(e.Key))
+            if (_dc.HandleKeyPressed(e.Key))
             {
                 e.Handled = true;
             }
