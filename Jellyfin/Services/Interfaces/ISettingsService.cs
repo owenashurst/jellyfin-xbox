@@ -10,6 +10,6 @@
 
         void SetProperty(string propertyName, object value);
 
-        T GetProperty<T>(string propertyName, T defaultValue = default(T));
+        T GetProperty<T>(string propertyName, T defaultValue = default);
     }
 }

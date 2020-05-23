@@ -1,5 +1,6 @@
 ﻿using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
+using Jellyfin.Logging;
 using Jellyfin.Models;
 using Jellyfin.Services.Interfaces;
 using Newtonsoft.Json;
@@ -81,6 +82,8 @@ namespace Jellyfin
         {
             get => CoreApplication.MainView.CoreWindow.Dispatcher;
         }
+
+        public ILogManager LogManager => Container?.Resolve<ILogManager>();
 
         #endregion
 

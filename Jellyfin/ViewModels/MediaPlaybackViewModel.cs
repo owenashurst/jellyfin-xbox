@@ -9,7 +9,6 @@ using Windows.UI.Xaml.Controls;
 using Jellyfin.Core;
 using Jellyfin.Models;
 using Jellyfin.Services.Interfaces;
-using Jellyfin.Views;
 using Unity;
 
 namespace Jellyfin.ViewModels
@@ -295,7 +294,7 @@ namespace Jellyfin.ViewModels
                 {
                     SelectedMediaElement = SelectedMediaElement,
                     IsJustFinishedPlaying = true,
-                    Playlist = PlaybackViewParameters.Playlist,
+                    Playlist = PlaybackViewParameters.Playlist
                 };
 
                 NavigationService.GoBack();

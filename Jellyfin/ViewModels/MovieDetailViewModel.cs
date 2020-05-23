@@ -1,69 +1,17 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.System;
-using Jellyfin.Core;
 using Jellyfin.Models;
 using Jellyfin.Services.Interfaces;
 using Jellyfin.Views;
 
 namespace Jellyfin.ViewModels
 {
-    public class MovieDetailViewModel : JellyfinViewModelBase
+    public class MovieDetailViewModel : NavigableMediaElementViewModelBase
     {
         #region Properties
-
-        #region SelectedMovie
-
-        private Movie _selectedMovie;
-
-        public Movie SelectedMovie
-        {
-            get { return _selectedMovie; }
-            set
-            {
-                _selectedMovie = value;
-                RaisePropertyChanged(nameof(SelectedMovie));
-                RaisePropertyChanged(nameof(FormattedResumeText));
-            }
-        }
-
-        #endregion
-
-        #region FormattedResumeText
-
-        public string FormattedResumeText
-        {
-            get
-            {
-                if (SelectedMovie == null)
-                {
-                    return string.Empty;
-                }
-
-                StringBuilder bld = new StringBuilder();
-                bld.Append("Resume from ");
-
-                if (SelectedMovie.PlaybackPosition.Hours > 0)
-                {
-                    bld.Append(SelectedMovie.PlaybackPosition.Hours).Append(":");
-                    bld.Append(SelectedMovie.PlaybackPosition.Minutes.ToString().PadLeft(2, '0')).Append(":");
-                }
-                else
-                {
-                    bld.Append(SelectedMovie.PlaybackPosition.Minutes).Append(":");
-                }
-
-                
-                bld.Append(SelectedMovie.PlaybackPosition.Seconds.ToString().PadLeft(2, '0'));
-
-                return bld.ToString();
-            }
-        }
-
-        #endregion
 
         #region RelatedMovies
 
@@ -130,16 +78,16 @@ namespace Jellyfin.ViewModels
         public async Task GetMovieDetails(Movie movie)
         {
             RelatedMovies.Clear();
-            SelectedMovie = await _movieService.GetMovieDetails(movie.Id);
+            SelectedMediaElement = await _movieService.GetMovieDetails(movie.Id);
 
             foreach (Movie relatedMovie in await _movieService.GetRelatedMovies(movie.Id))
             {
                 RelatedMovies.Add(relatedMovie);
             }
 
-            if (SelectedMovie.PlaybackInformation == null)
+            if (SelectedMediaElement.PlaybackInformation == null)
             {
-                SelectedMovie.PlaybackInformation = await _playbackInfoService.GetPlaybackInformation(movie.Id);
+                SelectedMediaElement.PlaybackInformation = await _playbackInfoService.GetPlaybackInformation(movie.Id);
             }
         }
 
@@ -147,7 +95,7 @@ namespace Jellyfin.ViewModels
         {
             NavigationService.Navigate(typeof(PlaybackConfirmationView), new PlaybackViewParameterModel
             {
-                SelectedMediaElement = SelectedMovie,
+                SelectedMediaElement = SelectedMediaElement,
                 Playlist = RelatedMovies.ToArray()
             });
         }

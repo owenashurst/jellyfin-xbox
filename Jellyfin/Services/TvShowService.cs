@@ -5,7 +5,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Jellyfin.Core;
 using Jellyfin.Extensions;
-using Jellyfin.Logging;
 using Jellyfin.Models;
 using Jellyfin.Models.ServiceModels;
 using Jellyfin.Models.ServiceModels.TvShow;

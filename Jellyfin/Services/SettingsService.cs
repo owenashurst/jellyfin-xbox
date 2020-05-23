@@ -47,7 +47,7 @@ namespace Jellyfin.Services
             return ContainerSettings.Values.Any(q => q.Key == propertyName);
         }
 
-        public T GetProperty<T>(string propertyName, T defaultValue = default(T))
+        public T GetProperty<T>(string propertyName, T defaultValue = default)
         {
             object value = ContainerSettings.Values[propertyName];
 

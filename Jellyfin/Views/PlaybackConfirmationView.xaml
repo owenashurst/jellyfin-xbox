@@ -17,10 +17,8 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Text="{Binding IsShowConfirmation}" FontSize="50" />
-
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center"
-            Visibility="{Binding IsShowConfirmation, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=false}">
+            Visibility="{Binding IsShowConfirmation, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=false, FallbackValue=Collapsed}">
             <uwp:FontAwesome Icon="InfoCircle" FontSize="40" />
             <TextBlock Text="Resume Playback" FontSize="40" Margin="15, 0, 0, 5" />
         </StackPanel>
@@ -44,7 +42,7 @@
         </StackPanel>
 
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center"
-            Visibility="{Binding IsShowConfirmation, Converter={StaticResource BooleanToVisibilityConverter}}">
+            Visibility="{Binding IsShowConfirmation, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
             <StackPanel Margin="0, 0, 120, 0">
                 <TextBlock Text="PREVIOUS" FontSize="{StaticResource FontL}" />
                 <Button
@@ -71,7 +69,7 @@
                         <Grid>
                             <Image Source="{Binding NextMediaElement.BackdropImageData, Converter={StaticResource ByteArrayToImageConverter}}" Width="575" />
 
-                            <Border Background="#A0000000" Height="120" Width="120" CornerRadius="5" Visibility="{Binding IsTimerStopped, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=false}">
+                            <Border Background="#A0000000" Height="120" Width="120" CornerRadius="5" Visibility="{Binding IsTimerVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
                                 <TextBlock Text="{Binding AutoPlayNextTimeLeft}"
                                        HorizontalAlignment="Center" VerticalAlignment="Center" />
                             </Border>

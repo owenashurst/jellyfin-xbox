@@ -134,10 +134,10 @@ namespace Jellyfin.Models
 
                 if (Runtime.TotalHours > 1)
                 {
-                    return Runtime.Hours + " hr " + Runtime.Minutes + " min";
+                    return $"{Runtime.Hours} hr {Runtime.Minutes} min";
                 }
 
-                return Runtime.Minutes + " min";
+                return $"{Runtime.Minutes} min";
             }
         }
 

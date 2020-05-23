@@ -7,11 +7,9 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using Jellyfin.Core;
 using Jellyfin.Services.Interfaces;
 using Jellyfin.Utils;
 using Jellyfin.Views;
-using NLog;
 using Unity;
 
 namespace Jellyfin
@@ -116,7 +114,7 @@ namespace Jellyfin
         /// <param name="e">Details about the navigation failure</param>
         void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
         {
-            throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
+            throw new Exception($"Failed to load Page {e.SourcePageType.FullName}");
         }
 
         /// <summary>

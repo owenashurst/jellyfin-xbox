@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Media.Core;
@@ -143,7 +142,8 @@ namespace Jellyfin.Views
             MediaElementPlaybackSource playbackInformation = mediaElement.PlaybackInformation.ToList()[0];
             if (!string.IsNullOrEmpty(playbackInformation.TranscodingUrl))
             {
-                _logManager.LogDebug(mediaElement + " playback: AMS mode. Transcoding URL: " + playbackInformation.TranscodingUrl);
+                _logManager.LogDebug(
+                    $"{mediaElement} playback: AMS mode. Transcoding URL: {playbackInformation.TranscodingUrl}");
 
                 AdaptiveMediaSource ams;
 
@@ -161,14 +161,14 @@ namespace Jellyfin.Views
                     mediaPlayerElement.MediaPlayer.Play();
                     OpenOsd();
 
-                    ams.InitialBitrate = ams.AvailableBitrates.Max<uint>();
+                    ams.InitialBitrate = ams.AvailableBitrates.Max();
                 }
 
                 _dataContext.PlaybackMode = "Transcoding";
             }
             else
             {
-                _logManager.LogDebug(mediaElement + " playback: direct play.");
+                _logManager.LogDebug($"{mediaElement} playback: direct play.");
 
                 // Regular streaming
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed

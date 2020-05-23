@@ -169,7 +169,7 @@ namespace Jellyfin.UserControls
 
             if (dataContext == null)
             {
-                // TODO smurancsik: throw new Argument exception
+                Globals.Instance.LogManager.LogError("MediaElementListView Onclick: Data content resolved null. Grab a programmer!");
                 return;
             }
 
@@ -246,6 +246,11 @@ namespace Jellyfin.UserControls
                 MediaElementItemUserControl result = ItemFromGridViewItem(SelectedElement);
                 result?.FocusLost();
             }
+        }
+
+        private void MediaElementListUserControl_OnLostFocus(object sender, RoutedEventArgs e)
+        {
+            LoseFocus();
         }
 
         #endregion

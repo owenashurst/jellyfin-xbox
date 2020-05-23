@@ -26,7 +26,7 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Image Grid.Row="0" Grid.Column="0" Source="{Binding SelectedMovie.ImageData, Converter={StaticResource ByteArrayToImageConverter}}" Height="500" Width="400" VerticalAlignment="Top">
+            <Image Grid.Row="0" Grid.Column="0" Source="{Binding SelectedMediaElement.ImageData, Converter={StaticResource ByteArrayToImageConverter}}" Height="500" Width="400" VerticalAlignment="Top">
             </Image>
 
             <Grid Grid.Row="0" Grid.Column="1">
@@ -39,16 +39,16 @@
                 </Grid.RowDefinitions>
 
                 <StackPanel Grid.Row="0">
-                    <TextBlock Text="{Binding SelectedMovie.Name}" FontSize="50" Margin="0, 0, 0, 20" />
+                    <TextBlock Text="{Binding SelectedMediaElement.Name}" FontSize="50" Margin="0, 0, 0, 20" />
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding SelectedMovie.Year}" FontSize="{StaticResource FontL}" Margin="0, 0, 0, 10" />
+                        <TextBlock Text="{Binding SelectedMediaElement.Year}" FontSize="{StaticResource FontL}" Margin="0, 0, 0, 10" />
 
                         <StackPanel Grid.Column="1" Orientation="Horizontal">
-                            <TextBlock Text="{Binding SelectedMovie.CommunityRating}" VerticalAlignment="Center" FontSize="{StaticResource FontL}" Margin="0, 0, 10, 4" />
+                            <TextBlock Text="{Binding SelectedMediaElement.CommunityRating}" VerticalAlignment="Center" FontSize="{StaticResource FontL}" Margin="0, 0, 10, 4" />
 
                             <uwp:FontAwesome Icon="Star" FontSize="{StaticResource FontM}" HorizontalAlignment="Center" />
                         </StackPanel>
@@ -60,32 +60,51 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0" Orientation="Horizontal">
-                            <TextBlock Opacity=".7" Text="{Binding SelectedMovie.FormattedRuntime}" FontSize="{StaticResource FontL}" />
+                            <TextBlock Opacity=".7" Text="{Binding SelectedMediaElement.FormattedRuntime}" FontSize="{StaticResource FontL}" />
 
-                            <TextBlock Opacity=".7" Text="{Binding SelectedMovie.FormattedPlaybackRemaining}" FontSize="{StaticResource FontL}" />
+                            <TextBlock Opacity=".7" Text="{Binding SelectedMediaElement.FormattedPlaybackRemaining}" FontSize="{StaticResource FontL}" />
 
                             <Border Background="#333" Padding="40, 5" Margin="20, -5, 0, 0" CornerRadius="5">
-                                <TextBlock Text="{Binding SelectedMovie.OfficialRating}" FontSize="{StaticResource FontL}" FontWeight="Bold" />
+                                <TextBlock Text="{Binding SelectedMediaElement.OfficialRating}" FontSize="{StaticResource FontL}" FontWeight="Bold" />
                             </Border>
                         </StackPanel>
 
                         <StackPanel Grid.Column="1" Orientation="Horizontal">
-                            <TextBlock Text="{Binding SelectedMovie.FormattedGenres}" FontSize="{StaticResource FontL}" Margin="0, 0, 0, 10" Opacity=".7" />
+                            <TextBlock Text="{Binding SelectedMediaElement.FormattedGenres}" FontSize="{StaticResource FontL}" Margin="0, 0, 0, 10" Opacity=".7" />
                         </StackPanel>
                     </Grid>
 
-                    <TextBlock Text="{Binding SelectedMovie.Description}" TextWrapping="Wrap" FontSize="{StaticResource FontL}"
+                    <TextBlock Text="{Binding SelectedMediaElement.Description}" TextWrapping="Wrap" FontSize="{StaticResource FontL}"
                            Margin="0, 20, 0, 20" />
                 </StackPanel>
 
-                <Button Grid.Row="2" Command="{Binding ToolCommand}" Width="80" 
-                FocusVisualPrimaryThickness="2" FocusVisualSecondaryThickness="0"
-                    FocusVisualSecondaryBrush="White" FocusVisualPrimaryBrush="Transparent"
-                CommandParameter="Play" Style="{StaticResource SelectableButton}" Padding="0, 5, 0, 5">
-                    <Button.Content>
-                        <Image Grid.Row="3" Source="../Assets/Images/play-button.png" Width="30" Height="30" />
-                    </Button.Content>
-                </Button>
+                <StackPanel Grid.Row="2" HorizontalAlignment="Left" Orientation="Horizontal">
+                    <StackPanel HorizontalAlignment="Center" Margin="0, 0, 25, 0">
+                        <Button Command="{Binding ToolCommand}" HorizontalAlignment="Center" Height="75"
+                        FocusVisualPrimaryThickness="2" FocusVisualSecondaryThickness="0"
+                            FocusVisualSecondaryBrush="White" FocusVisualPrimaryBrush="Transparent"
+                        CommandParameter="Play" Style="{StaticResource SelectableButton}" Padding="50, 20">
+                            <Button.Content>
+                                <Image Grid.Row="3" Source="../Assets/Images/play-button.png" Width="30" Height="30" />
+                            </Button.Content>
+                        </Button>
+                        <TextBlock Text="Play" Opacity=".7" FontSize="{StaticResource FontM}" HorizontalAlignment="Center" />
+                    </StackPanel>
+
+                    <StackPanel HorizontalAlignment="Center">
+                        <Button Command="{Binding ToolCommand}" HorizontalAlignment="Center" Height="75"
+                                FocusVisualPrimaryThickness="2" FocusVisualSecondaryThickness="0"
+                                FocusVisualSecondaryBrush="White" FocusVisualPrimaryBrush="Transparent"
+                                CommandParameter="Play" Style="{StaticResource SelectableButton}" Padding="50, 20">
+                            <Button.Content>
+                                <uwp:FontAwesome Icon="Eye" FontSize="{StaticResource FontM}" HorizontalAlignment="Center" />
+                            </Button.Content>
+                        </Button>
+                        <TextBlock Text="Mark as Watched" Opacity=".7" FontSize="{StaticResource FontM}" HorizontalAlignment="Center" />
+                    </StackPanel>
+                </StackPanel>
+
+
             </Grid>
 
             <!-- Related movies Grid -->

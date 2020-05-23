@@ -133,7 +133,7 @@ namespace Jellyfin.ViewModels
             NavigationService.Navigate(typeof(PlaybackConfirmationView), new PlaybackViewParameterModel
             {
                 SelectedMediaElement = SelectedMediaElement,
-                Playlist = remainingSeasonEpisodes,
+                Playlist = remainingSeasonEpisodes
             });
         }
 

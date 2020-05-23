@@ -6,7 +6,7 @@
     Loaded="MovieView_OnLoaded"
     DataContext="{Binding MovieListPage, Source={StaticResource ViewModelLocator}}">
 
-    <Grid HorizontalAlignment="Stretch" Margin="15, 40, 0, 0">
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="15, 40, 0, 0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -30,6 +30,9 @@
                     Template="{StaticResource SelectableToggleButtonControlTemplate}" />
         </StackPanel>
 
+        <userControls:LoadingUserControl Grid.Row="2" Margin="0, 250, 0, 0"
+            Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
         <StackPanel Grid.Row="1" Visibility="Collapsed">
             <Button Content="Order by: Name ABC" Style="{StaticResource PrimaryButton}"
                     HorizontalAlignment="Left" Margin="0, 30, 0, 0" FontSize="{StaticResource FontM}"
@@ -37,7 +40,7 @@
         </StackPanel>
 
         <userControls:MediaElementGridUserControl Grid.Row="2" MediaSource="{Binding Movies}"
-            BlockWidth="220" BlockHeight="270"
+            BlockWidth="260" BlockHeight="270"
             Visibility="{Binding IsRecommendationsOpened, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=false}"
         />
 

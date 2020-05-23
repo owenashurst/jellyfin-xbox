@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 
 namespace Jellyfin.Extensions
@@ -37,7 +32,7 @@ namespace Jellyfin.Extensions
                 }
             }
 
-            return default(T);
+            return default;
         }
     }
 }

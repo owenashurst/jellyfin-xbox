@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Jellyfin.Extensions;
+using Jellyfin.Logging;
 using Jellyfin.Models;
 using Jellyfin.Services.Interfaces;
 
@@ -28,160 +27,27 @@ namespace Jellyfin.ViewModels
             {
                 _movies = value;
                 RaisePropertyChanged(nameof(Movies));
-                RaisePropertyChanged(nameof(ContinueWatchingMovies));
-                RaisePropertyChanged(nameof(RecentlyReleasedMovies));
-                RaisePropertyChanged(nameof(MoviesFirstFavoriteGenre));
-                RaisePropertyChanged(nameof(MoviesSecondFavoriteGenre));
-                RaisePropertyChanged(nameof(FirstFavoriteGenre));
-                RaisePropertyChanged(nameof(SecondFavoriteGenre));
             }
         }
 
         #endregion
-
-        #region ContinueWatchingMovies
 
         /// <summary>
         /// List of movies which has already been started.
         /// </summary>
-        public ObservableCollectionEx<Movie> ContinueWatchingMovies
-        {
-            get
-            {
-                if (Movies == null)
-                {
-                    return new ObservableCollectionEx<Movie>();
-                }
+        public ObservableCollectionEx<Movie> ContinueWatchingMovies { get; private set; }
 
-                List<Movie> movies = Movies.Where(q => q.PlaybackPosition.Ticks > 0).ToList();
-                return new ObservableCollectionEx<Movie>(movies);
-            }
-        }
+        public ObservableCollectionEx<Movie> RecentlyReleasedMovies { get; private set; }
 
-        #endregion
+        public ObservableCollectionEx<Movie> MoviesFirstFavoriteGenre { get; private set; }
 
-        public ObservableCollectionEx<Movie> RecentlyReleasedMovies
-        {
-            get
-            {
-                if (Movies == null)
-                {
-                    return new ObservableCollectionEx<Movie>();
-                }
+        public ObservableCollectionEx<Movie> MoviesSecondFavoriteGenre { get; private set; }
 
-                List<Movie> movies = Movies
-                    .Where(q => q.PremiereDate > DateTime.Now.AddMonths(-18))
-                    .OrderByDescending(q => q.PremiereDate)
-                    .Take(20).ToList();
-                return new ObservableCollectionEx<Movie>(movies);
-            }
-        }
+        public List<string> MovieGenres { get; private set; }
 
-        #region MovieGenres
+        public string FirstFavoriteGenre { get; private set; }
 
-        private List<string> _movieGenres = new List<string>();
-
-        public List<string> MovieGenres
-        {
-            get
-            {
-                if (!_movieGenres.Any())
-                {
-                    if (Movies == null)
-                    {
-                        return new List<string>();
-                    }
-
-                    _movieGenres = _movies.SelectMany(q => q.Genres).GroupBy(q => q).Select(group => group.Key).OrderBy(x => x).ToList();
-                }
-                return _movieGenres;
-            }
-        }
-
-        #endregion
-
-        public string FirstFavoriteGenre
-        {
-            get
-            {
-                if (Movies == null)
-                {
-                    return string.Empty;
-                }
-
-                if (!MovieGenres.Any())
-                {
-                    return string.Empty;
-                }
-
-                return MovieGenres[0];
-            }
-        }
-
-        public string SecondFavoriteGenre
-        {
-            get
-            {
-                if (Movies == null)
-                {
-                    return string.Empty;
-                }
-
-                if (MovieGenres.Count < 2)
-                {
-                    return string.Empty;
-                }
-
-                return MovieGenres[1];
-            }
-        }
-
-        public ObservableCollectionEx<Movie> MoviesFirstFavoriteGenre
-        {
-            get
-            {
-                if (Movies == null)
-                {
-                    return new ObservableCollectionEx<Movie>();
-                }
-                
-                string mostFavoriteGenre = FirstFavoriteGenre;
-                if (string.IsNullOrEmpty(mostFavoriteGenre))
-                {
-                    return new ObservableCollectionEx<Movie>();
-                }
-
-                List<Movie> movies = Movies
-                    .Where(q => q.Genres.Any(w => w == mostFavoriteGenre))
-                    .OrderByDescending(q => q.OfficialRating)
-                    .Take(20).ToList();
-                return new ObservableCollectionEx<Movie>(movies);
-            }
-        }
-
-        public ObservableCollectionEx<Movie> MoviesSecondFavoriteGenre
-        {
-            get
-            {
-                if (Movies == null)
-                {
-                    return new ObservableCollectionEx<Movie>();
-                }
-                
-                string secondFavoriteGenre = SecondFavoriteGenre;
-                if (string.IsNullOrEmpty(secondFavoriteGenre))
-                {
-                    return new ObservableCollectionEx<Movie>();
-                }
-
-                List<Movie> movies = Movies
-                    .Where(q => q.Genres.Any(w => w == secondFavoriteGenre))
-                    .OrderByDescending(q => q.OfficialRating)
-                    .Take(20).ToList();
-                return new ObservableCollectionEx<Movie>(movies);
-            }
-        }
-
+        public string SecondFavoriteGenre { get; private set; }
 
         #region IsRecommendationsOpened
 
@@ -207,14 +73,22 @@ namespace Jellyfin.ViewModels
         /// </summary>
         private readonly IMovieService _movieService;
 
+        /// <summary>
+        /// Reference for the log manager.
+        /// </summary>
+        private readonly ILogManager _logManager;
+
         #endregion
 
         #region ctor
 
-        public MovieListViewModel(IMovieService movieService)
+        public MovieListViewModel(IMovieService movieService, ILogManager logManager)
         {
             _movieService = movieService ??
                 throw new ArgumentNullException(nameof(movieService));
+
+            _logManager = logManager ??
+                throw new ArgumentNullException(nameof(logManager));
         }
 
         #endregion
@@ -260,22 +134,59 @@ namespace Jellyfin.ViewModels
         /// <summary>
         /// Loads all the movies available.
         /// </summary>
+        [LogMethod]
         public async Task Load()
         {
-            if (!Movies.Any())
+            IsLoading = true;
+
+            try
             {
+                if (Movies.Any())
+                {
+                    return;
+                }
+
                 IList<Movie> movies = (await _movieService.GetMovies()).ToList();
                 foreach (Movie movie in movies.OrderBy(q => q.Name))
                 {
                     Movies.Add(movie);
                 }
 
+                ContinueWatchingMovies = new ObservableCollectionEx<Movie>(
+                    Movies.Where(q => q.PlaybackPosition.Ticks > 0));
                 RaisePropertyChanged(nameof(ContinueWatchingMovies));
+
+                RecentlyReleasedMovies = new ObservableCollectionEx<Movie>(Movies
+                    .Where(q => q.PremiereDate > DateTime.Now.AddMonths(-18))
+                    .OrderByDescending(q => q.PremiereDate)
+                    .Take(20).ToList());
+
                 RaisePropertyChanged(nameof(RecentlyReleasedMovies));
+
+                MovieGenres = _movies.SelectMany(q => q.Genres).GroupBy(q => q).Select(group => group.Key)
+                    .OrderBy(x => x).ToList();
+                FirstFavoriteGenre = MovieGenres[0];
+                SecondFavoriteGenre = MovieGenres[1];
+
+                MoviesFirstFavoriteGenre = new ObservableCollectionEx<Movie>(Movies
+                    .Where(q => q.Genres.Any(w => w == FirstFavoriteGenre))
+                    .OrderByDescending(q => q.OfficialRating)
+                    .Take(20).ToList());
                 RaisePropertyChanged(nameof(MoviesFirstFavoriteGenre));
+
+                MoviesSecondFavoriteGenre = new ObservableCollectionEx<Movie>(Movies
+                    .Where(q => q.Genres.Any(w => w == SecondFavoriteGenre))
+                    .OrderByDescending(q => q.OfficialRating)
+                    .Take(20).ToList());
                 RaisePropertyChanged(nameof(MoviesSecondFavoriteGenre));
-                RaisePropertyChanged(nameof(FirstFavoriteGenre));
-                RaisePropertyChanged(nameof(SecondFavoriteGenre));
+            }
+            catch (Exception xc)
+            {
+                _logManager.LogError(xc, "An error occurred while loading movies.");
+            }
+            finally
+            {
+                IsLoading = false;
             }
         }
 

@@ -1,9 +1,7 @@
-﻿using System;
-using Windows.Foundation;
+﻿using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Jellyfin.Models;
@@ -147,7 +145,6 @@ namespace Jellyfin.UserControls
             }
 
             stackPanel.Width = width;
-            ImageBorder.Width = width - 28;
             DoubleAnimation doubleAnimation = animateStoryboard.Children[0] as DoubleAnimation;
             doubleAnimation.From = width;
             RectangleGeometry.Rect = new Rect(0, 0, width, 40);

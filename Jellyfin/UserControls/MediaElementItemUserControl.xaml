@@ -7,12 +7,18 @@
     xmlns:userControls="using:Jellyfin.UserControls"
     mc:Ignorable="d" x:Name="UI"
     d:DataContext="{d:DesignInstance models:Movie}">
-    <StackPanel x:Name="stackPanel" Orientation="Vertical" Margin="11, 0, 11, 25" Width="250">
-        <Border CornerRadius="5" Width="192" Padding="4" x:Name="ImageBorder">
+    <StackPanel x:Name="stackPanel" Orientation="Vertical" Margin="11, 0, 11, 25">
+        <Border CornerRadius="5" Padding="4" x:Name="ImageBorder" HorizontalAlignment="Center">
             <Grid>
-                <Image Visibility="{Binding ElementName=UI, Path=IsLong, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=false}" Source="{Binding ImageData, Converter={StaticResource ByteArrayToImageConverter}}" Height="{Binding ElementName=UI, Path=BlockHeight, UpdateSourceTrigger=PropertyChanged}" />
+                <Image
+                    Visibility="{Binding ElementName=UI, Path=IsLong, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=false}" Stretch="None"
+                    Source="{Binding ImageData, Converter={StaticResource ByteArrayToImageConverter}}"
+                    Height="{Binding ElementName=UI, Path=BlockHeight, UpdateSourceTrigger=PropertyChanged, FallbackValue=260}" />
 
-                <Image Visibility="{Binding ElementName=UI, Path=IsLong, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}, TargetNullValue=Collapsed, FallbackValue=Collapsed}"  Source="{Binding BackdropImageData, Converter={StaticResource ByteArrayToImageConverter}}" Height="{Binding ElementName=UI, Path=BlockHeight, UpdateSourceTrigger=PropertyChanged}"  />
+                <Image
+                    Visibility="{Binding ElementName=UI, Path=IsLong, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}, TargetNullValue=Collapsed, FallbackValue=Collapsed}"
+                    Source="{Binding BackdropImageData, Converter={StaticResource ByteArrayToImageConverter}}"
+                    Height="{Binding ElementName=UI, Path=BlockHeight, UpdateSourceTrigger=PropertyChanged, FallbackValue=480}"  />
 
                 <userControls:NewMediaIndicator
                     Visibility="{Binding IsPlayed, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=false}"
@@ -38,7 +44,7 @@
             <TextBlock x:Name="movingTextBlock"
                        Text="{Binding Name}" FontSize="30" Foreground="White" HorizontalAlignment="Center" TextAlignment="Center" />
         </Canvas>
-        <ProgressBar x:Name="watchedProgressBar" Margin="17, -20, 17, 0" HorizontalAlignment="Stretch" Height="10" Minimum="0" Maximum="{Binding Runtime.Ticks}" Foreground="{StaticResource PrimaryColor}" Background="#80000000"
+        <ProgressBar x:Name="watchedProgressBar" Margin="17, -17, 17, 0" HorizontalAlignment="Stretch" Height="10" Minimum="0" Maximum="{Binding Runtime.Ticks}" Foreground="{StaticResource PrimaryColor}" Background="#80000000"
             Visibility="{Binding ElementName=UI, Path=IsProgressBarVisible, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}" 
             Value="{Binding PlaybackPosition.Ticks}" />
         

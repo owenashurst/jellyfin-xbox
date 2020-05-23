@@ -16,9 +16,15 @@
 
         <StackPanel Grid.Row="0" Padding="20">
             <TextBlock Text="{Binding SelectedMediaElement.Name}"
-                       FontSize="{StaticResource FontL}" />                                                                            
-            <TextBlock Text="{Binding SelectedMediaElement.SecondLine}"
-                       FontSize="{StaticResource FontL}" Opacity=".7" />
+                       FontSize="{StaticResource FontL}" />
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding SelectedMediaElement.TvShow.Name}"
+                           FontSize="{StaticResource FontL}" Opacity=".7" />
+                <TextBlock Text=" - " Visibility="{Binding SelectedMediaElement.TvShow.Name, Converter={StaticResource StringEmptyToVisibilityConverter}}"
+                           FontSize="{StaticResource FontL}" Opacity=".7" />
+                <TextBlock Text="{Binding SelectedMediaElement.SecondLine}"
+                           FontSize="{StaticResource FontL}" Opacity=".7" />
+            </StackPanel>
         </StackPanel>
 
         <Grid Grid.Row="1" Background="#80000000" CornerRadius="5"

@@ -1,6 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using Windows.UI.Xaml;
-using Jellyfin.Core.Models;
+﻿using Windows.UI.Xaml;
 
 namespace Jellyfin.UserControls
 {

@@ -11,12 +11,17 @@ namespace Jellyfin.Services
     {
         public void Navigate(Type sourcePage)
         {
+            Globals.Instance.LogManager.LogInfo($"Navigate to {sourcePage}");
+
             Frame frame = (Frame)Window.Current.Content;
             frame.Navigate(sourcePage, null, new DrillInNavigationTransitionInfo());
         }
 
         public void Navigate(Type sourcePage, object parameter)
         {
+            Globals.Instance.LogManager.LogInfo(
+                $"Navigate to {sourcePage} with parameters {parameter}");
+
             Frame frame = (Frame)Window.Current.Content;
             frame.Navigate(sourcePage, parameter, new DrillInNavigationTransitionInfo());
         }
@@ -43,7 +48,8 @@ namespace Jellyfin.Services
         /// </summary>
         public void GoBack()
         {
-            // Frame.CanGoBack()?
+            Frame frame = (Frame)Window.Current.Content;
+            Globals.Instance.LogManager.LogInfo($"NavigationService.GoBack() from " + frame.GetType());
             Go(false);
         }
 

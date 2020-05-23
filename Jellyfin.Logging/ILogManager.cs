@@ -1,4 +1,6 @@
-﻿namespace Jellyfin.Logging
+﻿using System;
+
+namespace Jellyfin.Logging
 {
     public interface ILogManager
     {
@@ -6,5 +8,6 @@
         void LogWarn(string text);
         void LogDebug(string text);
         void LogError(string text);
+        void LogError(Exception xc, string text);
     }
 }

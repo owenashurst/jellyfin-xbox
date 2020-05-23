@@ -135,10 +135,8 @@ namespace Jellyfin.ViewModels
 
                 return nextSeasonEpisodes.FirstOrDefault();
             }
-            else
-            {
-                return episodes[epNumber + 1];
-            }
+
+            return episodes[epNumber + 1];
         }
 
         #endregion

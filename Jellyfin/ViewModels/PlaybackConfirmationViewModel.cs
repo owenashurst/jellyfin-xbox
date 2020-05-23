@@ -110,17 +110,17 @@ namespace Jellyfin.ViewModels
         /// </summary>
         private readonly ILogManager _logManager;
 
-        #region IsTimerStopped
+        #region IsTimerVisible
 
-        private bool _isTimerStopped;
+        private bool _isTimerVisible;
 
-        public bool IsTimerStopped
+        public bool IsTimerVisible
         {
-            get { return _isTimerStopped; }
+            get { return _isTimerVisible; }
             set
             {
-                _isTimerStopped = value;
-                RaisePropertyChanged(nameof(IsTimerStopped));
+                _isTimerVisible = value;
+                RaisePropertyChanged(nameof(IsTimerVisible));
             }
         }
 
@@ -141,6 +141,7 @@ namespace Jellyfin.ViewModels
             _autoPlaybackTimer = new Timer();
             _autoPlaybackTimer.AutoReset = true;
             _autoPlaybackTimer.Interval = 1000;
+            IsTimerVisible = true;
             _autoPlaybackTimer.Elapsed += AutoPlaybackTimerOnElapsed;
         }
 
@@ -202,8 +203,14 @@ namespace Jellyfin.ViewModels
             });
         }
 
-        private void PlayNext()
+        private async Task PlayNext()
         {
+            if (NextMediaElement.PlaybackInformation == null)
+            {
+                NextMediaElement.PlaybackInformation =
+                    await _playbackInfoService.GetPlaybackInformation(NextMediaElement.Id);
+            }
+
             NavigationService.Navigate(typeof(MediaPlaybackView), new PlaybackViewParameterModel
             {
                 SelectedMediaElement = NextMediaElement,
@@ -250,7 +257,7 @@ namespace Jellyfin.ViewModels
         public void StopTimer()
         {
             _autoPlaybackTimer.Stop();
-            IsTimerStopped = true;
+            IsTimerVisible = false;
         }
 
         /// <summary>
@@ -261,13 +268,16 @@ namespace Jellyfin.ViewModels
         /// 2) The playback information is available and more than 2 min, so let the user decide what they want
         /// 3) IsJustFinished is set, display the boxed screen shot layout to the user to let them decide
         /// </summary>
+        [LogMethod]
         public async Task PlaybackViewParametersChanged(PlaybackViewParameterModel p)
         {
-            _logManager.LogDebug("Playback View Parameters Changed raised, obj = " + PlaybackViewParameters);
+            _logManager.LogDebug($"Playback View Parameters Changed raised, obj = {PlaybackViewParameters}");
 
             // Does it come from movie / episode chooser?
             if (!p.IsJustFinishedPlaying)
             {
+                _logManager.LogDebug($"{p.SelectedMediaElement}, It comes from movie/epi chooser.");
+
                 SelectedMediaElement = p.SelectedMediaElement;
                 if (SelectedMediaElement.PlaybackPosition.TotalMinutes > 2 &&
                     SelectedMediaElement.PlaybackRemaining.TotalMinutes < 2)
@@ -277,10 +287,12 @@ namespace Jellyfin.ViewModels
                 }
                 else if (SelectedMediaElement.PlaybackPosition.TotalMinutes <= 2)
                 {
+                    _logManager.LogDebug($"{p.SelectedMediaElement}, playback position total less than 2min.");
                     PlayFromBeginning();
                 }
                 else if (SelectedMediaElement.PlaybackRemaining.TotalMinutes <= 2)
                 {
+                    _logManager.LogDebug($"{p.SelectedMediaElement}, playback remaining total less than 2min.");
                     PlayFromBeginning();
                 }
             }
@@ -288,10 +300,29 @@ namespace Jellyfin.ViewModels
             {
                 
                 // go to the next element on the playlist, then play that from the beginning.
-                SelectedMediaElement = PlaybackViewParameters.Playlist[0];
-                PlaybackViewParameters.Playlist = PlaybackViewParameters.Playlist.Skip(1).ToArray();
+                SelectedMediaElement = PlaybackViewParameters.SelectedMediaElement;
+                if (PlaybackViewParameters.Playlist.Length >= 2)
+                {
+                    _logManager.LogDebug(
+                        $"{p.SelectedMediaElement}, go to the next element on the playlist, then play that from the beginning.");
 
-                IsShowConfirmation = true;
+                    NextMediaElement = PlaybackViewParameters.Playlist[0];
+                    PlaybackViewParameters.Playlist = PlaybackViewParameters.Playlist.Skip(1).ToArray();
+
+                    IsShowConfirmation = true;
+
+                    AutoPlayNextTimeLeft = 20;
+                    _autoPlaybackTimer.Start();
+                    IsTimerVisible = true;
+                }
+                else
+                {
+                    _logManager.LogDebug("No next element, navigating back twice.");
+
+                    // As it comes from the playback, we should navigate back two times
+                    NavigationService.GoBack();
+                    NavigationService.GoBack();
+                }
             }
         }
 

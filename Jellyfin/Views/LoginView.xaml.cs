@@ -3,7 +3,6 @@ using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using Jellyfin.ViewModels;
 
 namespace Jellyfin.Views
 {

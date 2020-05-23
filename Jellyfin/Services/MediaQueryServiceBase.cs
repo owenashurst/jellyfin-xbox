@@ -1,6 +1,5 @@
 ﻿using System;
 using Jellyfin.Core;
-using Jellyfin.Logging;
 using Jellyfin.Models;
 using Jellyfin.Services.Interfaces;
 

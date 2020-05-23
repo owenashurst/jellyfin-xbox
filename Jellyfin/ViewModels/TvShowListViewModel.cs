@@ -2,10 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.Globalization;
 using Jellyfin.Extensions;
+using Jellyfin.Logging;
 using Jellyfin.Models;
-using Jellyfin.Services;
 using Jellyfin.Services.Interfaces;
 
 namespace Jellyfin.ViewModels
@@ -35,7 +34,8 @@ namespace Jellyfin.ViewModels
 
         #region ContinueWatchingEpisodes
 
-        private ObservableCollectionEx<TvShowEpisode> _continueWatchingEpisodes = new ObservableCollectionEx<TvShowEpisode>();
+        private ObservableCollectionEx<TvShowEpisode> _continueWatchingEpisodes =
+            new ObservableCollectionEx<TvShowEpisode>();
 
         public ObservableCollectionEx<TvShowEpisode> ContinueWatchingEpisodes
         {
@@ -73,14 +73,22 @@ namespace Jellyfin.ViewModels
         /// </summary>
         private readonly ITvShowService _tvShowService;
 
+        /// <summary>
+        /// Reference for the log manager.
+        /// </summary>
+        private readonly ILogManager _logManager;
+
         #endregion
 
         #region ctor
 
-        public TvShowListViewModel(ITvShowService tvShowService)
+        public TvShowListViewModel(ITvShowService tvShowService, ILogManager logManager)
         {
             _tvShowService = tvShowService ??
-                            throw new ArgumentNullException(nameof(tvShowService));
+                             throw new ArgumentNullException(nameof(tvShowService));
+
+            _logManager = logManager ??
+                          throw new ArgumentNullException(nameof(logManager));
         }
 
         #endregion
@@ -126,50 +134,65 @@ namespace Jellyfin.ViewModels
         /// <summary>
         /// Loads all the tv shows available.
         /// </summary>
+        [LogMethod]
         public async Task Load()
-        { 
-            if (!TvShows.Any())
-            {
-                IList<TvShow> tvShows = (await _tvShowService.GetTvShows()).ToList();
-                foreach (TvShow tvShow in tvShows.OrderBy(q => q.Name))
-                {
-                    TvShows.Add(tvShow);
-                }
-            }
+        {
+            IsLoading = true;
 
-            IList<TvShowEpisode> tvShowEpisodes = (await _tvShowService.GetContinueWatchingEpisodes()).ToList();
-            foreach (TvShowEpisode tvShowEpisode in tvShowEpisodes)
+            try
             {
-                if (ContinueWatchingEpisodes.All(q => q.Id != tvShowEpisode.Id))
+                if (!TvShows.Any())
                 {
-                    ContinueWatchingEpisodes.Add(tvShowEpisode);
-
-                    TvShow correspondingTvShow = TvShows.FirstOrDefault(q => q.Id == tvShowEpisode.SeriesId);
-                    if (correspondingTvShow != null)
+                    IList<TvShow> tvShows = (await _tvShowService.GetTvShows()).ToList();
+                    foreach (TvShow tvShow in tvShows.OrderBy(q => q.Name))
                     {
-                        tvShowEpisode.TvShow = correspondingTvShow;
+                        TvShows.Add(tvShow);
+                    }
+                }
 
-                        TvShowSeason correspondingSeason =
-                            correspondingTvShow.Seasons.FirstOrDefault(q => q.Id == tvShowEpisode.SeasonId);
+                IList<TvShowEpisode> tvShowEpisodes = (await _tvShowService.GetContinueWatchingEpisodes()).ToList();
+                foreach (TvShowEpisode tvShowEpisode in tvShowEpisodes)
+                {
+                    if (ContinueWatchingEpisodes.All(q => q.Id != tvShowEpisode.Id))
+                    {
+                        ContinueWatchingEpisodes.Add(tvShowEpisode);
 
-                        if (correspondingSeason != null)
+                        TvShow correspondingTvShow = TvShows.FirstOrDefault(q => q.Id == tvShowEpisode.SeriesId);
+                        if (correspondingTvShow != null)
                         {
-                            tvShowEpisode.Season = correspondingSeason;
-                        }
-                        else
-                        {
-                            IEnumerable<TvShowSeason> seasons = await _tvShowService.GetSeasonsBy(correspondingTvShow);
+                            tvShowEpisode.TvShow = correspondingTvShow;
 
-                            correspondingSeason =
-                                seasons.FirstOrDefault(q => q.Id == tvShowEpisode.SeasonId);
+                            TvShowSeason correspondingSeason =
+                                correspondingTvShow.Seasons.FirstOrDefault(q => q.Id == tvShowEpisode.SeasonId);
 
-                            tvShowEpisode.Season = correspondingSeason;
+                            if (correspondingSeason != null)
+                            {
+                                tvShowEpisode.Season = correspondingSeason;
+                            }
+                            else
+                            {
+                                IEnumerable<TvShowSeason> seasons =
+                                    await _tvShowService.GetSeasonsBy(correspondingTvShow);
 
-                            // It performs creating the graph, I am still in doubt if it's a good idea or not.
-                            await _tvShowService.GetEpisodesBy(correspondingTvShow, correspondingSeason);
+                                correspondingSeason =
+                                    seasons.FirstOrDefault(q => q.Id == tvShowEpisode.SeasonId);
+
+                                tvShowEpisode.Season = correspondingSeason;
+
+                                // It performs creating the graph, I am still in doubt if it's a good idea or not.
+                                await _tvShowService.GetEpisodesBy(correspondingTvShow, correspondingSeason);
+                            }
                         }
                     }
                 }
+            }
+            catch (Exception xc)
+            {
+                _logManager.LogError(xc, "An error occurred while loading tv shows.");
+            }
+            finally
+            {
+                IsLoading = false;
             }
         }
 

@@ -73,36 +73,45 @@ namespace Jellyfin.Services
 
         #region Additional methods
 
+        [LogMethod]
         public async Task<IEnumerable<Movie>> GetMovies()
         {
             List<Movie> movieList = new List<Movie>();
 
-            using (HttpClient cli = new HttpClient())
+            try
             {
-                cli.AddAuthorizationHeaders();
 
-                HttpResponseMessage result = await cli.GetAsync(ListMoviesEndpoint);
-
-                if (!result.IsSuccessStatusCode)
+                using (HttpClient cli = new HttpClient())
                 {
-                    return new List<Movie>();
-                }
+                    cli.AddAuthorizationHeaders();
 
-                string jsonResult = await result.Content.ReadAsStringAsync();
+                    HttpResponseMessage result = await cli.GetAsync(ListMoviesEndpoint);
 
-                JellyfinMovieResult resultSet = JsonConvert.DeserializeObject<JellyfinMovieResult>(jsonResult);
-                
-                foreach (MovieItem item in resultSet.Items)
-                {
-                    Movie movie = _movieAdapter.Convert(item);
-                    movieList.Add(movie);
-                    ImageDownloadQueue.EnqueueTask(movie);
+                    if (!result.IsSuccessStatusCode)
+                    {
+                        return new List<Movie>();
+                    }
+
+                    string jsonResult = await result.Content.ReadAsStringAsync();
+
+                    JellyfinMovieResult resultSet = JsonConvert.DeserializeObject<JellyfinMovieResult>(jsonResult);
+
+                    foreach (MovieItem item in resultSet.Items)
+                    {
+                        Movie movie = _movieAdapter.Convert(item);
+                        movieList.Add(movie);
+                        ImageDownloadQueue.EnqueueTask(movie);
+                    }
                 }
+            } catch (Exception xc)
+            {
+                _logManager.LogError(xc, "An error occurred while getting movies.");
             }
 
             return movieList;
         }
 
+        [LogMethod]
         public async Task<Movie> GetMovieDetails(string movieId)
         {
             try
@@ -129,37 +138,44 @@ namespace Jellyfin.Services
             }
             catch (Exception xc)
             {
-                // TODO smurancsik: add correct logging
+                _logManager.LogError(xc, $"An error occurred while getting movie details for ID {movieId}.");
             }
 
             return null;
         }
 
+        [LogMethod]
         public async Task<IEnumerable<Movie>> GetRelatedMovies(string movieId)
         {
             List<Movie> movieList = new List<Movie>();
 
-            using (HttpClient cli = new HttpClient())
+            try
             {
-                cli.AddAuthorizationHeaders();
-
-                HttpResponseMessage result = await cli.GetAsync(string.Format(GetRelatedMoviesEndpoint, movieId));
-
-                if (!result.IsSuccessStatusCode)
+                using (HttpClient cli = new HttpClient())
                 {
-                    return new List<Movie>();
+                    cli.AddAuthorizationHeaders();
+
+                    HttpResponseMessage result = await cli.GetAsync(string.Format(GetRelatedMoviesEndpoint, movieId));
+
+                    if (!result.IsSuccessStatusCode)
+                    {
+                        return new List<Movie>();
+                    }
+
+                    string jsonResult = await result.Content.ReadAsStringAsync();
+
+                    JellyfinMovieResult resultSet = JsonConvert.DeserializeObject<JellyfinMovieResult>(jsonResult);
+
+                    foreach (MovieItem item in resultSet.Items)
+                    {
+                        Movie movie = _movieAdapter.Convert(item);
+                        movieList.Add(movie);
+                        ImageDownloadQueue.EnqueueTask(movie);
+                    }
                 }
-
-                string jsonResult = await result.Content.ReadAsStringAsync();
-
-                JellyfinMovieResult resultSet = JsonConvert.DeserializeObject<JellyfinMovieResult>(jsonResult);
-
-                foreach (MovieItem item in resultSet.Items)
-                {
-                    Movie movie = _movieAdapter.Convert(item);
-                    movieList.Add(movie);
-                    ImageDownloadQueue.EnqueueTask(movie);
-                }
+            } catch (Exception xc)
+            {
+                _logManager.LogError(xc, $"An error occurred while getting related movies for ID {movieId}.");
             }
 
             return movieList;

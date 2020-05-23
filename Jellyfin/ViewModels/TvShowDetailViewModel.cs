@@ -74,7 +74,7 @@ namespace Jellyfin.ViewModels
                     return SelectedSeason.Name;
                 }
 
-                return SelectedSeason.Name + " • " + SelectedSeasonEpisodes.Count + " Episodes";
+                return $"{SelectedSeason.Name} • {SelectedSeasonEpisodes.Count} Episodes";
             }
         }
 
@@ -150,7 +150,7 @@ namespace Jellyfin.ViewModels
             NavigationService.Navigate(typeof(PlaybackConfirmationView), new PlaybackViewParameterModel
             {
                 SelectedMediaElement = SelectedMediaElement,
-                Playlist = remainingSeasonEpisodes,
+                Playlist = remainingSeasonEpisodes
             });
         }
 

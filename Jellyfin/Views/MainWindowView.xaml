@@ -16,11 +16,11 @@
             <ScrollViewer>
                 <StackPanel>
                     <Grid Visibility="{Binding IsShowMovies, Converter={StaticResource BooleanToVisibilityConverter}}">
-                        <userControls:MovieListUserControl />
+                        <userControls:MovieListUserControl x:Name="movieListControl" />
                     </Grid>
 
                     <Grid Visibility="{Binding IsShowTvShows, Converter={StaticResource BooleanToVisibilityConverter}}">
-                        <userControls:TvShowListUserControl />
+                        <userControls:TvShowListUserControl x:Name="tvShowListControl" />
                     </Grid>
 
                     <Grid Visibility="{Binding IsShowMusic, Converter={StaticResource BooleanToVisibilityConverter}}">

@@ -1,10 +1,10 @@
-﻿using System.Threading.Tasks;
-using Windows.UI.Core;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Core;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
+using Jellyfin.Logging;
 using Jellyfin.Models;
 using Jellyfin.ViewModels;
+using Newtonsoft.Json;
 
 namespace Jellyfin.Views
 {
@@ -25,14 +25,8 @@ namespace Jellyfin.Views
         public PlaybackConfirmationView()
         {
             InitializeComponent();
-            Loaded += OnLoaded;
         }
         
-        private void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            //_dc.PlaybackViewParametersChanged(_dc.PlaybackViewParameters);
-        }
-
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             _dc.StopTimer();
@@ -43,6 +37,7 @@ namespace Jellyfin.Views
         /// Retrieves the playback navigation model, and passes to the view model.
         /// </summary>
         /// <param name="e"></param>
+        [LogMethod]
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             if (e.Parameter == null)
@@ -53,18 +48,17 @@ namespace Jellyfin.Views
             PlaybackViewParameterModel m = e.Parameter as PlaybackViewParameterModel;
             if (m.IsInvalidated)
             {
+                Globals.Instance.LogManager.LogDebug(
+                    $"Playback Confirmation View: View Parameter model is invalidated, not handling navigation logic. e.Parameter = {m}");
                 return;
             }
 
             m.IsInvalidated = true;
             _dc.PlaybackViewParameters = m;
 
-            Task.Delay(0).ContinueWith((task) =>
+            Globals.Instance.UIDispatcher.RunAsync(CoreDispatcherPriority.High, () =>
             {
-                Globals.Instance.UIDispatcher.RunAsync(CoreDispatcherPriority.High, () =>
-                    {
-                        _dc.PlaybackViewParametersChanged(m);
-                    });
+                _dc.PlaybackViewParametersChanged(m);
             });
         }
 

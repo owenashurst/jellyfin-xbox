@@ -13,7 +13,7 @@
         <ImageBrush ImageSource="/Assets/Images/background.png" Stretch="UniformToFill"/>
     </Page.Background>
     <ScrollViewer>
-        <Grid Margin="15, 150, 30, 0">
+        <Grid Margin="15, 50, 30, 0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
@@ -94,13 +94,13 @@
                 <Grid Margin="0, 50, 0, 0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
+                        <RowDefinition Height="310" />
                     </Grid.RowDefinitions>
 
                     <TextBlock Grid.Row="0" Text="{Binding SeasonEpisodesText, Converter={StaticResource StringToUpperConverter}}" FontSize="32" FontWeight="SemiBold" Margin="30, 0, 0, 20" />
 
-                    <userControls:MediaElementListUserControl Grid.Row="1" BlockWidth="500" BlockHeight="265"
-                        MediaSource="{Binding SelectedSeasonEpisodes}" IsDirectPlay="True" />
+                    <userControls:MediaElementListUserControl Grid.Row="1" BlockWidth="300" BlockHeight="165"
+                        MediaSource="{Binding SelectedSeasonEpisodes}" IsDirectPlay="True" IsLong="True" />
                 </Grid>
 
 

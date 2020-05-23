@@ -27,11 +27,12 @@ namespace Jellyfin.UserControls
 
         #region BlockHeight Dependency Property
 
-        public static readonly DependencyProperty BlockHeightDependency = DependencyProperty.Register("BlockHeight", typeof(int), typeof(MediaElementGridUserControl), new PropertyMetadata(0));
+        public static readonly DependencyProperty BlockHeightDependency = DependencyProperty.Register("BlockHeight",
+            typeof(int), typeof(MediaElementGridUserControl), new PropertyMetadata(0));
 
         public int BlockHeight
         {
-            get => (int)GetValue(BlockHeightDependency);
+            get => (int) GetValue(BlockHeightDependency);
             set => SetValue(BlockHeightDependency, value);
         }
 
@@ -39,11 +40,12 @@ namespace Jellyfin.UserControls
 
         #region BlockWidth Dependency Property
 
-        public static readonly DependencyProperty BlockWidthDependency = DependencyProperty.Register("BlockWidth", typeof(int), typeof(MediaElementGridUserControl), new PropertyMetadata(0));
+        public static readonly DependencyProperty BlockWidthDependency = DependencyProperty.Register("BlockWidth",
+            typeof(int), typeof(MediaElementGridUserControl), new PropertyMetadata(0));
 
         public int BlockWidth
         {
-            get => (int)GetValue(BlockWidthDependency);
+            get => (int) GetValue(BlockWidthDependency);
             set => SetValue(BlockWidthDependency, value);
         }
 
@@ -56,7 +58,20 @@ namespace Jellyfin.UserControls
         /// </summary>
         public GridViewItem FirstElement
         {
-            get => (GridViewItem)itemsContainer.ContainerFromIndex(0);
+            get => (GridViewItem) itemsContainer.ContainerFromIndex(0);
+        }
+
+        public GridViewItem SelectedElement
+        {
+            get
+            {
+                if (itemsContainer.SelectedIndex == -1)
+                {
+                    return null;
+                }
+
+                return (GridViewItem) itemsContainer.ContainerFromIndex(itemsContainer.SelectedIndex);
+            }
         }
 
         #endregion
@@ -120,6 +135,7 @@ namespace Jellyfin.UserControls
                 MediaElementItemUserControl item = ItemFromGridViewItem(FirstElement);
                 item.FocusLost();
             }
+
             foreach (object deletedItem in delArr)
             {
                 GridViewItem selectedItem = (GridViewItem) itemsContainer.ContainerFromItem(deletedItem);
@@ -147,6 +163,21 @@ namespace Jellyfin.UserControls
             }
         }
 
+        public void LoseFocus()
+        {
+            if (SelectedElement != null)
+            {
+                MediaElementItemUserControl result = ItemFromGridViewItem(SelectedElement);
+                result?.FocusLost();
+            }
+        }
+
+        private void MediaElementGridUserControl_OnLostFocus(object sender, RoutedEventArgs e)
+        {
+            //LoseFocus();
+        }
+
         #endregion
+
     }
 }

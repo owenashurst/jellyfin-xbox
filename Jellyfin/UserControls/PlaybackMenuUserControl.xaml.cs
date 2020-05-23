@@ -2,7 +2,6 @@
 using System.Timers;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
-using Jellyfin.Core;
 using Jellyfin.ViewModels;
 
 namespace Jellyfin.UserControls

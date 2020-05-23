@@ -1,5 +1,3 @@
-using System;
-
 namespace Jellyfin.Models.ServiceModels
 {
     public class UserData

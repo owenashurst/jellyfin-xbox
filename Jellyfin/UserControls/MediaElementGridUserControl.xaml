@@ -2,6 +2,7 @@
     x:Class="Jellyfin.UserControls.MediaElementGridUserControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    LostFocus="MediaElementGridUserControl_OnLostFocus"
     xmlns:local="using:Jellyfin.UserControls" x:Name="UI">
     <GridView x:Name="itemsContainer" GotFocus="ItemsContainer_OnGotFocus" ItemsSource="{Binding ElementName=UI, Path=MediaSource, UpdateSourceTrigger=PropertyChanged}"
             Margin="0, 30, 0, 0" IsItemClickEnabled="True"

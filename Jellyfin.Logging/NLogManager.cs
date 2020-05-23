@@ -1,27 +1,55 @@
-﻿namespace Jellyfin.Logging
+﻿using System;
+using NLog;
+
+namespace Jellyfin.Logging
 {
     public class NLogManager : ILogManager
     {
-        private readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
-
         public void LogInfo(string text)
         {
-            Logger.Info(text);
+            TaskLogQueue.Instance.LogItemQueue.EnqueueTask(new LogItem
+            {
+                Level = LogLevel.Info,
+                Text = text
+            });
         }
 
         public void LogWarn(string text)
         {
-            Logger.Warn(text);
+            TaskLogQueue.Instance.LogItemQueue.EnqueueTask(new LogItem
+            {
+                Level = LogLevel.Warn,
+                Text = text
+            });
         }
 
         public void LogDebug(string text)
         {
-            Logger.Debug(text);
+            TaskLogQueue.Instance.LogItemQueue.EnqueueTask(new LogItem
+            {
+                Level = LogLevel.Debug,
+                Text = text
+            });
+
         }
 
         public void LogError(string text)
         {
-            Logger.Error(text);
+            TaskLogQueue.Instance.LogItemQueue.EnqueueTask(new LogItem
+            {
+                Level = LogLevel.Error,
+                Text = text
+            });
+        }
+
+        public void LogError(Exception xc, string text)
+        {
+            TaskLogQueue.Instance.LogItemQueue.EnqueueTask(new LogItem
+            {
+                Level = LogLevel.Error,
+                Exception = xc,
+                Text = text
+            });
         }
     }
 }

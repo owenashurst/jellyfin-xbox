@@ -35,8 +35,11 @@
                     Command="{Binding ToolCommand}" CommandParameter="OrderBy" />
         </StackPanel>
 
+        <userControls:LoadingUserControl Grid.Row="2" Margin="0, 250, 0, 0"
+                Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
         <userControls:MediaElementGridUserControl Grid.Row="2" MediaSource="{Binding TvShows}"
-            BlockWidth="220" BlockHeight="270"
+            BlockWidth="260" BlockHeight="270"
             Visibility="{Binding IsRecommendationsOpened, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=false}"
         />
 

@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Jellyfin.Services.Interfaces;
 using Newtonsoft.Json;
-using Exception = System.Exception;
 
 namespace Jellyfin.Services
 {
@@ -28,12 +27,12 @@ namespace Jellyfin.Services
             await FileIO.WriteTextAsync(sampleFile, JsonConvert.SerializeObject(value));
         }
 
-        public async Task<T> Get<T>(string fileName, T defaultValue = default(T))
+        public async Task<T> Get<T>(string fileName, T defaultValue = default)
         {
             StorageFile sampleFile = (StorageFile) await _localCacheFolder.TryGetItemAsync(fileName);
             if (sampleFile == null)
             {
-                return default(T);
+                return default;
             }
 
             string fileContent = await FileIO.ReadTextAsync(sampleFile);
@@ -44,7 +43,7 @@ namespace Jellyfin.Services
             }
             catch (Exception)
             {
-                return default(T);
+                return default;
             }
         }
 

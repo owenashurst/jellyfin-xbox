@@ -121,8 +121,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ILogManager.cs" />
+    <Compile Include="LogItem.cs" />
     <Compile Include="NLogManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TaskLogQueue.cs" />
     <EmbeddedResource Include="Properties\Jellyfin.Logging.rd.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -148,6 +150,12 @@
     <None Include="FodyWeavers.xsd">
       <SubType>Designer</SubType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Jellyfin.Core\Jellyfin.Core.csproj">
+      <Project>{54407F8E-FB53-4123-9538-316C2912066E}</Project>
+      <Name>Jellyfin.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

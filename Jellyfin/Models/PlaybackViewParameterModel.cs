@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 
 namespace Jellyfin.Models
 {
@@ -36,9 +35,8 @@ namespace Jellyfin.Models
                 playlist = string.Join("/", Playlist.ToList());
             }
 
-            return $"<{SelectedMediaElement}> IsPlaybackFromBeginning = {IsPlaybackFromBeginning}, " +
-                   $"IsJustFinishedPlaying = {IsJustFinishedPlaying}, " +
-                   $"Playlist = {playlist}";
+            return
+                $"<{SelectedMediaElement}> IsPlaybackFromBeginning = {IsPlaybackFromBeginning}, IsJustFinishedPlaying = {IsJustFinishedPlaying}, Playlist = {playlist}";
         }
 
         #endregion

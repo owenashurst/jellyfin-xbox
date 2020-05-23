@@ -41,10 +41,10 @@ namespace Jellyfin.ViewModels
 
             _container.RegisterInstance(new MainViewModel(settingsService, navigationService));
             
-            _container.RegisterInstance(new MovieListViewModel(movieService));
+            _container.RegisterInstance(new MovieListViewModel(movieService, logManager));
             _container.RegisterInstance(new MovieDetailViewModel(movieService, playbackInfoService));
             
-            _container.RegisterInstance(new TvShowListViewModel(tvShowService));
+            _container.RegisterInstance(new TvShowListViewModel(tvShowService, logManager));
             _container.RegisterInstance(new TvShowDetailViewModel(tvShowService, playbackInfoService));
             _container.RegisterInstance(new TvShowEpisodeDetailViewModel(tvShowService, playbackInfoService));
 
