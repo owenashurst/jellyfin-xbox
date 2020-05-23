@@ -66,14 +66,14 @@
             </StackPanel>
 
             <StackPanel>
-                <Button x:Name="playNextButton"
+                <Button
                     Style="{StaticResource PlaybackFinishedButton}"
                     Command="{Binding ToolCommand}" CommandParameter="PlayNext">
                     <Button.Content>
                         <Grid>
                             <Image Source="{Binding NextMediaElement.BackdropImageData, Converter={StaticResource ByteArrayToImageConverter}}" Width="575" />
 
-                            <Border Background="#A0000000" Height="120" Width="120" CornerRadius="5">
+                            <Border Background="#A0000000" Height="120" Width="120" CornerRadius="5" Visibility="{Binding IsTimerStopped, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=false}">
                                 <TextBlock Text="{Binding AutoPlayNextTimeLeft}"
                                        HorizontalAlignment="Center" VerticalAlignment="Center" />
                             </Border>

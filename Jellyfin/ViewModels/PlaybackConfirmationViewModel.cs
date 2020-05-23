@@ -82,11 +82,6 @@ namespace Jellyfin.ViewModels
         #endregion
         
         /// <summary>
-        /// Reference for the tv show service, to retrieve the next element.
-        /// </summary>
-        private readonly ITvShowService _tvShowService;
-
-        /// <summary>
         /// Reference for the playback information service.
         /// </summary>
         private readonly IPlaybackInfoService _playbackInfoService;
@@ -96,16 +91,28 @@ namespace Jellyfin.ViewModels
         /// </summary>
         private readonly ILogManager _logManager;
 
+        #region IsTimerStopped
+
+        private bool _isTimerStopped;
+
+        public bool IsTimerStopped
+        {
+            get { return _isTimerStopped; }
+            set
+            {
+                _isTimerStopped = value;
+                RaisePropertyChanged(nameof(IsTimerStopped));
+            }
+        }
+
+        #endregion
+
         #endregion
 
         #region ctor
 
-        public PlaybackConfirmationViewModel(ITvShowService tvShowService,
-            IPlaybackInfoService playbackInfoService, ILogManager logManager)
+        public PlaybackConfirmationViewModel(IPlaybackInfoService playbackInfoService, ILogManager logManager)
         {
-            _tvShowService = tvShowService ??
-                             throw new ArgumentNullException(nameof(tvShowService));
-
             _playbackInfoService = playbackInfoService ??
                                    throw new ArgumentNullException(nameof(playbackInfoService));
 
@@ -203,6 +210,7 @@ namespace Jellyfin.ViewModels
 
             AutoPlayNextTimeLeft = 20;
             _autoPlaybackTimer.Start();
+            IsTimerStopped = false;
 
             SelectedMediaElement = vpm.SelectedMediaElement;
             NextMediaElement = vpm.NextMediaElement;
@@ -234,6 +242,7 @@ namespace Jellyfin.ViewModels
         public void StopTimer()
         {
             _autoPlaybackTimer.Stop();
+            IsTimerStopped = true;
         }
     }
 }
