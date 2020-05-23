@@ -24,6 +24,8 @@
                     IsLong="{Binding ElementName=UI, Path=IsLong, UpdateSourceTrigger=PropertyChanged}"
                     IsProgressBarVisible="{Binding ElementName=UI, Path=IsProgressBarVisible, UpdateSourceTrigger=PropertyChanged}"
                     IsShowSeriesNameAsSecondLine="{Binding ElementName=UI, Path=IsShowSeriesNameAsSecondLine, UpdateSourceTrigger=PropertyChanged}"
+                    BlockHeight="{Binding ElementName=UI, Path=BlockHeight, UpdateSourceTrigger=PropertyChanged}"
+                    BlockWidth="{Binding ElementName=UI, Path=BlockWidth, UpdateSourceTrigger=PropertyChanged}"
                     DataContext="{Binding}" />
         </DataTemplate>
         </ListView.ItemTemplate>

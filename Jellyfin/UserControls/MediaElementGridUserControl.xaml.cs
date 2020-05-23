@@ -25,6 +25,30 @@ namespace Jellyfin.UserControls
 
         #endregion
 
+        #region BlockHeight Dependency Property
+
+        public static readonly DependencyProperty BlockHeightDependency = DependencyProperty.Register("BlockHeight", typeof(int), typeof(MediaElementGridUserControl), new PropertyMetadata(0));
+
+        public int BlockHeight
+        {
+            get => (int)GetValue(BlockHeightDependency);
+            set => SetValue(BlockHeightDependency, value);
+        }
+
+        #endregion
+
+        #region BlockWidth Dependency Property
+
+        public static readonly DependencyProperty BlockWidthDependency = DependencyProperty.Register("BlockWidth", typeof(int), typeof(MediaElementGridUserControl), new PropertyMetadata(0));
+
+        public int BlockWidth
+        {
+            get => (int)GetValue(BlockWidthDependency);
+            set => SetValue(BlockWidthDependency, value);
+        }
+
+        #endregion
+
         #region Properties
 
         /// <summary>

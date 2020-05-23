@@ -59,7 +59,7 @@ namespace Jellyfin.Views
             m.IsInvalidated = true;
             _dc.PlaybackViewParameters = m;
 
-            Task.Delay(100).ContinueWith((task) =>
+            Task.Delay(0).ContinueWith((task) =>
             {
                 Globals.Instance.UIDispatcher.RunAsync(CoreDispatcherPriority.High, () =>
                     {

@@ -98,7 +98,7 @@
 
                 <TextBlock Grid.Row="0" Text="RELATED MOVIES" FontSize="32" FontWeight="SemiBold" Margin="15, 0, 0, 20" />
 
-                <userControls:MediaElementListUserControl Grid.Row="1"
+                <userControls:MediaElementListUserControl Grid.Row="1" BlockWidth="220" BlockHeight="270"
                     MediaSource="{Binding RelatedMovies}" />
             </Grid>
         </Grid>

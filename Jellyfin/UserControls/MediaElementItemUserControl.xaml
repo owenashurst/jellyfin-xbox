@@ -9,16 +9,16 @@
     d:DataContext="{d:DesignInstance models:Movie}">
     <StackPanel x:Name="stackPanel" Orientation="Vertical" Margin="11, 0, 11, 25" Width="250">
         <Border CornerRadius="5" Width="192" Padding="4" x:Name="ImageBorder">
-            <StackPanel>
-                <Image Visibility="{Binding ElementName=UI, Path=IsLong, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=false}" Source="{Binding ImageData, Converter={StaticResource ByteArrayToImageConverter}}" Height="280" />
+            <Grid>
+                <Image Visibility="{Binding ElementName=UI, Path=IsLong, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=false}" Source="{Binding ImageData, Converter={StaticResource ByteArrayToImageConverter}}" Height="{Binding ElementName=UI, Path=BlockHeight, UpdateSourceTrigger=PropertyChanged}" />
 
-                <Image Visibility="{Binding ElementName=UI, Path=IsLong, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}, TargetNullValue=Collapsed, FallbackValue=Collapsed}"  Source="{Binding BackdropImageData, Converter={StaticResource ByteArrayToImageConverter}}" Height="265"  />
+                <Image Visibility="{Binding ElementName=UI, Path=IsLong, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}, TargetNullValue=Collapsed, FallbackValue=Collapsed}"  Source="{Binding BackdropImageData, Converter={StaticResource ByteArrayToImageConverter}}" Height="{Binding ElementName=UI, Path=BlockHeight, UpdateSourceTrigger=PropertyChanged}"  />
 
                 <userControls:NewMediaIndicator
                     Visibility="{Binding IsPlayed, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=false}"
-                    Margin="0, -265, 0, 0" Height="30" Width="50"
+                    Margin="0, 0, 1, 0" Height="30" Width="50"
                     HorizontalAlignment="Right" VerticalAlignment="Top" />
-            </StackPanel>
+            </Grid>
         </Border>
 
         <Canvas HorizontalAlignment="Stretch" Height="40" x:Name="containerCanvas" Visibility="Collapsed">

@@ -126,8 +126,8 @@
 
                     <TextBlock Grid.Row="0" Text="EPISODES" FontSize="32" FontWeight="SemiBold" Margin="15, 0, 0, 20" />
 
-                    <userControls:MediaElementListUserControl Grid.Row="1" IsLong="true" x:Name="episodesList"
-                        MediaSource="{Binding SelectedSeasonEpisodes}"
+                    <userControls:MediaElementListUserControl Grid.Row="1" x:Name="episodesList"
+                        MediaSource="{Binding SelectedSeasonEpisodes}" BlockWidth="500" BlockHeight="265"
                         SelectedMediaElement="{Binding SelectedMediaElement, Mode=TwoWay}"
                         IsProgressBarVisible="True" IsDirectPlay="True" />
                 </Grid>

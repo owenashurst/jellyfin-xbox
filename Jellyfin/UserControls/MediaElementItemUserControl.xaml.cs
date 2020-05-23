@@ -3,6 +3,7 @@ using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Jellyfin.Models;
@@ -19,6 +20,30 @@ namespace Jellyfin.UserControls
         {
             get => (bool)GetValue(IsLongDependency);
             set => SetValue(IsLongDependency, value);
+        }
+
+        #endregion
+
+        #region BlockHeight Dependency Property
+
+        public static readonly DependencyProperty BlockHeightDependency = DependencyProperty.Register("BlockHeight", typeof(int), typeof(MediaElementItemUserControl), new PropertyMetadata(0, SizeChanged));
+
+        public int BlockHeight
+        {
+            get => (int)GetValue(BlockHeightDependency);
+            set => SetValue(BlockHeightDependency, value);
+        }
+
+        #endregion
+
+        #region BlockWidth Dependency Property
+
+        public static readonly DependencyProperty BlockWidthDependency = DependencyProperty.Register("BlockWidth", typeof(int), typeof(MediaElementItemUserControl), new PropertyMetadata(0, SizeChanged));
+
+        public int BlockWidth
+        {
+            get => (int)GetValue(BlockWidthDependency);
+            set => SetValue(BlockWidthDependency, value);
         }
 
         #endregion
@@ -90,21 +115,42 @@ namespace Jellyfin.UserControls
 
         private static void WideChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
         {
-            if(e.NewValue != null && (bool)e.NewValue)
-            {
-                MediaElementItemUserControl mediaElementItemUserControl =
-                    dependencyObject as MediaElementItemUserControl;
-                mediaElementItemUserControl?.SetWide();
-            }
+            //if(e.NewValue != null && (bool)e.NewValue)
+            //{
+            //    MediaElementItemUserControl mediaElementItemUserControl =
+            //        dependencyObject as MediaElementItemUserControl;
+            //    mediaElementItemUserControl?.SetWide();
+            //}
         }
 
-        public void SetWide()
+        private static void SizeChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
         {
-            stackPanel.Width = 500;
-            ImageBorder.Width = 472;
+            MediaElementItemUserControl mediaElementItemUserControl =
+                dependencyObject as MediaElementItemUserControl;
+
+            mediaElementItemUserControl.SetBlockSize();
+        }
+
+        public void SetBlockSize()
+        {
+            var height = BlockHeight;
+            var width = BlockWidth;
+
+            if (height < 50)
+            {
+                return;
+            }
+
+            if (width < 50)
+            {
+                return;
+            }
+
+            stackPanel.Width = width;
+            ImageBorder.Width = width - 28;
             DoubleAnimation doubleAnimation = animateStoryboard.Children[0] as DoubleAnimation;
-            doubleAnimation.From = 500;
-            RectangleGeometry.Rect = new Rect(0, 0, 500, 40);
+            doubleAnimation.From = width;
+            RectangleGeometry.Rect = new Rect(0, 0, width, 40);
         }
 
         public void FocusGot()

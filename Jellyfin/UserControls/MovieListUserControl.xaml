@@ -37,6 +37,7 @@
         </StackPanel>
 
         <userControls:MediaElementGridUserControl Grid.Row="2" MediaSource="{Binding Movies}"
+            BlockWidth="220" BlockHeight="270"
             Visibility="{Binding IsRecommendationsOpened, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=false}"
         />
 

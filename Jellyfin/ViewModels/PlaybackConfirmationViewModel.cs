@@ -130,8 +130,7 @@ namespace Jellyfin.ViewModels
 
         #region ctor
 
-        public PlaybackConfirmationViewModel(ITvShowService tvShowService,
-            IPlaybackInfoService playbackInfoService, ILogManager logManager)
+        public PlaybackConfirmationViewModel(IPlaybackInfoService playbackInfoService, ILogManager logManager)
         {
             _playbackInfoService = playbackInfoService ??
                                    throw new ArgumentNullException(nameof(playbackInfoService));
@@ -213,8 +212,6 @@ namespace Jellyfin.ViewModels
             });
         }
 
-        #endregion
-
         public bool HandleKeyPressed(VirtualKey key)
         {
             switch (key)
@@ -230,27 +227,6 @@ namespace Jellyfin.ViewModels
                 default:
                     StopTimer();
                     return false;
-            }
-        }
-
-        public async Task PrepareNextEpisode(PlaybackViewParameterModel vpm)
-        {
-            IsShowConfirmation = false;
-
-            AutoPlayNextTimeLeft = 20;
-            _autoPlaybackTimer.Start();
-
-            SelectedMediaElement = vpm.SelectedMediaElement;
-            NextMediaElement = vpm.NextMediaElement;
-            NextAfterMediaElement = await GetNextMediaElement((TvShowEpisode)vpm.NextMediaElement);
-
-            _logManager.LogInfo(
-                $"Playback finished, Selected Media Element = {SelectedMediaElement}, Next = {NextMediaElement}, Next After = {NextAfterMediaElement}");
-
-            if (NextMediaElement != null)
-            {
-                NextAfterMediaElement.PlaybackInformation =
-                    await _playbackInfoService.GetPlaybackInformation(NextAfterMediaElement.Id);
             }
         }
 
@@ -318,5 +294,8 @@ namespace Jellyfin.ViewModels
                 IsShowConfirmation = true;
             }
         }
+
+        #endregion
+
     }
 }

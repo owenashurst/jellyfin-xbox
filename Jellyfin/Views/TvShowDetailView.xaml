@@ -90,7 +90,6 @@
             
 
             <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Background="#60000000" Margin="-15, 50, -30, 0" Padding="15, 0, 0, 70">
-
                 <!-- Related episodes Grid -->
                 <Grid Margin="0, 50, 0, 0">
                     <Grid.RowDefinitions>
@@ -100,8 +99,8 @@
 
                     <TextBlock Grid.Row="0" Text="{Binding SeasonEpisodesText, Converter={StaticResource StringToUpperConverter}}" FontSize="32" FontWeight="SemiBold" Margin="30, 0, 0, 20" />
 
-                    <userControls:MediaElementListUserControl Grid.Row="1" IsLong="true"
-                        MediaSource="{Binding SelectedSeasonEpisodes}" />
+                    <userControls:MediaElementListUserControl Grid.Row="1" BlockWidth="500" BlockHeight="265"
+                        MediaSource="{Binding SelectedSeasonEpisodes}" IsDirectPlay="True" />
                 </Grid>
 
 
@@ -114,7 +113,7 @@
 
                     <TextBlock Grid.Row="0" Text="SEASONS" FontSize="32" FontWeight="SemiBold" Margin="30, 0, 0, 20" />
 
-                    <userControls:MediaElementListUserControl Grid.Row="1"
+                    <userControls:MediaElementListUserControl Grid.Row="1" BlockWidth="220" BlockHeight="270"
                         MediaSource="{Binding SelectedMediaElement.Seasons}" />
                 </Grid>
             </StackPanel>

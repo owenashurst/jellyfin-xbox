@@ -5,6 +5,7 @@ using Windows.System;
 using Jellyfin.Extensions;
 using Jellyfin.Models;
 using Jellyfin.Services.Interfaces;
+using Jellyfin.Views;
 
 namespace Jellyfin.ViewModels
 {
@@ -124,12 +125,33 @@ namespace Jellyfin.ViewModels
 
         public override void Execute(string commandParameter)
         {
+            #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             switch (commandParameter)
             {
+                case "Play":
+                    Play();
+                    break;
                 default:
                     base.Execute(commandParameter);
                     break;
             }
+
+            #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+        }
+
+        private async Task Play()
+        {
+            int currentSelectedNumber = ((TvShowEpisode)SelectedMediaElement).IndexNumber;
+            TvShowEpisode[] remainingSeasonEpisodes =
+                ((TvShowEpisode)SelectedMediaElement).Season.TvShowEpisodes
+                .Where(q => q.IndexNumber > currentSelectedNumber)
+                .OrderBy(q => q.IndexNumber).ToArray();
+
+            NavigationService.Navigate(typeof(PlaybackConfirmationView), new PlaybackViewParameterModel
+            {
+                SelectedMediaElement = SelectedMediaElement,
+                Playlist = remainingSeasonEpisodes,
+            });
         }
 
         public async Task GetTvShowDetails(MediaElementBase tvShow)

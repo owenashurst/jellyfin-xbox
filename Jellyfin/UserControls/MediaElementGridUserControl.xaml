@@ -9,7 +9,10 @@
             ItemClick="MediaElementGridView_OnItemClick">
     <GridView.ItemTemplate>
         <DataTemplate>
-            <local:MediaElementItemUserControl DataContext="{Binding}" />
+            <local:MediaElementItemUserControl 
+                BlockHeight="{Binding ElementName=UI, Path=BlockHeight, UpdateSourceTrigger=PropertyChanged}"
+                BlockWidth="{Binding ElementName=UI, Path=BlockWidth, UpdateSourceTrigger=PropertyChanged}"
+                DataContext="{Binding}" />
         </DataTemplate>
     </GridView.ItemTemplate>
     <GridView.ItemContainerStyle>

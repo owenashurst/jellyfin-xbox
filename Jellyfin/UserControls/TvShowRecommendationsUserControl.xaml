@@ -20,8 +20,8 @@
 
             <StackPanel Grid.Row="0">
                 <TextBlock Text="CONTINUE WATCHING" Style="{StaticResource GroupHeaderTextBlock}" />
-                <local:MediaElementListUserControl IsLong="true" IsProgressBarVisible="true"
-                    x:Name="a" GotFocus="UIElement_OnGotFocus1"
+                <local:MediaElementListUserControl IsProgressBarVisible="true"
+                    x:Name="a" GotFocus="UIElement_OnGotFocus1" BlockWidth="500" BlockHeight="265"
                     MediaSource="{Binding ContinueWatchingEpisodes}"
                     IsShowSeriesNameAsSecondLine="true"
                     />
@@ -29,20 +29,20 @@
         
             <!--<StackPanel Grid.Row="1">
                 <TextBlock Text="RECENTLY RELEASED MOVIES" Style="{StaticResource GroupHeaderTextBlock}" />
-                <local:MediaElementListUserControl x:Name="b" GotFocus="UIElement_OnGotFocus2" MediaSource="{Binding RecentlyReleasedMovies}" />
+                <local:MediaElementListUserControl BlockWidth="220" BlockHeight="270" x:Name="b" GotFocus="UIElement_OnGotFocus2" MediaSource="{Binding RecentlyReleasedMovies}" />
             </StackPanel>
 
             <StackPanel Grid.Row="2">
                 <TextBlock Text="{Binding FirstFavoriteGenre, Converter={StaticResource StringToUpperConverter}}" Style="{StaticResource GroupHeaderTextBlock}" />
                 <local:MediaElementListUserControl
-                    x:Name="c" GotFocus="UIElement_OnGotFocus3"
+                    x:Name="c" GotFocus="UIElement_OnGotFocus3" BlockWidth="220" BlockHeight="270"
                     MediaSource="{Binding MoviesFirstFavoriteGenre}" />
             </StackPanel>
 
             <StackPanel Grid.Row="3">
                 <TextBlock Text="{Binding SecondFavoriteGenre, Converter={StaticResource StringToUpperConverter}}" Style="{StaticResource GroupHeaderTextBlock}" />
                 <local:MediaElementListUserControl
-                    x:Name="d" GotFocus="UIElement_OnGotFocus4"
+                    x:Name="d" GotFocus="UIElement_OnGotFocus4" BlockWidth="220" BlockHeight="270"
                 MediaSource="{Binding MoviesSecondFavoriteGenre}" />
             </StackPanel>-->
         </Grid>
