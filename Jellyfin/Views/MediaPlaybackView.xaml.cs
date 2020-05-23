@@ -29,6 +29,7 @@ namespace Jellyfin.Views
             get => (DataContext as MediaPlaybackViewModel);
         }
 
+        [Obsolete]
         private PlaybackViewParameterModel playbackViewParameterModel { get; set; }
 
         private ILogManager _logManager;
@@ -117,12 +118,14 @@ namespace Jellyfin.Views
         /// <param name="e"></param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            playbackViewParameterModel = e.Parameter as PlaybackViewParameterModel;
-            
-            _dataContext.SelectedMediaElement = playbackViewParameterModel.SelectedMediaElement;
-            _dataContext.WasPlaybackPopupShown = playbackViewParameterModel.WasPlaybackPopupShown;
+            PlaybackViewParameterModel playbackViewParameterModel = e.Parameter as PlaybackViewParameterModel;
 
+            _dataContext.PlaybackViewParameters = playbackViewParameterModel;
+            _dataContext.SelectedMediaElement = playbackViewParameterModel.SelectedMediaElement;
+
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             Prelude(playbackViewParameterModel);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
             base.OnNavigatedTo(e);
         }
@@ -136,7 +139,7 @@ namespace Jellyfin.Views
             }
 
             _dataContext.IsLoading = true;
-
+            
             MediaElementPlaybackSource playbackInformation = mediaElement.PlaybackInformation.ToList()[0];
             if (!string.IsNullOrEmpty(playbackInformation.TranscodingUrl))
             {
@@ -168,7 +171,9 @@ namespace Jellyfin.Views
                 _logManager.LogDebug(mediaElement + " playback: direct play.");
 
                 // Regular streaming
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 StartDirectPlayback(playbackViewParameterModel);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                 _dataContext.PlaybackMode = "DirectStream";
             }
@@ -193,29 +198,26 @@ namespace Jellyfin.Views
         /// <param name="args"></param>
         private void MediaPlayerOnMediaEnded(MediaPlayer sender, object args)
         {
-            #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            #pragma warning disable CS4014
+            // Because this call is not awaited, execution of the current method continues before the call is completed
             Globals.Instance.UIDispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
             {
-                if (playbackViewParameterModel.NextMediaElement != null)
-                {
-                    _dataContext.PromptNextEpisode(playbackViewParameterModel);
-                }
-                else
-                {
-                    _dataContext.Return();
-                }
+                _dataContext.PromptNextEpisode();
             });
-            #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            #pragma warning restore CS4014
+            // Because this call is not awaited, execution of the current method continues before the call is completed
         }
 
         private void PlaybackSession_PlaybackStateChanged(MediaPlaybackSession sender, object args)
         {
-            #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            #pragma warning disable CS4014
+            // Because this call is not awaited, execution of the current method continues before the call is completed
             Globals.Instance.UIDispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
             {
                 _dataContext.IsLoading = sender.PlaybackState == MediaPlaybackState.Buffering;
             });
-            #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            #pragma warning restore CS4014
+            // Because this call is not awaited, execution of the current method continues before the call is completed
         }
 
         /// <summary>
@@ -243,13 +245,14 @@ namespace Jellyfin.Views
         }
 
         /// <summary>
-        /// Sets the playback position, then ubsubscribes from the event.
+        /// Sets the playback position, then unsubscribes from the event.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
         private void PlaybackSessionOnNaturalDurationChanged(MediaPlaybackSession sender, object args)
         {
-            #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            #pragma warning disable CS4014
+            // Because this call is not awaited, execution of the current method continues before the call is completed
             Globals.Instance.UIDispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
             {
                 MediaPlaybackSession session = mediaPlayerElement.MediaPlayer.PlaybackSession;
@@ -257,7 +260,8 @@ namespace Jellyfin.Views
 
                 session.NaturalDurationChanged -= PlaybackSessionOnNaturalDurationChanged;
             });
-            #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            #pragma warning restore CS4014
+            // Because this call is not awaited, execution of the current method continues before the call is completed
         }
         
         #endregion

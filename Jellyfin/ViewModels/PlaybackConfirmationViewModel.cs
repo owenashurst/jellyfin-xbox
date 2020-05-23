@@ -1,5 +1,5 @@
 using System;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
 using Windows.System;
@@ -63,6 +63,25 @@ namespace Jellyfin.ViewModels
 
         #endregion
 
+        #region PlaybackViewParameters
+
+        private PlaybackViewParameterModel _playbackViewParameters;
+
+        public PlaybackViewParameterModel PlaybackViewParameters
+        {
+            get { return _playbackViewParameters; }
+            set
+            {
+                if (_playbackViewParameters != value)
+                {
+                    _playbackViewParameters = value;
+                    RaisePropertyChanged(nameof(PlaybackViewParameters));
+                }
+            }
+        }
+
+        #endregion
+
         private Timer _autoPlaybackTimer;
 
         #region AutoPlayNextTimeLeft
@@ -111,7 +130,8 @@ namespace Jellyfin.ViewModels
 
         #region ctor
 
-        public PlaybackConfirmationViewModel(IPlaybackInfoService playbackInfoService, ILogManager logManager)
+        public PlaybackConfirmationViewModel(ITvShowService tvShowService,
+            IPlaybackInfoService playbackInfoService, ILogManager logManager)
         {
             _playbackInfoService = playbackInfoService ??
                                    throw new ArgumentNullException(nameof(playbackInfoService));
@@ -134,7 +154,7 @@ namespace Jellyfin.ViewModels
             switch (commandParameter)
             {
                 case "PlayFromBeginning":
-                    PlayFromBeginning(false);
+                    PlayFromBeginning();
                     break;
                 case "PlayFromPosition":
                     PlayFromPosition();
@@ -143,7 +163,7 @@ namespace Jellyfin.ViewModels
                     PlayNext();
                     break;
                 case "Replay":
-                    PlayFromBeginning(true);
+                    PlayFromBeginning();
                     break;
                 default:
                     base.Execute(commandParameter);
@@ -151,25 +171,35 @@ namespace Jellyfin.ViewModels
             }
         }
 
-        private void PlayFromBeginning(bool isPopupDisplayed)
+        private async Task PlayFromBeginning()
         {
+            if (SelectedMediaElement.PlaybackInformation == null)
+            {
+                SelectedMediaElement.PlaybackInformation =
+                    await _playbackInfoService.GetPlaybackInformation(SelectedMediaElement.Id);
+            }
+
             NavigationService.Navigate(typeof(MediaPlaybackView), new PlaybackViewParameterModel
             {
                 SelectedMediaElement = SelectedMediaElement,
                 IsPlaybackFromBeginning = true,
-                WasPlaybackPopupShown = isPopupDisplayed,
-                NextMediaElement = NextMediaElement
+                Playlist = PlaybackViewParameters.Playlist
             });
         }
 
-        private void PlayFromPosition()
+        private async Task PlayFromPosition()
         {
+            if (SelectedMediaElement.PlaybackInformation == null)
+            {
+                SelectedMediaElement.PlaybackInformation =
+                    await _playbackInfoService.GetPlaybackInformation(SelectedMediaElement.Id);
+            }
+
             NavigationService.Navigate(typeof(MediaPlaybackView), new PlaybackViewParameterModel
             {
                 SelectedMediaElement = SelectedMediaElement,
                 IsPlaybackFromBeginning = false,
-                WasPlaybackPopupShown = true,
-                NextMediaElement = NextMediaElement
+                Playlist = PlaybackViewParameters.Playlist
             });
         }
 
@@ -179,8 +209,7 @@ namespace Jellyfin.ViewModels
             {
                 SelectedMediaElement = NextMediaElement,
                 IsPlaybackFromBeginning = true,
-                WasPlaybackPopupShown = true,
-                NextMediaElement = NextAfterMediaElement
+                Playlist = PlaybackViewParameters.Playlist
             });
         }
 
@@ -210,7 +239,6 @@ namespace Jellyfin.ViewModels
 
             AutoPlayNextTimeLeft = 20;
             _autoPlaybackTimer.Start();
-            IsTimerStopped = false;
 
             SelectedMediaElement = vpm.SelectedMediaElement;
             NextMediaElement = vpm.NextMediaElement;
@@ -228,6 +256,8 @@ namespace Jellyfin.ViewModels
 
         private void AutoPlaybackTimerOnElapsed(object sender, ElapsedEventArgs e)
         {
+            #pragma warning disable CS4014
+            // Because this call is not awaited, execution of the current method continues before the call is completed
             Globals.Instance.UIDispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
             {
                 AutoPlayNextTimeLeft--;
@@ -237,12 +267,56 @@ namespace Jellyfin.ViewModels
                     PlayNext();
                 }
             });
+            #pragma warning restore CS4014
+            // Because this call is not awaited, execution of the current method continues before the call is completed
         }
 
         public void StopTimer()
         {
             _autoPlaybackTimer.Stop();
             IsTimerStopped = true;
+        }
+
+        /// <summary>
+        /// Handles the 4 cases of the confirmation navigation from and towards the playback.
+        /// Cases:
+        /// 1) The playback information is missing,
+        ///     or available but less than 2 min., so let it play as is
+        /// 2) The playback information is available and more than 2 min, so let the user decide what they want
+        /// 3) IsJustFinished is set, display the boxed screen shot layout to the user to let them decide
+        /// </summary>
+        public async Task PlaybackViewParametersChanged(PlaybackViewParameterModel p)
+        {
+            _logManager.LogDebug("Playback View Parameters Changed raised, obj = " + PlaybackViewParameters);
+
+            // Does it come from movie / episode chooser?
+            if (!p.IsJustFinishedPlaying)
+            {
+                SelectedMediaElement = p.SelectedMediaElement;
+                if (SelectedMediaElement.PlaybackPosition.TotalMinutes > 2 &&
+                    SelectedMediaElement.PlaybackRemaining.TotalMinutes < 2)
+                {
+                    // Let the user decide what they want, aka let the view model
+                    // render fully and show the action buttons
+                }
+                else if (SelectedMediaElement.PlaybackPosition.TotalMinutes <= 2)
+                {
+                    PlayFromBeginning();
+                }
+                else if (SelectedMediaElement.PlaybackRemaining.TotalMinutes <= 2)
+                {
+                    PlayFromBeginning();
+                }
+            }
+            else
+            {
+                
+                // go to the next element on the playlist, then play that from the beginning.
+                SelectedMediaElement = PlaybackViewParameters.Playlist[0];
+                PlaybackViewParameters.Playlist = PlaybackViewParameters.Playlist.Skip(1).ToArray();
+
+                IsShowConfirmation = true;
+            }
         }
     }
 }

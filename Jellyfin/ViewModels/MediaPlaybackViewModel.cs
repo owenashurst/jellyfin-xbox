@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
 using Windows.Media.Playback;
@@ -188,6 +189,25 @@ namespace Jellyfin.ViewModels
 
         #endregion
 
+        #region PlaybackViewParameters
+
+        private PlaybackViewParameterModel _playbackViewParameters;
+
+        public PlaybackViewParameterModel PlaybackViewParameters
+        {
+            get { return _playbackViewParameters; }
+            set
+            {
+                if (_playbackViewParameters != value)
+                {
+                    _playbackViewParameters = value;
+                    RaisePropertyChanged(nameof(PlaybackViewParameters));
+                }
+            }
+        }
+
+        #endregion
+
         #endregion
 
         #region ctor
@@ -260,29 +280,31 @@ namespace Jellyfin.ViewModels
         {
             Pause();
             NavigationService.GoBack();
-
-            if (WasPlaybackPopupShown)
-            {
-                NavigationService.GoBack();
-            }
+            NavigationService.GoBack();
         }
 
-        public async Task PromptNextEpisode(PlaybackViewParameterModel playbackViewParameterModel)
+        public async Task PromptNextEpisode()
         {
-            IUnityContainer container = Globals.Instance.Container;
-            PlaybackConfirmationViewModel confirmationVm =
-                container.Resolve<PlaybackConfirmationViewModel>();
-            await confirmationVm.PrepareNextEpisode(playbackViewParameterModel);
-
-            if (NavigationService.GetPreviousPage() == typeof(PlaybackConfirmationView))
+            if (PlaybackViewParameters.Playlist.Any())
             {
+                IUnityContainer container = Globals.Instance.Container;
+                PlaybackConfirmationViewModel confirmationVm =
+                    container.Resolve<PlaybackConfirmationViewModel>();
+
+                var pvpm =  new PlaybackViewParameterModel
+                {
+                    SelectedMediaElement = SelectedMediaElement,
+                    IsJustFinishedPlaying = true,
+                    Playlist = PlaybackViewParameters.Playlist,
+                };
+
                 NavigationService.GoBack();
+                confirmationVm.PlaybackViewParametersChanged(pvpm);
             }
             else
             {
-                NavigationService.Navigate(typeof(PlaybackConfirmationView));
+                Return();
             }
-            
         }
 
         #region Seek implementation
@@ -330,6 +352,11 @@ namespace Jellyfin.ViewModels
                 {
                     MediaPlayer.MediaPlayer.PlaybackSession.Position =
                         MediaPlayer.MediaPlayer.PlaybackSession.Position + TimeSpan.FromSeconds(seconds);
+
+                    if (PlaybackMode == "DirectStream")
+                    {
+                        IsLoading = false;
+                    }
                 }
             });
             #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
