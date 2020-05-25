@@ -126,6 +126,7 @@
     <Compile Include="ServiceModels\Genreitem.cs" />
     <Compile Include="ServiceModels\Imagetags.cs" />
     <Compile Include="ServiceModels\Item.cs" />
+    <Compile Include="MediaUserData.cs" />
     <Compile Include="ServiceModels\MovieItem.cs" />
     <Compile Include="ServiceModels\MovieUserData.cs" />
     <Compile Include="ServiceModels\Providerids.cs" />

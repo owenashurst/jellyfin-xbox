@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Windows.UI.Core;
 using Jellyfin.Core.Models;
+using Jellyfin.Models.ServiceModels;
 
 namespace Jellyfin.Models
 {
@@ -48,6 +49,11 @@ namespace Jellyfin.Models
         public abstract string SecondLine { get; }
 
         /// <summary>
+        /// Indicates the creation date.
+        /// </summary>
+        public DateTime DateCreated { get; set; }
+
+        /// <summary>
         /// The production year of the media element.
         /// </summary>
         public string Year { get; set; }
@@ -88,6 +94,11 @@ namespace Jellyfin.Models
         /// The title of the media element.
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// The user data for the media element.
+        /// </summary>
+        public MediaUserData UserData { get; set; }
 
         /// <summary>
         /// The genres of the media element.
@@ -141,6 +152,7 @@ namespace Jellyfin.Models
             }
         }
 
+        [Obsolete("Use UserData object.")]
         public TimeSpan PlaybackPosition { get; set; }
 
         public TimeSpan PlaybackRemaining
@@ -157,7 +169,7 @@ namespace Jellyfin.Models
                     return string.Empty;
                 }
 
-                if (PlaybackRemaining == Runtime)
+                if (PlaybackRemaining == Runtime && !UserData.Played)
                 {
                     return " • Unplayed";
                 }
@@ -171,6 +183,7 @@ namespace Jellyfin.Models
             }
         }
 
+        [Obsolete("Use UserData object.")]
         public bool IsPlayed { get; set; }
 
         /// <summary>

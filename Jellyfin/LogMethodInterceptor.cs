@@ -19,6 +19,10 @@ namespace Jellyfin.Logging
 
         private MethodBase _method;
 
+        private object[] _args;
+
+        private object _instance;
+
         // instance, method and args can be captured here and stored in attribute instance fields
         // for future usage in OnEntry/OnExit/OnException
         public void Init(object instance, MethodBase method, object[] args)
@@ -26,6 +30,8 @@ namespace Jellyfin.Logging
             try
             {
                 _method = method;
+                _instance = instance;
+                _args = args;
             }
             catch (Exception)
             {
@@ -38,7 +44,7 @@ namespace Jellyfin.Logging
             {
                 try
                 {
-                    Logger.Debug("Entering into {0}", _method.Name);
+                    Logger.Debug($"Entering {_instance} => {_method.Name}, Params = {string.Join(" ", _args)}");
                 }
                 catch (Exception)
                 {
@@ -53,7 +59,7 @@ namespace Jellyfin.Logging
             {
                 try
                 {
-                    Logger.Debug("Exiting from {0}", _method.Name);
+                    Logger.Debug("Exiting from {0} => {1}", _instance.ToString(), _method.Name);
                 }
                 catch (Exception)
                 {

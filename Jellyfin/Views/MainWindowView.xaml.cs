@@ -11,12 +11,5 @@ namespace Jellyfin.Views
         {
             InitializeComponent();
         }
-
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            //movieListControl.DataContext as 
-
-            base.OnNavigatedTo(e);
-        }
     }
 }

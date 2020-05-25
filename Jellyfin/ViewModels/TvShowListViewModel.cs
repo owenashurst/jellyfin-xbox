@@ -73,22 +73,15 @@ namespace Jellyfin.ViewModels
         /// </summary>
         private readonly ITvShowService _tvShowService;
 
-        /// <summary>
-        /// Reference for the log manager.
-        /// </summary>
-        private readonly ILogManager _logManager;
-
         #endregion
 
         #region ctor
 
-        public TvShowListViewModel(ITvShowService tvShowService, ILogManager logManager)
+        public TvShowListViewModel(ITvShowService tvShowService, IPersonalizeService personalizeService, ILogManager logManager)
+            : base(personalizeService, logManager)
         {
             _tvShowService = tvShowService ??
                              throw new ArgumentNullException(nameof(tvShowService));
-
-            _logManager = logManager ??
-                          throw new ArgumentNullException(nameof(logManager));
         }
 
         #endregion

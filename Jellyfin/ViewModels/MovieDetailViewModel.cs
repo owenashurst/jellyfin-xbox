@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.System;
+using Jellyfin.Logging;
 using Jellyfin.Models;
 using Jellyfin.Services.Interfaces;
 using Jellyfin.Views;
@@ -43,19 +44,22 @@ namespace Jellyfin.ViewModels
 
         #region ctor
 
-        public MovieDetailViewModel(IMovieService movieService, IPlaybackInfoService playbackInfoService)
+        public MovieDetailViewModel(
+            IMovieService movieService, IPlaybackInfoService playbackInfoService,
+            IPersonalizeService personalizeService, ILogManager logManager) : base(personalizeService, logManager)
         {
             _movieService = movieService ??
                     throw new ArgumentNullException(nameof(movieService));
 
             _playbackInfoService = playbackInfoService ??
-                            throw new ArgumentNullException(nameof(playbackInfoService));
+                    throw new ArgumentNullException(nameof(playbackInfoService));
         }
 
         #endregion
 
         #region Additional methods
 
+        [LogMethod]
         public override void Execute(string commandParameter)
         {
             switch (commandParameter)
@@ -63,12 +67,6 @@ namespace Jellyfin.ViewModels
                 case "Play":
                     Play();
                     break;
-                //case "PlayFromBeginning":
-                //    PlayFromBeginning(false);
-                //    break;
-                //case "PlayFromPosition":
-                //    PlayFromPosition();
-                //    break;
                 default:
                     base.Execute(commandParameter);
                     break;
@@ -91,6 +89,12 @@ namespace Jellyfin.ViewModels
             }
         }
 
+        /// <summary>
+        /// Passes to playback confirmation view. This would determine whether the movie was already played for several minutes or not,
+        /// and if so, it would display if the user would like to continue watching where s/he stopped watching from the last time,
+        /// or start over.
+        /// </summary>
+        [LogMethod]
         private void Play()
         {
             NavigationService.Navigate(typeof(PlaybackConfirmationView), new PlaybackViewParameterModel
@@ -100,23 +104,7 @@ namespace Jellyfin.ViewModels
             });
         }
 
-        //private void PlayFromBeginning(bool isPopupDisplayed)
-        //{
-        //    NavigationService.Navigate(typeof(MediaPlaybackView), );
-        //}
-
-        //private void PlayFromPosition()
-        //{
-        //    NavigationService.Navigate(typeof(MediaPlaybackView), new PlaybackViewParameterModel
-        //    {
-        //        SelectedMediaElement = SelectedMovie,
-        //        IsPlaybackFromBeginning = false,
-        //        Playlist = RelatedMovies.ToArray()
-        //    });
-        //}
-
-        #endregion
-
+        [LogMethod]
         public bool HandleKeyPressed(VirtualKey key)
         {
             switch (key)
@@ -128,5 +116,7 @@ namespace Jellyfin.ViewModels
                     return false;
             }
         }
+
+        #endregion
     }
 }

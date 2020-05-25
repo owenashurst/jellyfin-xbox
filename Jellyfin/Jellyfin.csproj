@@ -132,6 +132,7 @@
     <Compile Include="Controls\DeviceFamilyStateTrigger.cs" />
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\ByteArrayToImageConverter.cs" />
+    <Compile Include="Converters\CollectionToVisibilityConverter.cs" />
     <Compile Include="Converters\GreaterThanZeroToVisibilityConverter.cs" />
     <Compile Include="Converters\ParametrizedBooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\BooleanInverterConverter.cs" />
@@ -173,12 +174,14 @@
     <Compile Include="Models\TvShow.cs" />
     <Compile Include="Models\TvShowSeason.cs" />
     <Compile Include="Services\Interfaces\ILocalCacheService.cs" />
+    <Compile Include="Services\Interfaces\IPersonalizeService.cs" />
     <Compile Include="Services\Interfaces\IPlaybackInfoService.cs" />
     <Compile Include="Services\Interfaces\IReportProgressService.cs" />
     <Compile Include="Services\Interfaces\ISettingsService.cs" />
     <Compile Include="Services\Interfaces\ITvShowService.cs" />
     <Compile Include="Services\LocalCacheService.cs" />
     <Compile Include="Services\MediaQueryServiceBase.cs" />
+    <Compile Include="Services\PersonalizeService.cs" />
     <Compile Include="Services\PlaybackInfoService.Constants.cs" />
     <Compile Include="Services\PlaybackInfoService.cs" />
     <Compile Include="Services\ReportProgressService.cs" />

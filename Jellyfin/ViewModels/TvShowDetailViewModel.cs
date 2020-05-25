@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.System;
 using Jellyfin.Extensions;
+using Jellyfin.Logging;
 using Jellyfin.Models;
 using Jellyfin.Services.Interfaces;
 using Jellyfin.Views;
@@ -110,7 +111,7 @@ namespace Jellyfin.ViewModels
 
         #region ctor
 
-        public TvShowDetailViewModel(ITvShowService tvShowService, IPlaybackInfoService playbackInfoService)
+        public TvShowDetailViewModel(ITvShowService tvShowService, IPlaybackInfoService playbackInfoService, IPersonalizeService personalizeService, ILogManager logManager) : base(personalizeService, logManager)
         {
             _tvShowService = tvShowService ??
                             throw new ArgumentNullException(nameof(tvShowService));

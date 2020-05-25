@@ -3,23 +3,29 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:userControls="using:Jellyfin.UserControls"
+    xmlns:uwp="using:FontAwesome.UWP"
     Loaded="MovieView_OnLoaded"
     DataContext="{Binding MovieListPage, Source={StaticResource ViewModelLocator}}">
 
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="15, 40, 0, 0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         
-        <StackPanel Grid.Row="0" Orientation="Horizontal">
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Orientation="Horizontal">
             <ToggleButton Content="Recommendations"
-                    Command="{Binding ToolCommand}" 
-                    CommandParameter="OpenRecommendations"
-                    IsChecked="{Binding IsRecommendationsOpened, Mode=TwoWay}" 
-                    Style="{StaticResource SelectableToggleButton}"
-                    Template="{StaticResource SelectableToggleButtonControlTemplate}">
+                          Command="{Binding ToolCommand}" 
+                          CommandParameter="OpenRecommendations"
+                          IsChecked="{Binding IsRecommendationsOpened, Mode=TwoWay}" 
+                          Style="{StaticResource SelectableToggleButton}"
+                          Template="{StaticResource SelectableToggleButtonControlTemplate}">
             </ToggleButton>
             <ToggleButton Content="Library"
                     Command="{Binding ToolCommand}"
@@ -28,9 +34,100 @@
                     Margin="30, 0, 0, 0"
                     Style="{StaticResource SelectableToggleButton}"
                     Template="{StaticResource SelectableToggleButtonControlTemplate}" />
-        </StackPanel>
+            </StackPanel>
 
-        <userControls:LoadingUserControl Grid.Row="2" Margin="0, 250, 0, 0"
+            <StackPanel Grid.Column="1" Orientation="Horizontal"
+                        Visibility="{Binding IsRecommendationsOpened, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=false}">
+                <Button Padding="20, 0" Style="{StaticResource PrimaryButton}" Visibility="Collapsed"
+                      Margin="30, 0, 0, 0">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <uwp:FontAwesome Icon="Filter" FontSize="{StaticResource FontM}" />
+                            <TextBlock Text="Filter" FontSize="{StaticResource FontM}" Padding="0, 0, 0, 4" Margin="10, 0" />
+                            <uwp:FontAwesome Icon="ChevronDown" FontSize="{StaticResource FontM}" />
+                        </StackPanel>
+                    </Button.Content>
+                    <Button.Flyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem Text="Share">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xE72D;" />
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem Text="Copy" Icon="Copy" />
+                            <MenuFlyoutItem Text="Delete" Icon="Delete" />
+                            <MenuFlyoutSeparator />
+                            <MenuFlyoutItem Text="Rename" />
+                            <MenuFlyoutItem Text="Select" />
+                        </MenuFlyout>
+                    </Button.Flyout>
+                </Button>
+
+                <Button Padding="20, 0" Style="{StaticResource PrimaryButton}"
+                        Margin="30, 0, 0, 0">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <uwp:FontAwesome Icon="Sort" FontSize="{StaticResource FontM}" />
+                            <TextBlock Text="Sort" FontSize="{StaticResource FontM}" Padding="0, 0, 0, 4" Margin="10, 0" />
+                            <uwp:FontAwesome Icon="ChevronDown" FontSize="{StaticResource FontM}" />
+                        </StackPanel>
+                    </Button.Content>
+                    <Button.Flyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem Text="Name" Style="{StaticResource PrimaryMenuFlyoutItem}"
+                                    Command="{Binding ToolCommand}" CommandParameter="OrderByName">
+                                <MenuFlyoutItem.Icon>
+                                    <uwp:FontAwesome Icon="SortAlphaAsc" FontSize="{StaticResource FontL}" />
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem Text="Rating" Style="{StaticResource PrimaryMenuFlyoutItem}"
+                                    Command="{Binding ToolCommand}" CommandParameter="OrderByRating">
+                                <MenuFlyoutItem.Icon>
+                                    <uwp:FontAwesome Icon="Star" FontSize="{StaticResource FontM}" />
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem Text="Date Added" Style="{StaticResource PrimaryMenuFlyoutItem}"
+                                    Command="{Binding ToolCommand}" CommandParameter="OrderByDateAdded">
+                                <MenuFlyoutItem.Icon>
+                                    <uwp:FontAwesome Icon="CalendarPlusOutline" FontSize="{StaticResource FontM}" />
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem Text="Release Date" Style="{StaticResource PrimaryMenuFlyoutItem}"
+                                    Command="{Binding ToolCommand}" CommandParameter="OrderByReleaseDate">
+                                <MenuFlyoutItem.Icon>
+                                    <uwp:FontAwesome Icon="Calendar" FontSize="{StaticResource FontM}" />
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem Text="Runtime" Style="{StaticResource PrimaryMenuFlyoutItem}"
+                                    Command="{Binding ToolCommand}" CommandParameter="OrderByRuntime">
+                                <MenuFlyoutItem.Icon>
+                                    <uwp:FontAwesome Icon="ClockOutline" FontSize="{StaticResource FontM}" />
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutSeparator />
+                            <MenuFlyoutItem Text="Ascending" Style="{StaticResource PrimaryMenuFlyoutItem}"
+                                            Command="{Binding ToolCommand}" CommandParameter="Ascending">
+                                <MenuFlyoutItem.Icon>
+                                    <uwp:FontAwesome Icon="SortAlphaAsc" FontSize="{StaticResource FontM}" />
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem Text="Descending" Style="{StaticResource PrimaryMenuFlyoutItem}"
+                                            Command="{Binding ToolCommand}" CommandParameter="Descending">
+                                <MenuFlyoutItem.Icon>
+                                    <uwp:FontAwesome Icon="SortAlphaDesc" FontSize="{StaticResource FontM}" />
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                        </MenuFlyout>
+                    </Button.Flyout>
+                </Button>
+
+                <Border Margin="30, 0, 15, 0" Padding="20, 10" Background="#40FFFFFF" CornerRadius="10">
+                    <TextBlock Text="{Binding ItemsCount}" FontSize="{StaticResource FontM}" FontWeight="Bold" />
+                </Border>
+            </StackPanel>
+        </Grid>
+
+        <userControls:LoadingUserControl Grid.Row="1" Margin="0, 250, 0, 0"
             Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
         <StackPanel Grid.Row="1" Visibility="Collapsed">
@@ -39,13 +136,14 @@
                     Command="{Binding ToolCommand}" CommandParameter="OrderBy" />
         </StackPanel>
 
-        <userControls:MediaElementGridUserControl Grid.Row="2" MediaSource="{Binding Movies}"
+        <userControls:MediaElementGridUserControl Grid.Row="1" MediaSource="{Binding DisplayedMovies}"
             BlockWidth="260" BlockHeight="270"
             Visibility="{Binding IsRecommendationsOpened, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=false}"
         />
 
-        <userControls:MovieRecommendationsUserControl Grid.Row="2"
+        <userControls:MovieRecommendationsUserControl Grid.Row="1"
             Visibility="{Binding IsRecommendationsOpened, Converter={StaticResource BooleanToVisibilityConverter}}"
             MediaSource="{Binding Movies}" />
     </Grid>
+
 </Frame>

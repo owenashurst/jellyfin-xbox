@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Jellyfin.Extensions;
 using Jellyfin.Logging;
@@ -32,6 +34,22 @@ namespace Jellyfin.ViewModels
 
         #endregion
 
+        #region DisplayedMovies
+
+        private ObservableCollectionEx<Movie> _displayedMovies = new ObservableCollectionEx<Movie>();
+
+        public ObservableCollectionEx<Movie> DisplayedMovies
+        {
+            get { return _displayedMovies; }
+            set
+            {
+                _displayedMovies = value;
+                RaisePropertyChanged(nameof(DisplayedMovies));
+            }
+        }
+
+        #endregion
+
         /// <summary>
         /// List of movies which has already been started.
         /// </summary>
@@ -48,6 +66,21 @@ namespace Jellyfin.ViewModels
         public string FirstFavoriteGenre { get; private set; }
 
         public string SecondFavoriteGenre { get; private set; }
+
+        public string ItemsCount
+        {
+            get { return $"{DisplayedMovies.Count} items"; }
+        }
+
+        /// <summary>
+        /// Indicates whether the sort was ascending or descending the last time.
+        /// </summary>
+        public bool IsAscending { get; set; } = true;
+
+        /// <summary>
+        /// Contains last sort command.
+        /// </summary>
+        public string LastSortCommand { get; set; }
 
         #region IsRecommendationsOpened
 
@@ -73,28 +106,29 @@ namespace Jellyfin.ViewModels
         /// </summary>
         private readonly IMovieService _movieService;
 
-        /// <summary>
-        /// Reference for the log manager.
-        /// </summary>
-        private readonly ILogManager _logManager;
-
         #endregion
 
         #region ctor
 
-        public MovieListViewModel(IMovieService movieService, ILogManager logManager)
+        public MovieListViewModel(IMovieService movieService, IPersonalizeService personalizeService, ILogManager logManager)
+            : base(personalizeService, logManager)
         {
             _movieService = movieService ??
                 throw new ArgumentNullException(nameof(movieService));
 
-            _logManager = logManager ??
-                throw new ArgumentNullException(nameof(logManager));
+            DisplayedMovies.CollectionChanged += MoviesOnCollectionChanged;
         }
 
         #endregion
 
         #region Additional methods
 
+        private void MoviesOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            RaisePropertyChanged(nameof(ItemsCount));
+        }
+
+        [LogMethod]
         public override void Execute(string commandParameter)
         {
             switch (commandParameter)
@@ -105,8 +139,26 @@ namespace Jellyfin.ViewModels
                 case "OpenLibrary":
                     OpenLibrary();
                     break;
-                case "OrderBy":
-                    // TODO smurancsik: add correct logging
+                case "OrderByName":
+                    OrderByName();
+                    break;
+                case "OrderByRating":
+                    OrderByRating();
+                    break;
+                case "OrderByDateAdded":
+                    OrderByDateAdded();
+                    break;
+                case "OrderByReleaseDate":
+                    OrderByReleaseDate();
+                    break;
+                case "OrderByRuntime":
+                    OrderByRuntime();
+                    break;
+                case "Ascending":
+                    Ascending();
+                    break;
+                case "Descending":
+                    Descending();
                     break;
                 default:
                     base.Execute(commandParameter);
@@ -131,6 +183,126 @@ namespace Jellyfin.ViewModels
             IsRecommendationsOpened = false;
         }
 
+        private void Ascending()
+        {
+            if (IsAscending)
+            {
+                _logManager.LogDebug("Ascending command arrived, but the list is already sorted to ascending. Returning...");
+                return;
+            }
+
+            IsAscending = true;
+            Execute(LastSortCommand);
+        }
+
+        private void Descending()
+        {
+            if (!IsAscending)
+            {
+                _logManager.LogDebug("Descending command arrived, but the list is already sorted to descending. Returning...");
+                return;
+            }
+
+            IsAscending = false;
+            Execute(LastSortCommand);
+        }
+
+        /// <summary>
+        /// Orders movies by name.
+        /// </summary>
+        private void OrderByName()
+        {
+            if (IsAscending)
+            {
+                OrderBy(movie => movie.Name);
+            }
+            else
+            {
+                OrderByDescending(movie => movie.Name);
+            }
+        }
+
+        private void OrderByDateAdded()
+        {
+            if (IsAscending)
+            {
+                OrderBy(movie => movie.DateCreated);
+            }
+            else
+            {
+                OrderByDescending(movie => movie.DateCreated);
+            }
+        }
+
+        private void OrderByReleaseDate()
+        {
+            if (IsAscending)
+            {
+                OrderByDescending(movie => movie.PremiereDate);
+            }
+            else
+            {
+                OrderBy(movie => movie.PremiereDate);
+            }
+        }
+
+        private void OrderByRuntime()
+        {
+            if (IsAscending)
+            {
+                OrderBy(movie => movie.Runtime);
+            }
+            else
+            {
+                OrderByDescending(movie => movie.Runtime);
+            }
+        }
+
+        /// <summary>
+        /// Orders movies by name.
+        /// </summary>
+        private void OrderByRating()
+        {
+            if (IsAscending)
+            {
+                OrderByDescending(movie => movie.CommunityRating);
+            }
+            else
+            {
+                OrderBy(movie => movie.CommunityRating);
+            }
+        }
+
+        /// <summary>
+        /// Orders the movie array by the passed predicate in descending.
+        /// </summary>
+        /// <param name="predicate"></param>
+        private void OrderByDescending(Func<Movie, object> predicate)
+        {
+            DisplayedMovies.Clear();
+            foreach (var movie in Movies.OrderByDescending(predicate))
+            {
+                DisplayedMovies.Add(movie);
+            }
+
+            RaisePropertyChanged(nameof(DisplayedMovies));
+        }
+
+        /// <summary>
+        /// Orders the movie array by the passed predicate in ascending.
+        /// </summary>
+        /// <param name="predicate"></param>
+        private void OrderBy(Func<Movie, object> predicate)
+        {
+            DisplayedMovies.Clear();
+            foreach (var movie in Movies.OrderBy(predicate))
+            {
+                DisplayedMovies.Add(movie);
+            }
+
+            RaisePropertyChanged(nameof(DisplayedMovies));
+        }
+
         /// <summary>
         /// Loads all the movies available.
         /// </summary>
@@ -143,6 +315,7 @@ namespace Jellyfin.ViewModels
             {
                 if (Movies.Any())
                 {
+                    _logManager.LogDebug("Movies already loaded, skipping to reload.");
                     return;
                 }
 
@@ -151,6 +324,7 @@ namespace Jellyfin.ViewModels
                 {
                     Movies.Add(movie);
                 }
+
 
                 ContinueWatchingMovies = new ObservableCollectionEx<Movie>(
                     Movies.Where(q => q.PlaybackPosition.Ticks > 0));
@@ -179,6 +353,8 @@ namespace Jellyfin.ViewModels
                     .OrderByDescending(q => q.OfficialRating)
                     .Take(20).ToList());
                 RaisePropertyChanged(nameof(MoviesSecondFavoriteGenre));
+
+                OrderByName();
             }
             catch (Exception xc)
             {

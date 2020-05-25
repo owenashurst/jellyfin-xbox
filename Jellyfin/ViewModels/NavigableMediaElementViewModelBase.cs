@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Jellyfin.Core;
+using Jellyfin.Logging;
 using Jellyfin.Models;
 using Jellyfin.Services.Interfaces;
 using Jellyfin.Views;
@@ -64,9 +65,54 @@ namespace Jellyfin.ViewModels
 
         #endregion
 
+        /// <summary>
+        /// Reference for the personalize service.
+        /// </summary>
+        protected readonly IPersonalizeService _personalizeService;
+
+        /// <summary>
+        /// Reference for the log manager.
+        /// </summary>
+        protected readonly ILogManager _logManager;
+
+        #endregion
+
+        #region ctor
+
+        protected NavigableMediaElementViewModelBase(IPersonalizeService personalizeService, ILogManager logManager)
+        {
+            _personalizeService = personalizeService ??
+                    throw new ArgumentNullException(nameof(personalizeService));
+
+            _logManager = logManager ??
+                    throw new ArgumentNullException(nameof(logManager));
+        }
+
         #endregion
 
         #region Additional methods
+
+        public override void Execute(string commandParameter)
+        {
+            switch (commandParameter)
+            {
+                case "MarkAsUnwatched":
+                    MarkAsUnwatched();
+                    break;
+                case "MarkAsWatched":
+                    MarkAsWatched();
+                    break;
+                case "Like":
+                    Like();
+                    break;
+                case "Dislike":
+                    Dislike();
+                    break;
+                default:
+                    base.Execute(commandParameter);
+                    break;
+            }
+        }
 
         public void NavigateToSelected()
         {
@@ -137,6 +183,110 @@ namespace Jellyfin.ViewModels
             }
 
             return episodes[epNumber + 1];
+        }
+
+        /// <summary>
+        /// Marks this media element as watched.
+        /// </summary>
+        /// <returns></returns>
+        protected async Task MarkAsWatched()
+        {
+            if (SelectedMediaElement == null)
+            {
+                return;
+            }
+
+            try
+            {
+                await _personalizeService.MarkAsWatched(SelectedMediaElement.Id);
+
+                if (SelectedMediaElement.UserData != null)
+                {
+                    SelectedMediaElement.UserData.Played = true;
+                }
+            }
+            catch (Exception xc)
+            {
+                _logManager.LogError(xc, "An error occurred while marking the media element as watched.");
+            }
+        }
+
+        // <summary>
+        /// Marks this media element as unwatched.
+        /// </summary>
+        /// <returns></returns>
+        protected async Task MarkAsUnwatched()
+        {
+            if (SelectedMediaElement == null)
+            {
+                return;
+            }
+
+            try
+            {
+                await _personalizeService.MarkAsUnwatched(SelectedMediaElement.Id);
+
+                if (SelectedMediaElement.UserData != null)
+                {
+                    SelectedMediaElement.UserData.Played = false;
+                }
+            }
+            catch (Exception xc)
+            {
+                _logManager.LogError(xc, "An error occurred while marking the media element as unwatched.");
+            }
+        }
+
+        /// <summary>
+        /// Likes this media element.
+        /// </summary>
+        /// <returns></returns>
+        protected async Task Like()
+        {
+            if (SelectedMediaElement == null)
+            {
+                return;
+            }
+
+            try
+            {
+                await _personalizeService.Like(SelectedMediaElement.Id);
+
+                if (SelectedMediaElement.UserData != null)
+                {
+                    SelectedMediaElement.UserData.IsFavorite = true;
+                }
+            }
+            catch (Exception xc)
+            {
+                _logManager.LogError(xc, "An error occurred while marking the media element as liked.");
+            }
+        }
+
+        /// <summary>
+        /// Dislikes this media element.
+        /// </summary>
+        /// <returns></returns>
+        protected async Task Dislike()
+        {
+            if (SelectedMediaElement == null)
+            {
+                return;
+            }
+
+            try
+            {
+                await _personalizeService.Dislike(SelectedMediaElement.Id);
+                
+                if (SelectedMediaElement.UserData != null)
+                {
+                    SelectedMediaElement.UserData.IsFavorite = false;
+                }
+            }
+            catch (Exception xc)
+            {
+                _logManager.LogError(xc, "An error occurred while marking the media element as disliked.");
+            }
         }
 
         #endregion

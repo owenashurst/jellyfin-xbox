@@ -215,5 +215,11 @@ namespace Jellyfin.UserControls
         }
 
         #endregion
+
+        private void NotMovingTextBlock_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            //TextBlock tb = sender as TextBlock;
+            //if (tb.Width > 
+        }
     }
 }

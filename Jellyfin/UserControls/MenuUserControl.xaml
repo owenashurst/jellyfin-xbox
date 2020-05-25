@@ -2,6 +2,7 @@
     x:Class="Jellyfin.UserControls.MenuUserControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Loaded="MenuUserControl_OnLoaded"
     xmlns:uwp="using:FontAwesome.UWP">
     <Frame.Resources>
         <ResourceDictionary>
@@ -34,7 +35,7 @@
             </Grid.RowDefinitions>
 
             <StackPanel Grid.Row="0" VerticalAlignment="Top">
-                <Button Command="{Binding ToolCommand}" Style="{StaticResource MenuButton}"
+                <Button Command="{Binding ToolCommand}" Style="{StaticResource MenuButton}" x:Name="lol"
                               CommandParameter="Movies">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">

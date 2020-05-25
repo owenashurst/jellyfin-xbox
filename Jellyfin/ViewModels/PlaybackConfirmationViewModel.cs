@@ -105,11 +105,6 @@ namespace Jellyfin.ViewModels
         /// </summary>
         private readonly IPlaybackInfoService _playbackInfoService;
 
-        /// <summary>
-        /// Reference for the log manager.
-        /// </summary>
-        private readonly ILogManager _logManager;
-
         #region IsTimerVisible
 
         private bool _isTimerVisible;
@@ -130,13 +125,11 @@ namespace Jellyfin.ViewModels
 
         #region ctor
 
-        public PlaybackConfirmationViewModel(IPlaybackInfoService playbackInfoService, ILogManager logManager)
+        public PlaybackConfirmationViewModel(IPlaybackInfoService playbackInfoService, IPersonalizeService personalizeService,
+            ILogManager logManager) : base(personalizeService, logManager)
         {
             _playbackInfoService = playbackInfoService ??
                                    throw new ArgumentNullException(nameof(playbackInfoService));
-
-            _logManager = logManager ??
-                          throw new ArgumentNullException(nameof(logManager));
 
             _autoPlaybackTimer = new Timer();
             _autoPlaybackTimer.AutoReset = true;
@@ -277,6 +270,7 @@ namespace Jellyfin.ViewModels
             if (!p.IsJustFinishedPlaying)
             {
                 _logManager.LogDebug($"{p.SelectedMediaElement}, It comes from movie/epi chooser.");
+                IsShowConfirmation = false;
 
                 SelectedMediaElement = p.SelectedMediaElement;
                 if (SelectedMediaElement.PlaybackPosition.TotalMinutes > 2 &&

@@ -1,4 +1,5 @@
 ﻿using System;
+using Jellyfin.Models.ServiceModels;
 
 namespace Jellyfin.Models
 {
@@ -24,7 +25,7 @@ namespace Jellyfin.Models
         /// The date when it went to premiere.
         /// </summary>
         public DateTimeOffset PremiereDate { get; set; }
-        
+
         #endregion
 
         #region Overrides

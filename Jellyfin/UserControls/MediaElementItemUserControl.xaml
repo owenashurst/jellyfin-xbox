@@ -9,7 +9,7 @@
     d:DataContext="{d:DesignInstance models:Movie}">
     <StackPanel x:Name="stackPanel" Orientation="Vertical" Margin="11, 0, 11, 25">
         <Border CornerRadius="5" Padding="4" x:Name="ImageBorder" HorizontalAlignment="Center">
-            <Grid>
+            <Grid CornerRadius="10">
                 <Image
                     Visibility="{Binding ElementName=UI, Path=IsLong, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=false}" Stretch="None"
                     Source="{Binding ImageData, Converter={StaticResource ByteArrayToImageConverter}}"
@@ -22,7 +22,7 @@
 
                 <userControls:NewMediaIndicator
                     Visibility="{Binding IsPlayed, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=false}"
-                    Margin="0, 0, 1, 0" Height="30" Width="50"
+                    Height="30" Width="50"
                     HorizontalAlignment="Right" VerticalAlignment="Top" />
             </Grid>
         </Border>
@@ -48,8 +48,8 @@
             Visibility="{Binding ElementName=UI, Path=IsProgressBarVisible, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}" 
             Value="{Binding PlaybackPosition.Ticks}" />
         
-        <TextBlock Text="{Binding Name}" FontSize="30" x:Name="notMovingTextBlock"
-                   Foreground="White" HorizontalAlignment="Center" Opacity=".7" />
+        <TextBlock Text="{Binding Name}" FontSize="30" x:Name="notMovingTextBlock" Loaded="NotMovingTextBlock_OnLoaded"
+                   Foreground="White" HorizontalAlignment="Center" Opacity=".7" FontWeight="SemiBold" />
 
         <TextBlock x:Name="seriesNameTextBlock" Opacity=".7"
                    Visibility="{Binding ElementName=UI, Path=IsShowSeriesNameAsSecondLine, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}"

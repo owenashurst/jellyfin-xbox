@@ -26,6 +26,7 @@
     <converters:StringToUpperConverter  x:Key="StringToUpperConverter"/>
     <converters:StringEmptyToVisibilityConverter  x:Key="StringEmptyToVisibilityConverter"/>
     <converters:GreaterThanZeroToVisibilityConverter  x:Key="GreaterThanZeroToVisibilityConverter"/>
+    <converters:CollectionToVisibilityConverter  x:Key="CollectionToVisibilityConverter"/>
 
     <x:Double x:Key="FontS">24</x:Double>
     <x:Double x:Key="FontM">28</x:Double>
@@ -150,7 +151,39 @@
         <Setter Property="Margin" Value="0, 20, 0, 0"/>
         <Setter Property="CornerRadius" Value="5"/>
         <Setter Property="FontSize" Value="32"/>
-        <Setter Property="Background" Value="#00A4DC" />
+        <Setter Property="Background" Value="#8000A4DC" />
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="RootGrid" Background="{TemplateBinding Background}" CornerRadius="4">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="Focused">
+                                    <VisualState.Setters>
+                                        <Setter Target="RootGrid.(Border.Background)"
+                                                Value="#00A4DC" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Pressed" />
+                                <VisualState x:Name="Disabled" />
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <ContentPresenter x:Name="ContentPresenter"
+                                          BorderBrush="{TemplateBinding BorderBrush}"
+                                          BorderThickness="{TemplateBinding BorderThickness}"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTransitions="{TemplateBinding ContentTransitions}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          Padding="{TemplateBinding Padding}"
+                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          AutomationProperties.AccessibilityView="Raw" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <Style x:Key="DetailHeaderButton" TargetType="Button">
@@ -313,6 +346,12 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+
+    <Style x:Key="PrimaryMenuFlyoutItem" TargetType="MenuFlyoutItem">
+        <Setter Property="FocusVisualPrimaryBrush" Value="{StaticResource PrimaryColor}" />
+        <Setter Property="FocusVisualSecondaryBrush" Value="{StaticResource PrimaryColor}" />
+        <Setter Property="FontSize" Value="{StaticResource FontM}"/>
     </Style>
 
     <ControlTemplate x:Name="SelectableToggleButtonControlTemplate" TargetType="ToggleButton">

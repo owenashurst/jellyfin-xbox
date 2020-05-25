@@ -26,8 +26,9 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Image Grid.Row="0" Grid.Column="0" Source="{Binding SelectedMediaElement.ImageData, Converter={StaticResource ByteArrayToImageConverter}}" Height="500" Width="400" VerticalAlignment="Top">
-            </Image>
+            <Border Grid.Row="0" Grid.Column="0" Height="500" Width="400" VerticalAlignment="Top" Margin="0, 15, 0, 0">
+                <Image Source="{Binding SelectedMediaElement.ImageData, Converter={StaticResource ByteArrayToImageConverter}}"   />
+            </Border>
 
             <Grid Grid.Row="0" Grid.Column="1">
                 <Grid.RowDefinitions>
@@ -39,7 +40,12 @@
                 </Grid.RowDefinitions>
 
                 <StackPanel Grid.Row="0">
-                    <TextBlock Text="{Binding SelectedMediaElement.Name}" FontSize="50" Margin="0, 0, 0, 20" />
+                    <StackPanel Orientation="Horizontal">
+                        <uwp:FontAwesome Icon="Heart" FontSize="{StaticResource FontM}"
+                            Visibility="{Binding SelectedMediaElement.UserData.IsFavorite, Converter={StaticResource BooleanToVisibilityConverter}}"       
+                            HorizontalAlignment="Center" Margin="0, 0, 15, 0" />
+                        <TextBlock Text="{Binding SelectedMediaElement.Name}" FontSize="50" Margin="0, 0, 0, 10" />
+                    </StackPanel>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -74,12 +80,15 @@
                         </StackPanel>
                     </Grid>
 
-                    <TextBlock Text="{Binding SelectedMediaElement.Description}" TextWrapping="Wrap" FontSize="{StaticResource FontL}"
-                           Margin="0, 20, 0, 20" />
+                    <Border  Margin="0, 20, 0, 20" BorderBrush="White" BorderThickness="5, 0, 0, 0" Padding="20, 0, 0, 0">
+                    <TextBlock Text="{Binding SelectedMediaElement.Description}" TextWrapping="Wrap"
+                               TextAlignment="Justify" FontSize="{StaticResource FontL}"
+                           />
+                    </Border>
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" HorizontalAlignment="Left" Orientation="Horizontal">
-                    <StackPanel HorizontalAlignment="Center" Margin="0, 0, 25, 0">
+                    <StackPanel HorizontalAlignment="Center" Margin="0, 0, 20, 0" Width="150">
                         <Button Command="{Binding ToolCommand}" HorizontalAlignment="Center" Height="75"
                         FocusVisualPrimaryThickness="2" FocusVisualSecondaryThickness="0"
                             FocusVisualSecondaryBrush="White" FocusVisualPrimaryBrush="Transparent"
@@ -88,19 +97,60 @@
                                 <Image Grid.Row="3" Source="../Assets/Images/play-button.png" Width="30" Height="30" />
                             </Button.Content>
                         </Button>
-                        <TextBlock Text="Play" Opacity=".7" FontSize="{StaticResource FontM}" HorizontalAlignment="Center" />
+                        <TextBlock Text="Play" Opacity=".7" TextWrapping="Wrap" FontSize="{StaticResource FontM}" HorizontalAlignment="Center" />
                     </StackPanel>
 
-                    <StackPanel HorizontalAlignment="Center">
+                    <StackPanel HorizontalAlignment="Center" Margin="0, 0, 20, 0" Width="150"
+                        Visibility="{Binding SelectedMediaElement.UserData.Played, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=false}"        
+                        >
                         <Button Command="{Binding ToolCommand}" HorizontalAlignment="Center" Height="75"
                                 FocusVisualPrimaryThickness="2" FocusVisualSecondaryThickness="0"
                                 FocusVisualSecondaryBrush="White" FocusVisualPrimaryBrush="Transparent"
-                                CommandParameter="Play" Style="{StaticResource SelectableButton}" Padding="50, 20">
+                                CommandParameter="MarkAsWatched" Style="{StaticResource SelectableButton}" Padding="50, 20">
                             <Button.Content>
                                 <uwp:FontAwesome Icon="Eye" FontSize="{StaticResource FontM}" HorizontalAlignment="Center" />
                             </Button.Content>
                         </Button>
-                        <TextBlock Text="Mark as Watched" Opacity=".7" FontSize="{StaticResource FontM}" HorizontalAlignment="Center" />
+                        <TextBlock Text="Mark as Watched" Opacity=".7" TextWrapping="Wrap" FontSize="{StaticResource FontM}" TextAlignment="Center" />
+                    </StackPanel>
+
+                    <StackPanel HorizontalAlignment="Center" Margin="0, 0, 20, 0" Width="150"
+                                Visibility="{Binding SelectedMediaElement.UserData.Played, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <Button Command="{Binding ToolCommand}" HorizontalAlignment="Center" Height="75"
+                                FocusVisualPrimaryThickness="2" FocusVisualSecondaryThickness="0"
+                                FocusVisualSecondaryBrush="White" FocusVisualPrimaryBrush="Transparent"
+                                CommandParameter="MarkAsUnwatched" Style="{StaticResource SelectableButton}" Padding="50, 20">
+                            <Button.Content>
+                                <uwp:FontAwesome Icon="EyeSlash" FontSize="{StaticResource FontM}" HorizontalAlignment="Center" />
+                            </Button.Content>
+                        </Button>
+                        <TextBlock Text="Mark as Unwatched" Opacity=".7" TextWrapping="Wrap" FontSize="{StaticResource FontM}" TextAlignment="Center" />
+                    </StackPanel>
+
+                    <StackPanel HorizontalAlignment="Center" Margin="0, 0, 20, 0"  Width="150"
+                                Visibility="{Binding SelectedMediaElement.UserData.IsFavorite, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=false}">
+                        <Button Command="{Binding ToolCommand}" HorizontalAlignment="Center" Height="75"
+                                FocusVisualPrimaryThickness="2" FocusVisualSecondaryThickness="0"
+                                FocusVisualSecondaryBrush="White" FocusVisualPrimaryBrush="Transparent"
+                                CommandParameter="Like" Style="{StaticResource SelectableButton}" Padding="50, 20">
+                            <Button.Content>
+                                <uwp:FontAwesome Icon="Heart" FontSize="{StaticResource FontM}" HorizontalAlignment="Center" />
+                            </Button.Content>
+                        </Button>
+                        <TextBlock Text="Mark as Favorite" TextWrapping="Wrap" Opacity=".7" FontSize="{StaticResource FontM}" TextAlignment="Center" />
+                    </StackPanel>
+
+                    <StackPanel HorizontalAlignment="Center" Margin="0, 0, 20, 0"  Width="150"
+                                Visibility="{Binding SelectedMediaElement.UserData.IsFavorite, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <Button Command="{Binding ToolCommand}" HorizontalAlignment="Center" Height="75"
+                                FocusVisualPrimaryThickness="2" FocusVisualSecondaryThickness="0"
+                                FocusVisualSecondaryBrush="White" FocusVisualPrimaryBrush="Transparent"
+                                CommandParameter="Dislike" Style="{StaticResource SelectableButton}" Padding="50, 20">
+                            <Button.Content>
+                                <uwp:FontAwesome Icon="Diamond" FontSize="{StaticResource FontM}" HorizontalAlignment="Center" />
+                            </Button.Content>
+                        </Button>
+                        <TextBlock Text="Remove Favorite" TextWrapping="Wrap" Opacity=".7" FontSize="{StaticResource FontM}" TextAlignment="Center" />
                     </StackPanel>
                 </StackPanel>
 

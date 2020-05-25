@@ -16,6 +16,7 @@ namespace Jellyfin.Models.Adapters
 
             m.Id = source.Id;
             m.Name = source.Name;
+            m.DateCreated = source.DateCreated;
             m.Year = source.ProductionYear.ToString();
             m.ImageId = source.ImageTags.Primary;
             
@@ -23,9 +24,22 @@ namespace Jellyfin.Models.Adapters
             m.CommunityRating = source.CommunityRating.ToString();
             m.OfficialRating = source.OfficialRating;
             m.Runtime = new TimeSpan(source.RunTimeTicks);
-            m.PlaybackPosition = new TimeSpan(source.UserData.PlaybackPositionTicks);
-            m.IsPlayed = source.UserData.Played;
 
+            if (source.UserData != null)
+            {
+                m.UserData = new MediaUserData
+                {
+                    Played = source.UserData.Played,
+                    IsFavorite = source.UserData.IsFavorite,
+                    Key = source.UserData.Key,
+                    PlaybackPositionTicks = source.UserData.PlaybackPositionTicks,
+                    PlayCount = source.UserData.PlayCount,
+                    PlayedPercentage = source.UserData.PlayedPercentage,
+                };
+
+                m.PlaybackPosition = new TimeSpan(source.UserData.PlaybackPositionTicks);
+                m.IsPlayed = source.UserData.Played;
+            }
 
             m.Genres = source.Genres;
             m.Description = source.Overview;

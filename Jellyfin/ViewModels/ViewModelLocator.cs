@@ -38,18 +38,19 @@ namespace Jellyfin.ViewModels
             ISettingsService settingsService = _container.Resolve<ISettingsService>();
             IJellyfinNavigationService navigationService = _container.Resolve<IJellyfinNavigationService>();
             IReportProgressService reportProgressService = _container.Resolve<IReportProgressService>();
+            IPersonalizeService personalizeService = _container.Resolve<IPersonalizeService>();
 
             _container.RegisterInstance(new MainViewModel(settingsService, navigationService));
             
-            _container.RegisterInstance(new MovieListViewModel(movieService, logManager));
-            _container.RegisterInstance(new MovieDetailViewModel(movieService, playbackInfoService));
+            _container.RegisterInstance(new MovieListViewModel(movieService, personalizeService, logManager));
+            _container.RegisterInstance(new MovieDetailViewModel(movieService, playbackInfoService, personalizeService, logManager));
             
-            _container.RegisterInstance(new TvShowListViewModel(tvShowService, logManager));
-            _container.RegisterInstance(new TvShowDetailViewModel(tvShowService, playbackInfoService));
-            _container.RegisterInstance(new TvShowEpisodeDetailViewModel(tvShowService, playbackInfoService));
+            _container.RegisterInstance(new TvShowListViewModel(tvShowService, personalizeService, logManager));
+            _container.RegisterInstance(new TvShowDetailViewModel(tvShowService, playbackInfoService, personalizeService, logManager));
+            _container.RegisterInstance(new TvShowEpisodeDetailViewModel(tvShowService, playbackInfoService, personalizeService, logManager));
 
-            _container.RegisterInstance(new MediaPlaybackViewModel(reportProgressService));
-            _container.RegisterInstance(new PlaybackConfirmationViewModel(playbackInfoService, logManager));
+            _container.RegisterInstance(new MediaPlaybackViewModel(reportProgressService, logManager));
+            _container.RegisterInstance(new PlaybackConfirmationViewModel(playbackInfoService, personalizeService, logManager));
             _container.RegisterInstance(new LoginViewModel(loginService, settingsService));
         }
 

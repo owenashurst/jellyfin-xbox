@@ -55,6 +55,7 @@ namespace Jellyfin
             container.RegisterType<IPlaybackInfoService, PlaybackInfoService>();
             container.RegisterType<IReportProgressService, ReportProgressService>();
             container.RegisterType<ILocalCacheService, LocalCacheService>();
+            container.RegisterType<IPersonalizeService, PersonalizeService>();
         }
     }
 }

@@ -7,6 +7,7 @@ using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 using Jellyfin.Core;
+using Jellyfin.Logging;
 using Jellyfin.Models;
 using Jellyfin.Services.Interfaces;
 using Unity;
@@ -172,6 +173,8 @@ namespace Jellyfin.ViewModels
         /// </summary>
         private readonly IReportProgressService _reportProgressService;
 
+        private readonly ILogManager _logManager;
+
         #region IsPlaying
 
         private bool _isPlaying;
@@ -211,7 +214,7 @@ namespace Jellyfin.ViewModels
 
         #region ctor
 
-        public MediaPlaybackViewModel(IReportProgressService reportProgressService)
+        public MediaPlaybackViewModel(IReportProgressService reportProgressService, ILogManager logManager)
         {
             OSDUpdateTimer = new Timer();
             OSDUpdateTimer.Interval = 1000;
@@ -221,6 +224,9 @@ namespace Jellyfin.ViewModels
 
             _reportProgressService = reportProgressService ??
                 throw new ArgumentNullException(nameof(reportProgressService));
+
+            _logManager = logManager ??
+                          throw new ArgumentNullException(nameof(logManager));
 
             ReportPlaybackStatusTimer = new Timer();
             ReportPlaybackStatusTimer.Interval = 60 * 1000;
@@ -235,6 +241,7 @@ namespace Jellyfin.ViewModels
 
         #region Additional methods
 
+        [LogMethod]
         public override void Execute(string commandParameter)
         {
             switch (commandParameter)
@@ -282,6 +289,7 @@ namespace Jellyfin.ViewModels
             NavigationService.GoBack();
         }
 
+        [LogMethod]
         public async Task PromptNextEpisode()
         {
             if (PlaybackViewParameters.Playlist.Any())
@@ -342,20 +350,23 @@ namespace Jellyfin.ViewModels
             SeekRequestTimer = null;
         }
 
+        [LogMethod]
         public void Seek(int seconds)
         {
             #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             Globals.Instance.UIDispatcher.RunAsync(CoreDispatcherPriority.High, () =>
             {
-                if (MediaPlayer != null)
+                if (MediaPlayer == null)
                 {
-                    MediaPlayer.MediaPlayer.PlaybackSession.Position =
-                        MediaPlayer.MediaPlayer.PlaybackSession.Position + TimeSpan.FromSeconds(seconds);
+                    return;
+                }
 
-                    if (PlaybackMode == "DirectStream")
-                    {
-                        IsLoading = false;
-                    }
+                MediaPlayer.MediaPlayer.PlaybackSession.Position =
+                    MediaPlayer.MediaPlayer.PlaybackSession.Position + TimeSpan.FromSeconds(seconds);
+
+                if (PlaybackMode == "DirectStream")
+                {
+                    IsLoading = false;
                 }
             });
             #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
@@ -401,19 +412,21 @@ namespace Jellyfin.ViewModels
             }
         }
 
-
+        [LogMethod]
         public void Pause()
         {
             IsPlaying = false;
             MediaPlayer?.MediaPlayer.Pause();
         }
 
+        [LogMethod]
         public void Play()
         {
             IsPlaying = true;
             MediaPlayer?.MediaPlayer.Play();
         }
 
+        [LogMethod]
         public ControllerButtonHandledResult HandleKeyPressed(VirtualKey key)
         {
             switch (key)
@@ -470,6 +483,7 @@ namespace Jellyfin.ViewModels
             });
             #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
+
         private void OsdUpdateTimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
         {
 #pragma warning disable CS4014

@@ -12,6 +12,7 @@ using Windows.UI.Xaml.Navigation;
 using Jellyfin.Logging;
 using Jellyfin.Models;
 using Jellyfin.ViewModels;
+using Newtonsoft.Json;
 using Unity;
 
 namespace Jellyfin.Views
@@ -27,9 +28,6 @@ namespace Jellyfin.Views
         {
             get => (DataContext as MediaPlaybackViewModel);
         }
-
-        [Obsolete]
-        private PlaybackViewParameterModel playbackViewParameterModel { get; set; }
 
         private ILogManager _logManager;
 
@@ -56,6 +54,7 @@ namespace Jellyfin.Views
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+        [LogMethod]
         private void MediaPlaybackView_OnPreviewKeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key == VirtualKey.Space && playbackMenuView.Visibility == Visibility.Collapsed)
@@ -103,10 +102,13 @@ namespace Jellyfin.Views
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            if (mediaPlayerElement.MediaPlayer != null)
+            if (mediaPlayerElement.MediaPlayer == null)
             {
-                mediaPlayerElement.MediaPlayer.Pause();
+                _logManager.LogWarn("Somehow the media player is null. Grab a programmer!");
+                return;
             }
+
+            mediaPlayerElement.MediaPlayer.Pause();
 
             //base.OnNavigatedFrom(e);
         }
@@ -183,6 +185,26 @@ namespace Jellyfin.Views
         private void SubscribeToEvents(MediaPlayer mediaPlayer, PlaybackViewParameterModel vm)
         {
             mediaPlayer.PlaybackSession.PlaybackStateChanged += PlaybackSession_PlaybackStateChanged;
+            mediaPlayer.PlaybackSession.BufferingStarted += (sender, args) =>
+            {
+                LogStatus("Buffered started");
+            };
+
+            mediaPlayer.PlaybackSession.BufferingEnded += (sender, args) =>
+            {
+                LogStatus("Buffered ended");
+            };
+
+            mediaPlayer.PlaybackSession.BufferingProgressChanged += (sender, args) =>
+            {
+                LogStatus("Buffered progress changed");
+            };
+
+            mediaPlayer.PlaybackSession.BufferedRangesChanged += (sender, args) =>
+            {
+                LogStatus("Buffered ranges changed");
+            };
+
             mediaPlayer.MediaEnded += MediaPlayerOnMediaEnded;
 
             if (!vm.IsPlaybackFromBeginning)
@@ -191,6 +213,30 @@ namespace Jellyfin.Views
             }
         }
 
+        private void LogStatus(string status)
+        {
+            Globals.Instance.UIDispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            {
+                var quick = new
+                {
+                    NaturalDuration = mediaPlayerElement.MediaPlayer.PlaybackSession.NaturalDuration,
+                    PlaybackRate = mediaPlayerElement.MediaPlayer.PlaybackSession.PlaybackRate,
+                    BufferingProgress = mediaPlayerElement.MediaPlayer.PlaybackSession.BufferingProgress,
+                    CanPause = mediaPlayerElement.MediaPlayer.PlaybackSession.CanPause,
+                    CanSeek = mediaPlayerElement.MediaPlayer.PlaybackSession.CanSeek,
+                    DownloadProgress = mediaPlayerElement.MediaPlayer.PlaybackSession.DownloadProgress,
+                    IsMirroring = mediaPlayerElement.MediaPlayer.PlaybackSession.IsMirroring,
+                    NaturalVideoHeight = mediaPlayerElement.MediaPlayer.PlaybackSession.NaturalVideoHeight,
+                    NaturalVideoWidth = mediaPlayerElement.MediaPlayer.PlaybackSession.NaturalVideoWidth,
+                    PlaybackState = mediaPlayerElement.MediaPlayer.PlaybackSession.PlaybackState.ToString(),
+                    Position = mediaPlayerElement.MediaPlayer.PlaybackSession.Position,
+                    IsPlaying = String.Join(", ", mediaPlayerElement.MediaPlayer.PlaybackSession.GetBufferedRanges())
+                };
+
+                _logManager.LogDebug($"{status}: {JsonConvert.SerializeObject(quick)}");
+            });
+        } 
+
         /// <summary>
         /// Gets triggered when the media playback is ended.
         /// </summary>
@@ -198,6 +244,8 @@ namespace Jellyfin.Views
         /// <param name="args"></param>
         private void MediaPlayerOnMediaEnded(MediaPlayer sender, object args)
         {
+            LogStatus("Media ended");
+
             #pragma warning disable CS4014
             // Because this call is not awaited, execution of the current method continues before the call is completed
             Globals.Instance.UIDispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
@@ -210,10 +258,13 @@ namespace Jellyfin.Views
 
         private void PlaybackSession_PlaybackStateChanged(MediaPlaybackSession sender, object args)
         {
+            LogStatus("Playback state changed");
+
             #pragma warning disable CS4014
             // Because this call is not awaited, execution of the current method continues before the call is completed
             Globals.Instance.UIDispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
             {
+                _logManager.LogDebug("Playback state changed: " + sender.PlaybackState);
                 _dataContext.IsLoading = sender.PlaybackState == MediaPlaybackState.Buffering;
             });
             #pragma warning restore CS4014
@@ -234,8 +285,6 @@ namespace Jellyfin.Views
                 $"{Globals.Instance.Host}/Videos/{id}/stream.mov?Static=true&mediaSourceId={id}&deviceId={Globals.Instance.SessionInfo.DeviceId}&api_key={Globals.Instance.AccessToken}&Tag=beb6ef9128431e67c421e4cb890cf84f";
 
             Uri uri = new Uri(videoUrl);
-
-            mediaPlayerElement.SetMediaPlayer(new MediaPlayer());
             mediaPlayerElement.MediaPlayer.Source = MediaSource.CreateFromUri(uri);
 
             SubscribeToEvents(mediaPlayerElement.MediaPlayer, playbackViewParameterModel);
@@ -251,13 +300,14 @@ namespace Jellyfin.Views
         /// <param name="args"></param>
         private void PlaybackSessionOnNaturalDurationChanged(MediaPlaybackSession sender, object args)
         {
+            LogStatus("Natural Duration changed");
+
             #pragma warning disable CS4014
             // Because this call is not awaited, execution of the current method continues before the call is completed
             Globals.Instance.UIDispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
             {
                 MediaPlaybackSession session = mediaPlayerElement.MediaPlayer.PlaybackSession;
                 session.Position = _dataContext.SelectedMediaElement.PlaybackPosition;
-
                 session.NaturalDurationChanged -= PlaybackSessionOnNaturalDurationChanged;
             });
             #pragma warning restore CS4014

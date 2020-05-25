@@ -18,26 +18,26 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <StackPanel Grid.Row="0">
+            <StackPanel Grid.Row="0" Visibility="{Binding ContinueWatchingMovies, Converter={StaticResource CollectionToVisibilityConverter}}">
                 <TextBlock Text="CONTINUE WATCHING" Style="{StaticResource GroupHeaderTextBlock}" />
                 <local:MediaElementListUserControl IsLong="true" IsProgressBarVisible="true"
                     BlockWidth="510" BlockHeight="270"
                     MediaSource="{Binding ContinueWatchingMovies}" />
             </StackPanel>
         
-            <StackPanel Grid.Row="1">
+            <StackPanel Grid.Row="1" Visibility="{Binding RecentlyReleasedMovies, Converter={StaticResource CollectionToVisibilityConverter}}">
                 <TextBlock Text="RECENTLY RELEASED MOVIES" Style="{StaticResource GroupHeaderTextBlock}" />
                 <local:MediaElementListUserControl BlockWidth="220" BlockHeight="270"
                     MediaSource="{Binding RecentlyReleasedMovies}" />
             </StackPanel>
 
-            <StackPanel Grid.Row="2">
+            <StackPanel Grid.Row="2" Visibility="{Binding MoviesFirstFavoriteGenre, Converter={StaticResource CollectionToVisibilityConverter}}">
                 <TextBlock Text="{Binding FirstFavoriteGenre, Converter={StaticResource StringToUpperConverter}}" Style="{StaticResource GroupHeaderTextBlock}" />
                 <local:MediaElementListUserControl BlockWidth="220" BlockHeight="270"
                     MediaSource="{Binding MoviesFirstFavoriteGenre}" />
             </StackPanel>
 
-            <StackPanel Grid.Row="3">
+            <StackPanel Grid.Row="3" Visibility="{Binding MoviesSecondFavoriteGenre, Converter={StaticResource CollectionToVisibilityConverter}}">
                 <TextBlock Text="{Binding SecondFavoriteGenre, Converter={StaticResource StringToUpperConverter}}" Style="{StaticResource GroupHeaderTextBlock}" />
                 <local:MediaElementListUserControl BlockWidth="220" BlockHeight="270"
                 MediaSource="{Binding MoviesSecondFavoriteGenre}" />
