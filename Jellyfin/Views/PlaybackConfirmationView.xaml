@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:uwp="using:FontAwesome.UWP"
+    xmlns:userControls="using:Jellyfin.UserControls"
     mc:Ignorable="d"
     PreviewKeyDown="PlaybackConfirmationView_OnPreviewKeyDown"
     DataContext="{Binding PlaybackConfirmationPage, Source={StaticResource ViewModelLocator}}">
@@ -11,76 +12,82 @@
         <ImageBrush ImageSource="/Assets/Images/background.png" Stretch="UniformToFill"/>
     </Page.Background>
     <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Padding="100" Width="1600">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+        <userControls:LoadingUserControl HorizontalAlignment="Center" VerticalAlignment="Center"
+            Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
-        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center"
-            Visibility="{Binding IsShowConfirmation, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=false, FallbackValue=Collapsed}">
-            <uwp:FontAwesome Icon="InfoCircle" FontSize="40" />
-            <TextBlock Text="Resume Playback" FontSize="40" Margin="15, 0, 0, 5" />
-        </StackPanel>
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Padding="100" Width="1600"
+              Visibility="{Binding IsLoading, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=false, FallbackValue=Collapsed}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center"
-                    Visibility="{Binding IsShowConfirmation, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <uwp:FontAwesome Icon="Play" FontSize="40" />
-            <TextBlock Text="Playing Next" FontSize="40" Margin="15, 0, 0, 5" />
-        </StackPanel>
-        
-        <Border Grid.Row="1" Background="White" Height="2" Margin="0, 50" />
-        
-        <StackPanel Grid.Row="2"
-            Visibility="{Binding IsShowConfirmation, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=false}">
-            <Button Content="{Binding FormattedResumeText}"
-                    Style="{StaticResource PlaybackConfirmationButton}"
-                    Command="{Binding ToolCommand}" CommandParameter="PlayFromPosition" />
-            <Button Content="Start from the beginning"
-                    Style="{StaticResource PlaybackConfirmationButton}"
-                    Command="{Binding ToolCommand}" CommandParameter="PlayFromBeginning" />
-        </StackPanel>
-
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center"
-            Visibility="{Binding IsShowConfirmation, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-            <StackPanel Margin="0, 0, 120, 0">
-                <TextBlock Text="PREVIOUS" FontSize="{StaticResource FontL}" />
-                <Button
-                    Margin="0, 30, 0, 30"
-                    Style="{StaticResource PlaybackFinishedButton}"
-                    Command="{Binding ToolCommand}" CommandParameter="Replay">
-                    <Button.Content>
-                        <Grid>
-                            <Image Source="{Binding SelectedMediaElement.BackdropImageData, Converter={StaticResource ByteArrayToImageConverter}}" Width="450" />
-                            <uwp:FontAwesome Icon="Refresh" FontSize="50" />
-                        </Grid>
-                    </Button.Content>
-                </Button>
-                <TextBlock Text="{Binding SelectedMediaElement.Name}" FontSize="{StaticResource FontL}" />
-                <TextBlock Text="{Binding SelectedMediaElement.TvShow.Name}" FontSize="{StaticResource FontL}" Opacity=".7" />
-                <TextBlock Text="{Binding SelectedMediaElement.SecondLine}" FontSize="{StaticResource FontL}" Opacity=".7" />
+            <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center"
+                Visibility="{Binding IsShowConfirmation, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=false, FallbackValue=Collapsed}">
+                <uwp:FontAwesome Icon="InfoCircle" FontSize="40" />
+                <TextBlock Text="Resume Playback" FontSize="40" Margin="15, 0, 0, 5" />
             </StackPanel>
 
-            <StackPanel>
-                <Button
-                    Style="{StaticResource PlaybackFinishedButton}"
-                    Command="{Binding ToolCommand}" CommandParameter="PlayNext">
-                    <Button.Content>
-                        <Grid>
-                            <Image Source="{Binding NextMediaElement.BackdropImageData, Converter={StaticResource ByteArrayToImageConverter}}" Width="575" />
-
-                            <Border Background="#A0000000" Height="120" Width="120" CornerRadius="5" Visibility="{Binding IsTimerVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                <TextBlock Text="{Binding AutoPlayNextTimeLeft}"
-                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
-                            </Border>
-                        </Grid>
-                    </Button.Content>
-                </Button>
-                <TextBlock Text="{Binding NextMediaElement.Name}" FontSize="{StaticResource FontL}" />
-                <TextBlock Text="{Binding NextMediaElement.TvShow.Name}" FontSize="{StaticResource FontL}" Opacity=".7" />
-                <TextBlock Text="{Binding NextMediaElement.SecondLine}" FontSize="{StaticResource FontL}" Opacity=".7" />
+            <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center"
+                        Visibility="{Binding IsShowConfirmation, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <uwp:FontAwesome Icon="Play" FontSize="40" />
+                <TextBlock Text="Playing Next" FontSize="40" Margin="15, 0, 0, 5" />
             </StackPanel>
-        </StackPanel>
+            
+            <Border Grid.Row="1" Background="White" Height="2" Margin="0, 50" />
+            
+            <StackPanel Grid.Row="2"
+                Visibility="{Binding IsShowConfirmation, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=false}">
+                <Button Content="{Binding FormattedResumeText}"
+                        Style="{StaticResource PlaybackConfirmationButton}"
+                        Command="{Binding ToolCommand}" CommandParameter="PlayFromPosition" />
+                <Button Content="Start from the beginning"
+                        Style="{StaticResource PlaybackConfirmationButton}"
+                        Command="{Binding ToolCommand}" CommandParameter="PlayFromBeginning" />
+            </StackPanel>
+
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center"
+                Visibility="{Binding IsShowConfirmation, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                <StackPanel Margin="0, 0, 120, 0">
+                    <TextBlock Text="PREVIOUS" FontSize="{StaticResource FontL}" />
+                    <Button
+                        Margin="0, 30, 0, 30"
+                        Style="{StaticResource PlaybackFinishedButton}"
+                        Command="{Binding ToolCommand}" CommandParameter="Replay">
+                        <Button.Content>
+                            <Grid>
+                                <Image Source="{Binding SelectedMediaElement.BackdropImageData, Converter={StaticResource ByteArrayToImageConverter}}" Width="450" />
+                                <uwp:FontAwesome Icon="Refresh" FontSize="50" />
+                            </Grid>
+                        </Button.Content>
+                    </Button>
+                    <TextBlock Text="{Binding SelectedMediaElement.Name}" FontSize="{StaticResource FontL}" />
+                    <TextBlock Text="{Binding SelectedMediaElement.TvShow.Name}" FontSize="{StaticResource FontL}" Opacity=".7" />
+                    <TextBlock Text="{Binding SelectedMediaElement.SecondLine}" FontSize="{StaticResource FontL}" Opacity=".7" />
+                </StackPanel>
+
+                <StackPanel>
+                    <Button
+                        Style="{StaticResource PlaybackFinishedButton}"
+                        Command="{Binding ToolCommand}" CommandParameter="PlayNext">
+                        <Button.Content>
+                            <Grid>
+                                <Image Source="{Binding NextMediaElement.BackdropImageData, Converter={StaticResource ByteArrayToImageConverter}}" Width="575" />
+
+                                <Border Background="#A0000000" Height="120" Width="120" CornerRadius="5" Visibility="{Binding IsTimerVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                    <TextBlock Text="{Binding AutoPlayNextTimeLeft}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Border>
+                            </Grid>
+                        </Button.Content>
+                    </Button>
+                    <TextBlock Text="{Binding NextMediaElement.Name}" FontSize="{StaticResource FontL}" />
+                    <TextBlock Text="{Binding NextMediaElement.TvShow.Name}" FontSize="{StaticResource FontL}" Opacity=".7" />
+                    <TextBlock Text="{Binding NextMediaElement.SecondLine}" FontSize="{StaticResource FontL}" Opacity=".7" />
+                </StackPanel>
+            </StackPanel>
+        </Grid>
     </Grid>
 </Page>
 

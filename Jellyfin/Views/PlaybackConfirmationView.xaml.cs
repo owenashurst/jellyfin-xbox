@@ -45,6 +45,7 @@ namespace Jellyfin.Views
                 return;
             }
 
+            _dc.IsLoading = true;
             PlaybackViewParameterModel m = e.Parameter as PlaybackViewParameterModel;
             if (m.IsInvalidated)
             {

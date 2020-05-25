@@ -10,7 +10,7 @@
     DataContext="{Binding MediaPlaybackPage, Source={StaticResource ViewModelLocator}}"
     Background="Black">
     <Grid>
-        <MediaPlayerElement AreTransportControlsEnabled="True"
+        <MediaPlayerElement AreTransportControlsEnabled="False"
             x:Name="mediaPlayerElement" AutoPlay="True" Stretch="Uniform"
             PreviewKeyDown="MediaPlaybackView_OnPreviewKeyDown"
             IsFocusEngagementEnabled="True"

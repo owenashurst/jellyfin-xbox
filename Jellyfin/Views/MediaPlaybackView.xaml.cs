@@ -215,26 +215,34 @@ namespace Jellyfin.Views
 
         private void LogStatus(string status)
         {
-            Globals.Instance.UIDispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
-            {
-                var quick = new
-                {
-                    NaturalDuration = mediaPlayerElement.MediaPlayer.PlaybackSession.NaturalDuration,
-                    PlaybackRate = mediaPlayerElement.MediaPlayer.PlaybackSession.PlaybackRate,
-                    BufferingProgress = mediaPlayerElement.MediaPlayer.PlaybackSession.BufferingProgress,
-                    CanPause = mediaPlayerElement.MediaPlayer.PlaybackSession.CanPause,
-                    CanSeek = mediaPlayerElement.MediaPlayer.PlaybackSession.CanSeek,
-                    DownloadProgress = mediaPlayerElement.MediaPlayer.PlaybackSession.DownloadProgress,
-                    IsMirroring = mediaPlayerElement.MediaPlayer.PlaybackSession.IsMirroring,
-                    NaturalVideoHeight = mediaPlayerElement.MediaPlayer.PlaybackSession.NaturalVideoHeight,
-                    NaturalVideoWidth = mediaPlayerElement.MediaPlayer.PlaybackSession.NaturalVideoWidth,
-                    PlaybackState = mediaPlayerElement.MediaPlayer.PlaybackSession.PlaybackState.ToString(),
-                    Position = mediaPlayerElement.MediaPlayer.PlaybackSession.Position,
-                    IsPlaying = String.Join(", ", mediaPlayerElement.MediaPlayer.PlaybackSession.GetBufferedRanges())
-                };
+            // Enable only for debugging. Makes playback responsiveness laggy
+            //Globals.Instance.UIDispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            //{
+            //    try
+            //    {
+            //        var quick = new
+            //        {
+            //            NaturalDuration = mediaPlayerElement.MediaPlayer.PlaybackSession.NaturalDuration,
+            //            PlaybackRate = mediaPlayerElement.MediaPlayer.PlaybackSession.PlaybackRate,
+            //            BufferingProgress = mediaPlayerElement.MediaPlayer.PlaybackSession.BufferingProgress,
+            //            CanPause = mediaPlayerElement.MediaPlayer.PlaybackSession.CanPause,
+            //            CanSeek = mediaPlayerElement.MediaPlayer.PlaybackSession.CanSeek,
+            //            DownloadProgress = mediaPlayerElement.MediaPlayer.PlaybackSession.DownloadProgress,
+            //            IsMirroring = mediaPlayerElement.MediaPlayer.PlaybackSession.IsMirroring,
+            //            NaturalVideoHeight = mediaPlayerElement.MediaPlayer.PlaybackSession.NaturalVideoHeight,
+            //            NaturalVideoWidth = mediaPlayerElement.MediaPlayer.PlaybackSession.NaturalVideoWidth,
+            //            PlaybackState = mediaPlayerElement.MediaPlayer.PlaybackSession.PlaybackState.ToString(),
+            //            Position = mediaPlayerElement.MediaPlayer.PlaybackSession.Position,
+            //            IsPlaying = String.Join(", ",
+            //                mediaPlayerElement.MediaPlayer.PlaybackSession.GetBufferedRanges())
+            //        };
 
-                _logManager.LogDebug($"{status}: {JsonConvert.SerializeObject(quick)}");
-            });
+            //        _logManager.LogDebug($"{status}: {JsonConvert.SerializeObject(quick)}");
+            //    } catch (Exception)
+            //    {
+
+            //    }
+            //});
         } 
 
         /// <summary>

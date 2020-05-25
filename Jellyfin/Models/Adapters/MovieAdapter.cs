@@ -24,8 +24,22 @@ namespace Jellyfin.Models.Adapters
             m.HasSubtitles = source.HasSubtitles;
             m.Genres = source.Genres;
             m.PremiereDate = source.PremiereDate;
-            m.PlaybackPosition = new TimeSpan(source.UserData.PlaybackPositionTicks);
-            m.IsPlayed = source.UserData.Played;
+            
+            if (source.UserData != null)
+            {
+                m.UserData = new MediaUserData
+                {
+                    Played = source.UserData.Played,
+                    IsFavorite = source.UserData.IsFavorite,
+                    Key = source.UserData.Key,
+                    PlaybackPositionTicks = source.UserData.PlaybackPositionTicks,
+                    PlayCount = source.UserData.PlayCount,
+                    PlayedPercentage = source.UserData.PlayedPercentage,
+                };
+
+                m.PlaybackPosition = new TimeSpan(source.UserData.PlaybackPositionTicks);
+                m.IsPlayed = source.UserData.Played;
+            }
 
             return m;
         }

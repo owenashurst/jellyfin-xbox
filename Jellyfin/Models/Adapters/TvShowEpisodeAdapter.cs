@@ -25,8 +25,21 @@ namespace Jellyfin.Models.Adapters
             t.IndexNumber = source.IndexNumber;
             t.SeasonNumber = source.ParentIndexNumber.ToString();
             t.Description = source.Overview;
-            t.PlaybackPosition = new TimeSpan(source.UserData.PlaybackPositionTicks);
-            t.IsPlayed = source.UserData.Played || source.UserData.PlaybackPositionTicks > 0;
+            if (source.UserData != null)
+            {
+                t.UserData = new MediaUserData
+                {
+                    Played = source.UserData.Played,
+                    IsFavorite = source.UserData.IsFavorite,
+                    Key = source.UserData.Key,
+                    PlaybackPositionTicks = source.UserData.PlaybackPositionTicks,
+                    PlayCount = source.UserData.PlayCount,
+                    PlayedPercentage = source.UserData.PlayedPercentage,
+                };
+
+                t.PlaybackPosition = new TimeSpan(source.UserData.PlaybackPositionTicks);
+                t.IsPlayed = source.UserData.Played;
+            }
 
             if (source.ImageTags != null) { 
                 t.BackdropImageId = source.ImageTags.Primary;

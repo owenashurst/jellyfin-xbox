@@ -27,8 +27,21 @@ namespace Jellyfin.Models.Adapters
 
             t.CommunityRating = source.CommunityRating.ToString();
             t.Runtime = new TimeSpan(source.RunTimeTicks);
-            t.PlaybackPosition = new TimeSpan(source.UserData.PlaybackPositionTicks);
-            t.IsPlayed = source.UserData.Played;
+            if (source.UserData != null)
+            {
+                t.UserData = new MediaUserData
+                {
+                    Played = source.UserData.Played,
+                    IsFavorite = source.UserData.IsFavorite,
+                    Key = source.UserData.Key,
+                    PlaybackPositionTicks = source.UserData.PlaybackPositionTicks,
+                    PlayCount = source.UserData.PlayCount,
+                    PlayedPercentage = source.UserData.PlayedPercentage,
+                };
+
+                t.PlaybackPosition = new TimeSpan(source.UserData.PlaybackPositionTicks);
+                t.IsPlayed = source.UserData.Played;
+            }
             t.Genres = source.Genres;
             t.Description = source.Overview;
 

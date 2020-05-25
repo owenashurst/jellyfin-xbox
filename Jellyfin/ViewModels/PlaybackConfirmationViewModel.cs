@@ -178,6 +178,8 @@ namespace Jellyfin.ViewModels
                 IsPlaybackFromBeginning = true,
                 Playlist = PlaybackViewParameters.Playlist
             });
+
+            IsLoading = false;
         }
 
         private async Task PlayFromPosition()
@@ -260,11 +262,13 @@ namespace Jellyfin.ViewModels
         ///     or available but less than 2 min., so let it play as is
         /// 2) The playback information is available and more than 2 min, so let the user decide what they want
         /// 3) IsJustFinished is set, display the boxed screen shot layout to the user to let them decide
+        ///
+        /// IsLoading is not extracted to delay the end of Loading... popup as possible.
         /// </summary>
         [LogMethod]
         public async Task PlaybackViewParametersChanged(PlaybackViewParameterModel p)
         {
-            _logManager.LogDebug($"Playback View Parameters Changed raised, obj = {PlaybackViewParameters}");
+            _logManager.LogDebug($"Playback View Parameters Changed raised, obj = {p}");
 
             // Does it come from movie / episode chooser?
             if (!p.IsJustFinishedPlaying)
@@ -292,7 +296,6 @@ namespace Jellyfin.ViewModels
             }
             else
             {
-                
                 // go to the next element on the playlist, then play that from the beginning.
                 SelectedMediaElement = PlaybackViewParameters.SelectedMediaElement;
                 if (PlaybackViewParameters.Playlist.Length >= 2)
@@ -303,6 +306,7 @@ namespace Jellyfin.ViewModels
                     NextMediaElement = PlaybackViewParameters.Playlist[0];
                     PlaybackViewParameters.Playlist = PlaybackViewParameters.Playlist.Skip(1).ToArray();
 
+                    IsLoading = false;
                     IsShowConfirmation = true;
 
                     AutoPlayNextTimeLeft = 20;
@@ -311,6 +315,7 @@ namespace Jellyfin.ViewModels
                 }
                 else
                 {
+                    IsLoading = false;
                     _logManager.LogDebug("No next element, navigating back twice.");
 
                     // As it comes from the playback, we should navigate back two times

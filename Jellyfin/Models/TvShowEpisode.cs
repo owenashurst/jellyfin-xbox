@@ -41,8 +41,6 @@ namespace Jellyfin.Models
 
         public TimeSpan PlayedLength { get; set; }
 
-        public bool IsPlayed { get; set; }
-
         #endregion
 
         #region Overrides

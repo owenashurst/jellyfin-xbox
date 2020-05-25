@@ -14,6 +14,7 @@ namespace Jellyfin.Models.Adapters
             target.Runtime = TimeSpan.FromTicks(source.RunTimeTicks);
             target.Year = source.ProductionYear;
 
+
             if (source.ImageTags != null)
             {
                 target.ImageId = source.ImageTags.Primary;
