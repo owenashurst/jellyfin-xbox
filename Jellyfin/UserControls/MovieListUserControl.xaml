@@ -6,7 +6,6 @@
     xmlns:uwp="using:FontAwesome.UWP"
     Loaded="MovieView_OnLoaded"
     DataContext="{Binding MovieListPage, Source={StaticResource ViewModelLocator}}">
-
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="15, 40, 0, 0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -20,14 +19,13 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="0" Orientation="Horizontal">
-            <ToggleButton Content="Recommendations"
+                <ToggleButton Content="Recommendations"
                           Command="{Binding ToolCommand}" 
                           CommandParameter="OpenRecommendations"
                           IsChecked="{Binding IsRecommendationsOpened, Mode=TwoWay}" 
                           Style="{StaticResource SelectableToggleButton}"
-                          Template="{StaticResource SelectableToggleButtonControlTemplate}">
-            </ToggleButton>
-            <ToggleButton Content="Library"
+                          Template="{StaticResource SelectableToggleButtonControlTemplate}" />
+                <ToggleButton Content="Library"
                     Command="{Binding ToolCommand}"
                     CommandParameter="OpenLibrary"
                     IsChecked="{Binding IsRecommendationsOpened, Mode=TwoWay, Converter={StaticResource BooleanInverterConverter}}"

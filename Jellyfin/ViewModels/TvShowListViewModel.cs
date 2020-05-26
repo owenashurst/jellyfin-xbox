@@ -32,22 +32,50 @@ namespace Jellyfin.ViewModels
 
         #endregion
 
-        #region ContinueWatchingEpisodes
+        #region DisplayedTvShows
 
-        private ObservableCollectionEx<TvShowEpisode> _continueWatchingEpisodes =
-            new ObservableCollectionEx<TvShowEpisode>();
+        private ObservableCollectionEx<TvShow> _displayedTvShows = new ObservableCollectionEx<TvShow>();
 
-        public ObservableCollectionEx<TvShowEpisode> ContinueWatchingEpisodes
+        public ObservableCollectionEx<TvShow> DisplayedTvShows
         {
-            get { return _continueWatchingEpisodes; }
+            get { return _displayedTvShows; }
             set
             {
-                _continueWatchingEpisodes = value;
-                RaisePropertyChanged(nameof(ContinueWatchingEpisodes));
+                _displayedTvShows = value;
+                RaisePropertyChanged(nameof(DisplayedTvShows));
             }
         }
 
         #endregion
+
+        public ObservableCollectionEx<TvShowEpisode> ContinueWatchingTvShows { get; private set; }
+
+        public ObservableCollectionEx<TvShow> RecentlyReleasedTvShows { get; private set; }
+
+        public ObservableCollectionEx<TvShow> TvShowsFirstFavoriteGenre { get; private set; }
+
+        public ObservableCollectionEx<TvShow> TvShowsSecondFavoriteGenre { get; private set; }
+
+        public List<string> TvShowGenres { get; private set; }
+
+        public string FirstFavoriteGenre { get; private set; }
+
+        public string SecondFavoriteGenre { get; private set; }
+
+        public string ItemsCount
+        {
+            get { return $"{DisplayedTvShows.Count} items"; }
+        }
+
+        /// <summary>
+        /// Indicates whether the sort was ascending or descending the last time.
+        /// </summary>
+        public bool IsAscending { get; set; } = true;
+
+        /// <summary>
+        /// Contains last sort command.
+        /// </summary>
+        public string LastSortCommand { get; set; } = "OrderByName";
 
         #region IsRecommendationsOpened
 
@@ -82,6 +110,8 @@ namespace Jellyfin.ViewModels
         {
             _tvShowService = tvShowService ??
                              throw new ArgumentNullException(nameof(tvShowService));
+
+            ContinueWatchingTvShows = new ObservableCollectionEx<TvShowEpisode>();
         }
 
         #endregion
@@ -98,8 +128,27 @@ namespace Jellyfin.ViewModels
                 case "OpenLibrary":
                     OpenLibrary();
                     break;
-                case "OrderBy":
-                    // TODO smurancsik: add correct logging
+                case "OrderByName":
+                    LastSortCommand = commandParameter;
+                    OrderByName();
+                    break;
+                case "OrderByRating":
+                    LastSortCommand = commandParameter;
+                    OrderByRating();
+                    break;
+                case "OrderByDateAdded":
+                    LastSortCommand = commandParameter;
+                    OrderByDateAdded();
+                    break;
+                case "OrderByRuntime":
+                    LastSortCommand = commandParameter;
+                    OrderByRuntime();
+                    break;
+                case "Ascending":
+                    Ascending();
+                    break;
+                case "Descending":
+                    Descending();
                     break;
                 default:
                     base.Execute(commandParameter);
@@ -124,6 +173,114 @@ namespace Jellyfin.ViewModels
             IsRecommendationsOpened = false;
         }
 
+        private void Ascending()
+        {
+            if (IsAscending)
+            {
+                _logManager.LogDebug("Ascending command arrived, but the list is already sorted to ascending. Returning...");
+                return;
+            }
+
+            IsAscending = true;
+            Execute(LastSortCommand);
+        }
+
+        private void Descending()
+        {
+            if (!IsAscending)
+            {
+                _logManager.LogDebug("Descending command arrived, but the list is already sorted to descending. Returning...");
+                return;
+            }
+
+            IsAscending = false;
+            Execute(LastSortCommand);
+        }
+
+        /// <summary>
+        /// Orders movies by name.
+        /// </summary>
+        private void OrderByName()
+        {
+            if (IsAscending)
+            {
+                OrderBy(movie => movie.Name);
+            }
+            else
+            {
+                OrderByDescending(movie => movie.Name);
+            }
+        }
+
+        private void OrderByDateAdded()
+        {
+            if (IsAscending)
+            {
+                OrderBy(movie => movie.DateCreated);
+            }
+            else
+            {
+                OrderByDescending(movie => movie.DateCreated);
+            }
+        }
+
+        private void OrderByRuntime()
+        {
+            if (IsAscending)
+            {
+                OrderBy(movie => movie.Runtime);
+            }
+            else
+            {
+                OrderByDescending(movie => movie.Runtime);
+            }
+        }
+
+        /// <summary>
+        /// Orders movies by name.
+        /// </summary>
+        private void OrderByRating()
+        {
+            if (IsAscending)
+            {
+                OrderByDescending(movie => movie.CommunityRating);
+            }
+            else
+            {
+                OrderBy(movie => movie.CommunityRating);
+            }
+        }
+
+        /// <summary>
+        /// Orders the tv show array by the passed predicate in descending.
+        /// </summary>
+        /// <param name="predicate"></param>
+        private void OrderByDescending(Func<TvShow, object> predicate)
+        {
+            DisplayedTvShows.Clear();
+            foreach (var movie in TvShows.OrderByDescending(predicate))
+            {
+                DisplayedTvShows.Add(movie);
+            }
+
+            RaisePropertyChanged(nameof(DisplayedTvShows));
+        }
+
+        /// <summary>
+        /// Orders the tv show array by the passed predicate in ascending.
+        /// </summary>
+        /// <param name="predicate"></param>
+        private void OrderBy(Func<TvShow, object> predicate)
+        {
+            DisplayedTvShows.Clear();
+            foreach (var movie in TvShows.OrderBy(predicate))
+            {
+                DisplayedTvShows.Add(movie);
+            }
+
+            RaisePropertyChanged(nameof(DisplayedTvShows));
+        }
+
         /// <summary>
         /// Loads all the tv shows available.
         /// </summary>
@@ -146,9 +303,9 @@ namespace Jellyfin.ViewModels
                 IList<TvShowEpisode> tvShowEpisodes = (await _tvShowService.GetContinueWatchingEpisodes()).ToList();
                 foreach (TvShowEpisode tvShowEpisode in tvShowEpisodes)
                 {
-                    if (ContinueWatchingEpisodes.All(q => q.Id != tvShowEpisode.Id))
+                    if (ContinueWatchingTvShows.All(q => q.Id != tvShowEpisode.Id))
                     {
-                        ContinueWatchingEpisodes.Add(tvShowEpisode);
+                        ContinueWatchingTvShows.Add(tvShowEpisode);
 
                         TvShow correspondingTvShow = TvShows.FirstOrDefault(q => q.Id == tvShowEpisode.SeriesId);
                         if (correspondingTvShow != null)
@@ -172,12 +329,13 @@ namespace Jellyfin.ViewModels
 
                                 tvShowEpisode.Season = correspondingSeason;
 
-                                // It performs creating the graph, I am still in doubt if it's a good idea or not.
                                 await _tvShowService.GetEpisodesBy(correspondingTvShow, correspondingSeason);
                             }
                         }
                     }
                 }
+
+                OrderByName();
             }
             catch (Exception xc)
             {

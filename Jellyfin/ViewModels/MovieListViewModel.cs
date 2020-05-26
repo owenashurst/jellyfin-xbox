@@ -80,7 +80,7 @@ namespace Jellyfin.ViewModels
         /// <summary>
         /// Contains last sort command.
         /// </summary>
-        public string LastSortCommand { get; set; }
+        public string LastSortCommand { get; set; } = "OrderByName";
 
         #region IsRecommendationsOpened
 
@@ -140,18 +140,23 @@ namespace Jellyfin.ViewModels
                     OpenLibrary();
                     break;
                 case "OrderByName":
+                    LastSortCommand = commandParameter;
                     OrderByName();
                     break;
                 case "OrderByRating":
+                    LastSortCommand = commandParameter;
                     OrderByRating();
                     break;
                 case "OrderByDateAdded":
+                    LastSortCommand = commandParameter;
                     OrderByDateAdded();
                     break;
                 case "OrderByReleaseDate":
+                    LastSortCommand = commandParameter;
                     OrderByReleaseDate();
                     break;
                 case "OrderByRuntime":
+                    LastSortCommand = commandParameter;
                     OrderByRuntime();
                     break;
                 case "Ascending":
