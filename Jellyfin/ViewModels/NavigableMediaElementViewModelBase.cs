@@ -15,6 +15,28 @@ namespace Jellyfin.ViewModels
     {
         #region Properties
 
+        #region DirectPlayMediaElement
+
+        private MediaElementBase _directPlayMediaElement;
+
+        /// <summary>
+        /// Then an item was chosen to be directly played from a list or grid, it'll be stored there.
+        /// </summary>
+        public MediaElementBase DirectPlayMediaElement
+        {
+            get { return _directPlayMediaElement; }
+            set
+            {
+                if (_directPlayMediaElement != value)
+                {
+                    _directPlayMediaElement = value;
+                    RaisePropertyChanged(nameof(DirectPlayMediaElement));
+                }
+            }
+        }
+
+        #endregion
+
         #region SelectedMediaElement
 
         private MediaElementBase _selectedMediaElement;

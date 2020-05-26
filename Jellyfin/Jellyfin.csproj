@@ -134,6 +134,7 @@
     <Compile Include="Converters\ByteArrayToImageConverter.cs" />
     <Compile Include="Converters\CollectionToVisibilityConverter.cs" />
     <Compile Include="Converters\GreaterThanZeroToVisibilityConverter.cs" />
+    <Compile Include="Converters\NotNullToVisibilityConverter.cs" />
     <Compile Include="Converters\ParametrizedBooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\BooleanInverterConverter.cs" />
     <Compile Include="Converters\StringEmptyToVisibilityConverter.cs" />

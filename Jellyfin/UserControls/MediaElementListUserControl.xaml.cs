@@ -173,14 +173,15 @@ namespace Jellyfin.UserControls
                 return;
             }
 
-            dataContext.SelectedMediaElement = e.ClickedItem as MediaElementBase;
-
+            MediaElementBase mediaElement = e.ClickedItem as MediaElementBase;
             if (IsDirectPlay)
             {
+                dataContext.DirectPlayMediaElement = mediaElement;
                 dataContext.Execute("Play");
             }
             else
             {
+                dataContext.SelectedMediaElement = mediaElement;
                 dataContext.NavigateToSelected();
             }
         }

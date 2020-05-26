@@ -27,6 +27,7 @@
     <converters:StringEmptyToVisibilityConverter  x:Key="StringEmptyToVisibilityConverter"/>
     <converters:GreaterThanZeroToVisibilityConverter  x:Key="GreaterThanZeroToVisibilityConverter"/>
     <converters:CollectionToVisibilityConverter  x:Key="CollectionToVisibilityConverter"/>
+    <converters:NotNullToVisibilityConverter  x:Key="NotNullToVisibilityConverter"/>
 
     <x:Double x:Key="FontS">24</x:Double>
     <x:Double x:Key="FontM">28</x:Double>

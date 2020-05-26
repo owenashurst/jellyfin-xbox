@@ -81,7 +81,7 @@
                     </Grid>
 
                     <Border  Margin="0, 20, 0, 20" BorderBrush="White" BorderThickness="5, 0, 0, 0" Padding="20, 0, 0, 0">
-                    <TextBlock Text="{Binding SelectedMediaElement.Description}" TextWrapping="Wrap"
+                        <TextBlock Text="{Binding SelectedMediaElement.Description}" TextWrapping="Wrap"
                                TextAlignment="Justify" FontSize="{StaticResource FontL}"
                            />
                     </Border>

@@ -34,6 +34,25 @@ namespace Jellyfin.Models
 
         #endregion
 
+        #region AllEpisodes
+
+        private ObservableCollectionEx<TvShowEpisode> _allEpisodes;
+
+        public ObservableCollectionEx<TvShowEpisode> AllEpisodes
+        {
+            get { return _allEpisodes; }
+            set
+            {
+                if (_allEpisodes != value)
+                {
+                    _allEpisodes = value;
+                    RaisePropertyChanged(nameof(AllEpisodes));
+                }
+            }
+        }
+
+        #endregion
+
         #region SelectedSeason
 
         private TvShowSeason _selectedSeason;
@@ -57,6 +76,7 @@ namespace Jellyfin.Models
         public TvShow()
         {
             Seasons = new ObservableCollectionEx<TvShowSeason>();
+            AllEpisodes = new ObservableCollectionEx<TvShowEpisode>();
         }
 
         #endregion

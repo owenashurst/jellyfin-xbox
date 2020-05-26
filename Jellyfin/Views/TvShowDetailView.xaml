@@ -12,112 +12,241 @@
     <Page.Background>
         <ImageBrush ImageSource="/Assets/Images/background.png" Stretch="UniformToFill"/>
     </Page.Background>
-    <ScrollViewer>
-        <Grid Margin="15, 50, 30, 0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+        <Grid>
+            <ScrollViewer>
+                <Grid Margin="15, 50, 30, 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
 
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
 
-            <Image Grid.Row="0" Grid.Column="0" Source="{Binding SelectedMediaElement.ImageData, Converter={StaticResource ByteArrayToImageConverter}}" Height="500" Width="400" VerticalAlignment="Top">
-            </Image>
+                    <Image Grid.Row="0" Grid.Column="0" Source="{Binding SelectedMediaElement.ImageData, Converter={StaticResource ByteArrayToImageConverter}}" Height="500" Width="400" VerticalAlignment="Top">
+                    </Image>
 
-            <Grid Grid.Row="0" Grid.Column="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
 
-                <StackPanel Grid.Row="0">
-                    <TextBlock Text="{Binding SelectedMediaElement.Name}" TextWrapping="Wrap" FontSize="50"
-                               Margin="0, 0, 0, 20" />
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding SelectedMediaElement.SecondLine}" FontSize="{StaticResource FontL}" Margin="0, 0, 0, 10" />
+                        <StackPanel Grid.Row="0">
+                            <TextBlock Text="{Binding SelectedMediaElement.Name}" TextWrapping="Wrap" FontSize="50"
+                                       Margin="0, 0, 0, 20" />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding SelectedMediaElement.SecondLine}" FontSize="{StaticResource FontL}" Margin="0, 0, 0, 10" />
 
-                        <StackPanel Grid.Column="1" Orientation="Horizontal">
-                            <TextBlock Text="{Binding SelectedMediaElement.CommunityRating}" VerticalAlignment="Center" FontSize="{StaticResource FontL}" Margin="0, 0, 10, 4" />
+                                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                    <TextBlock Text="{Binding SelectedMediaElement.CommunityRating}" VerticalAlignment="Center" FontSize="{StaticResource FontL}" Margin="0, 0, 10, 4" />
 
-                            <uwp:FontAwesome Icon="Star" FontSize="{StaticResource FontM}" HorizontalAlignment="Center" />
-                        </StackPanel>
-                    </Grid>
+                                    <uwp:FontAwesome Icon="Star" FontSize="{StaticResource FontM}" HorizontalAlignment="Center" />
+                                </StackPanel>
+                            </Grid>
 
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0" Orientation="Horizontal">
-                            <TextBlock Opacity=".7" Text="{Binding SelectedMediaElement.FormattedRuntime}" FontSize="{StaticResource FontL}" />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                    <TextBlock Opacity=".7" Text="{Binding SelectedMediaElement.FormattedRuntime}" FontSize="{StaticResource FontL}" />
 
-                            <TextBlock Opacity=".7" Text="{Binding SelectedMediaElement.FormattedPlaybackRemaining}" FontSize="{StaticResource FontL}" />
+                                    <TextBlock Opacity=".7" Text="{Binding SelectedMediaElement.FormattedPlaybackRemaining}" FontSize="{StaticResource FontL}" />
 
-                            <Border Background="#333" Padding="40, 5" Margin="20, -5, 0, 0" CornerRadius="5" Visibility="{Binding SelectedMediaElement.OfficialRating, Converter={StaticResource StringEmptyToVisibilityConverter}}">
-                                <TextBlock Text="{Binding SelectedMediaElement.OfficialRating}" FontSize="{StaticResource FontL}" FontWeight="Bold" />
+                                    <Border Background="#333" Padding="40, 5" Margin="20, -5, 0, 0" CornerRadius="5" Visibility="{Binding SelectedMediaElement.OfficialRating, Converter={StaticResource StringEmptyToVisibilityConverter}}">
+                                        <TextBlock Text="{Binding SelectedMediaElement.OfficialRating}" FontSize="{StaticResource FontL}" FontWeight="Bold" />
+                                    </Border>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                    <TextBlock Text="{Binding SelectedMediaElement.FormattedGenres}" FontSize="{StaticResource FontL}" Margin="0, 0, 0, 10" Opacity=".7" />
+                                </StackPanel>
+                            </Grid>
+
+                            <Border  Margin="0, 20, 0, 20" BorderBrush="White" BorderThickness="5, 0, 0, 0" Padding="20, 0, 0, 0">
+                                <TextBlock Text="{Binding SelectedMediaElement.Description}" TextWrapping="Wrap"
+                                           TextAlignment="Justify" FontSize="{StaticResource FontL}"
+                                />
                             </Border>
                         </StackPanel>
 
-                        <StackPanel Grid.Column="1" Orientation="Horizontal">
-                            <TextBlock Text="{Binding SelectedMediaElement.FormattedGenres}" FontSize="{StaticResource FontL}" Margin="0, 0, 0, 10" Opacity=".7" />
+                        <StackPanel Grid.Row="1" Orientation="Horizontal">
+                            <StackPanel HorizontalAlignment="Center" Margin="0, 0, 20, 0" Width="150"
+                                        Visibility="{Binding ContinueWatchingEpisode, Converter={StaticResource NotNullToVisibilityConverter}}">
+                                <Button Command="{Binding ToolCommand}" HorizontalAlignment="Center" Height="75"
+                                        FocusVisualPrimaryThickness="2" FocusVisualSecondaryThickness="0"
+                                        FocusVisualSecondaryBrush="White" FocusVisualPrimaryBrush="Transparent"
+                                        CommandParameter="PlayContinueWatchingEpisode" Style="{StaticResource SelectableButton}" Padding="50, 20">
+                                    <Button.Content>
+                                        <Image Grid.Row="3" Source="../Assets/Images/play-button.png" Width="30" Height="30" />
+                                    </Button.Content>
+                                </Button>
+                                <TextBlock Text="Continue watching" TextWrapping="Wrap" FontSize="{StaticResource FontM}" TextAlignment="Center" />
+                                <TextBlock Text="{Binding ContinueWatchingEpisode.SecondLine}" Opacity=".7" TextWrapping="Wrap" FontSize="{StaticResource FontM}" HorizontalAlignment="Center" />
+                            </StackPanel>
+
+                            <StackPanel HorizontalAlignment="Center" Margin="0, 0, 20, 0" Width="150"
+                                        Visibility="{Binding NextUnplayedEpisode, Converter={StaticResource NotNullToVisibilityConverter}}">
+                                <Button Command="{Binding ToolCommand}" HorizontalAlignment="Center" Height="75"
+                                FocusVisualPrimaryThickness="2" FocusVisualSecondaryThickness="0"
+                                    FocusVisualSecondaryBrush="White" FocusVisualPrimaryBrush="Transparent"
+                                CommandParameter="PlayNextUnplayedEpisode" Style="{StaticResource SelectableButton}" Padding="50, 20">
+                                    <Button.Content>
+                                        <Image Grid.Row="3" Source="../Assets/Images/play-button.png" Width="30" Height="30" />
+                                    </Button.Content>
+                                </Button>
+                                <TextBlock Text="Play next" TextWrapping="Wrap" FontSize="{StaticResource FontM}" TextAlignment="Center" />
+                                <TextBlock Text="{Binding NextUnplayedEpisode.SecondLine}" Opacity=".7" TextWrapping="Wrap" FontSize="{StaticResource FontM}" HorizontalAlignment="Center" />
+                            </StackPanel>
+
+                            <StackPanel HorizontalAlignment="Center" Margin="0, 0, 20, 0" Width="150"
+                                        Visibility="{Binding FirstEpisodeFromCurrentSeason, Converter={StaticResource NotNullToVisibilityConverter}}">
+                                <Button Command="{Binding ToolCommand}" HorizontalAlignment="Center" Height="75"
+                                        FocusVisualPrimaryThickness="2" FocusVisualSecondaryThickness="0"
+                                        FocusVisualSecondaryBrush="White" FocusVisualPrimaryBrush="Transparent"
+                                        CommandParameter="PlayFirstEpisodeFromCurrentSeason" Style="{StaticResource SelectableButton}" Padding="50, 20">
+                                    <Button.Content>
+                                        <Image Grid.Row="3" Source="../Assets/Images/play-button.png" Width="30" Height="30" />
+                                    </Button.Content>
+                                </Button>
+                                <TextBlock Text="Season Premiere" TextWrapping="Wrap" FontSize="{StaticResource FontM}" TextAlignment="Center" />
+                                <TextBlock Text="{Binding FirstEpisodeFromCurrentSeason.SecondLine}" Opacity=".7" TextWrapping="Wrap" FontSize="{StaticResource FontM}" HorizontalAlignment="Center" />
+                            </StackPanel>
+
+                            <StackPanel HorizontalAlignment="Center" Margin="0, 0, 20, 0" Width="150"
+                                        Visibility="{Binding FirstAvailableEpisode, Converter={StaticResource NotNullToVisibilityConverter}}">
+                                <Button Command="{Binding ToolCommand}" HorizontalAlignment="Center" Height="75"
+                                        FocusVisualPrimaryThickness="2" FocusVisualSecondaryThickness="0"
+                                        FocusVisualSecondaryBrush="White" FocusVisualPrimaryBrush="Transparent"
+                                        CommandParameter="PlayFirstAvailableEpisode" Style="{StaticResource SelectableButton}" Padding="50, 20">
+                                    <Button.Content>
+                                        <Image Grid.Row="3" Source="../Assets/Images/play-button.png" Width="30" Height="30" />
+                                    </Button.Content>
+                                </Button>
+                                <TextBlock Text="Play" Opacity=".7" TextWrapping="Wrap" FontSize="{StaticResource FontM}" HorizontalAlignment="Center" />
+                                <TextBlock Text="{Binding FirstAvailableEpisode.SecondLine}" Opacity=".7" TextWrapping="Wrap" FontSize="{StaticResource FontM}" HorizontalAlignment="Center" />
+                            </StackPanel>
+
+                            <StackPanel HorizontalAlignment="Center" Margin="0, 0, 20, 0"  Width="150">
+                                <Button Command="{Binding ToolCommand}" HorizontalAlignment="Center" Height="75"
+                                        FocusVisualPrimaryThickness="2" FocusVisualSecondaryThickness="0"
+                                        FocusVisualSecondaryBrush="White" FocusVisualPrimaryBrush="Transparent"
+                                        CommandParameter="Shuffle" Style="{StaticResource SelectableButton}" Padding="50, 20">
+                                    <Button.Content>
+                                        <uwp:FontAwesome Icon="Random" FontSize="{StaticResource FontM}" HorizontalAlignment="Center" />
+                                    </Button.Content>
+                                </Button>
+                                <TextBlock Text="Play" TextWrapping="Wrap" Opacity=".7" FontSize="{StaticResource FontM}" TextAlignment="Center" />
+                                <TextBlock Text="Shuffle" TextWrapping="Wrap" Opacity=".7" FontSize="{StaticResource FontM}" TextAlignment="Center" />
+                            </StackPanel>
+
+                            <StackPanel HorizontalAlignment="Center" Margin="0, 0, 20, 0" Width="150"
+                                Visibility="{Binding SelectedMediaElement.UserData.Played, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=false}"        
+                                >
+                                <Button Command="{Binding ToolCommand}" HorizontalAlignment="Center" Height="75"
+                                        FocusVisualPrimaryThickness="2" FocusVisualSecondaryThickness="0"
+                                        FocusVisualSecondaryBrush="White" FocusVisualPrimaryBrush="Transparent"
+                                        CommandParameter="MarkAsWatched" Style="{StaticResource SelectableButton}" Padding="50, 20">
+                                    <Button.Content>
+                                        <uwp:FontAwesome Icon="Eye" FontSize="{StaticResource FontM}" HorizontalAlignment="Center" />
+                                    </Button.Content>
+                                </Button>
+                                <TextBlock Text="Mark as Watched" Opacity=".7" TextWrapping="Wrap" FontSize="{StaticResource FontM}" TextAlignment="Center" />
+                            </StackPanel>
+
+                            <StackPanel HorizontalAlignment="Center" Margin="0, 0, 20, 0" Width="150"
+                                        Visibility="{Binding SelectedMediaElement.UserData.Played, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <Button Command="{Binding ToolCommand}" HorizontalAlignment="Center" Height="75"
+                                        FocusVisualPrimaryThickness="2" FocusVisualSecondaryThickness="0"
+                                        FocusVisualSecondaryBrush="White" FocusVisualPrimaryBrush="Transparent"
+                                        CommandParameter="MarkAsUnwatched" Style="{StaticResource SelectableButton}" Padding="50, 20">
+                                    <Button.Content>
+                                        <uwp:FontAwesome Icon="EyeSlash" FontSize="{StaticResource FontM}" HorizontalAlignment="Center" />
+                                    </Button.Content>
+                                </Button>
+                                <TextBlock Text="Mark as Unwatched" Opacity=".7" TextWrapping="Wrap" FontSize="{StaticResource FontM}" TextAlignment="Center" />
+                            </StackPanel>
+
+                            <StackPanel HorizontalAlignment="Center" Margin="0, 0, 20, 0"  Width="150"
+                                        Visibility="{Binding SelectedMediaElement.UserData.IsFavorite, Converter={StaticResource ParametrizedBooleanToVisibilityConverter}, ConverterParameter=false}">
+                                <Button Command="{Binding ToolCommand}" HorizontalAlignment="Center" Height="75"
+                                        FocusVisualPrimaryThickness="2" FocusVisualSecondaryThickness="0"
+                                        FocusVisualSecondaryBrush="White" FocusVisualPrimaryBrush="Transparent"
+                                        CommandParameter="Like" Style="{StaticResource SelectableButton}" Padding="50, 20">
+                                    <Button.Content>
+                                        <uwp:FontAwesome Icon="Heart" FontSize="{StaticResource FontM}" HorizontalAlignment="Center" />
+                                    </Button.Content>
+                                </Button>
+                                <TextBlock Text="Mark as Favorite" TextWrapping="Wrap" Opacity=".7" FontSize="{StaticResource FontM}" TextAlignment="Center" />
+                            </StackPanel>
+
+                            <StackPanel HorizontalAlignment="Center" Margin="0, 0, 20, 0"  Width="150"
+                                        Visibility="{Binding SelectedMediaElement.UserData.IsFavorite, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <Button Command="{Binding ToolCommand}" HorizontalAlignment="Center" Height="75"
+                                        FocusVisualPrimaryThickness="2" FocusVisualSecondaryThickness="0"
+                                        FocusVisualSecondaryBrush="White" FocusVisualPrimaryBrush="Transparent"
+                                        CommandParameter="Dislike" Style="{StaticResource SelectableButton}" Padding="50, 20">
+                                    <Button.Content>
+                                        <uwp:FontAwesome Icon="Diamond" FontSize="{StaticResource FontM}" HorizontalAlignment="Center" />
+                                    </Button.Content>
+                                </Button>
+                                <TextBlock Text="Remove Favorite" TextWrapping="Wrap" Opacity=".7" FontSize="{StaticResource FontM}" TextAlignment="Center" />
+                            </StackPanel>
                         </StackPanel>
                     </Grid>
 
-                    <TextBlock Text="{Binding SelectedMediaElement.Description}" TextWrapping="Wrap" FontSize="{StaticResource FontL}"
-                           Margin="0, 20, 0, 20" />
-                </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Background="#60000000" Margin="-15, 50, -30, 0" Padding="15, 0, 0, 70">
+                        <!-- Episodes Grid -->
+                        <Grid Margin="0, 50, 0, 0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="310" />
+                            </Grid.RowDefinitions>
 
-                <!--<Button Grid.Row="2" Command="{Binding ToolCommand}" Width="80" 
-                FocusVisualPrimaryThickness="2" FocusVisualSecondaryThickness="0"
-                    FocusVisualSecondaryBrush="White" FocusVisualPrimaryBrush="Transparent"
-                CommandParameter="Play" Style="{StaticResource SelectableButton}" Padding="0, 5, 0, 5">
-                    <Button.Content>
-                        <Image Grid.Row="3" Source="../Assets/Images/play-button.png" Width="30" Height="30" />
-                    </Button.Content>
-                </Button>-->
-            </Grid>
+                            <TextBlock Grid.Row="0" Text="{Binding SeasonEpisodesText, Converter={StaticResource StringToUpperConverter}}" FontSize="32" FontWeight="SemiBold" Margin="30, 0, 0, 20" />
 
+                            <userControls:MediaElementListUserControl Grid.Row="1" BlockWidth="300" BlockHeight="165"
+                                MediaSource="{Binding SelectedSeasonEpisodes}" IsDirectPlay="True" IsLong="True" />
+                        </Grid>
+
+
+                        <!-- Seasons Grid -->
+                        <Grid Margin="0, 50, 0, 0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" Text="SEASONS" FontSize="32" FontWeight="SemiBold" Margin="30, 0, 0, 20" />
+
+                            <userControls:MediaElementListUserControl Grid.Row="1" BlockWidth="220" BlockHeight="270"
+                                MediaSource="{Binding SelectedMediaElement.Seasons}" />
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="0, 50, 0, 70">
+                        <TextBlock Text="MORE LIKE THIS" FontSize="32" FontWeight="SemiBold" Margin="30, 0, 0, 20" />
+
+                        <userControls:MediaElementListUserControl BlockWidth="220" BlockHeight="270"
+                                MediaSource="{Binding RelatedTvShows}" IsDirectPlay="False" IsLong="False" />
+                    </StackPanel>
+                </Grid>
             
-
-            <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Background="#60000000" Margin="-15, 50, -30, 0" Padding="15, 0, 0, 70">
-                <!-- Related episodes Grid -->
-                <Grid Margin="0, 50, 0, 0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="310" />
-                    </Grid.RowDefinitions>
-
-                    <TextBlock Grid.Row="0" Text="{Binding SeasonEpisodesText, Converter={StaticResource StringToUpperConverter}}" FontSize="32" FontWeight="SemiBold" Margin="30, 0, 0, 20" />
-
-                    <userControls:MediaElementListUserControl Grid.Row="1" BlockWidth="300" BlockHeight="165"
-                        MediaSource="{Binding SelectedSeasonEpisodes}" IsDirectPlay="True" IsLong="True" />
-                </Grid>
-
-
-                <!-- Related seasons Grid -->
-                <Grid Margin="0, 50, 0, 0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-
-                    <TextBlock Grid.Row="0" Text="SEASONS" FontSize="32" FontWeight="SemiBold" Margin="30, 0, 0, 20" />
-
-                    <userControls:MediaElementListUserControl Grid.Row="1" BlockWidth="220" BlockHeight="270"
-                        MediaSource="{Binding SelectedMediaElement.Seasons}" />
-                </Grid>
-            </StackPanel>
-        </Grid>
-    </ScrollViewer>
+        </ScrollViewer>
+        <userControls:LoadingUserControl HorizontalAlignment="Center" VerticalAlignment="Center"
+                                         Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}" />
+    </Grid>
 </Page>
 

@@ -426,7 +426,6 @@ namespace Jellyfin.ViewModels
             MediaPlayer?.MediaPlayer.Play();
         }
 
-        [LogMethod]
         public ControllerButtonHandledResult HandleKeyPressed(VirtualKey key)
         {
             switch (key)

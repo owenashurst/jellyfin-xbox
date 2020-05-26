@@ -273,6 +273,8 @@ namespace Jellyfin.ViewModels
             // Does it come from movie / episode chooser?
             if (!p.IsJustFinishedPlaying)
             {
+                IsLoading = true;
+
                 _logManager.LogDebug($"{p.SelectedMediaElement}, It comes from movie/epi chooser.");
                 IsShowConfirmation = false;
 
@@ -282,6 +284,7 @@ namespace Jellyfin.ViewModels
                 {
                     // Let the user decide what they want, aka let the view model
                     // render fully and show the action buttons
+                    IsLoading = false;
                 }
                 else if (SelectedMediaElement.PlaybackPosition.TotalMinutes <= 2)
                 {

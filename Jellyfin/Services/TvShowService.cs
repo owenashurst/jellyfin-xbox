@@ -236,14 +236,6 @@ namespace Jellyfin.Services
                         TvShowEpisode tvShowEpisode = _tvShowEpisodeAdapter.Convert(item);
                         episodes.Add(tvShowEpisode);
 
-                        tvShowEpisode.Season = season;
-                        tvShowEpisode.TvShow = tvShow;
-
-                        if (season.TvShowEpisodes.All(q => q.Id != tvShowEpisode.Id))
-                        {
-                            season.TvShowEpisodes.Add(tvShowEpisode);
-                        }
-
                         ImageDownloadQueue.EnqueueTask(tvShowEpisode);
                     }
 
@@ -284,14 +276,6 @@ namespace Jellyfin.Services
                         TvShowEpisode tvShowEpisode = _tvShowEpisodeAdapter.Convert(item);
                         episodes.Add(tvShowEpisode);
 
-                        //tvShowEpisode.Season = season;
-                        //tvShowEpisode.TvShow = tvShow;
-
-                        //if (season.TvShowEpisodes.All(q => q.Id != tvShowEpisode.Id))
-                        //{
-                        //    season.TvShowEpisodes.Add(tvShowEpisode);
-                        //}
-
                         ImageDownloadQueue.EnqueueTask(tvShowEpisode);
                     }
 
@@ -308,33 +292,32 @@ namespace Jellyfin.Services
 
         public async Task<IEnumerable<TvShow>> GetRelatedTvShows(string tvShowId)
         {
-            //List<TvShow> tvShowList = new List<TvShow>();
+            List<TvShow> tvShowList = new List<TvShow>();
 
-            //using (HttpClient cli = new HttpClient())
-            //{
-            //    cli.AddAuthorizationHeaders();
+            using (HttpClient cli = new HttpClient())
+            {
+                cli.AddAuthorizationHeaders();
 
-            //    HttpResponseMessage result = await cli.GetAsync(string.Format(GetRelatedTvShowsEndpoint, tvShowId));
+                HttpResponseMessage result = await cli.GetAsync(string.Format(GetRelatedTvShowsEndpoint, tvShowId));
 
-            //    if (!result.IsSuccessStatusCode)
-            //    {
-            //        return new List<TvShow>();
-            //    }
+                if (!result.IsSuccessStatusCode)
+                {
+                    return new List<TvShow>();
+                }
 
-            //    string jsonResult = await result.Content.ReadAsStringAsync();
+                string jsonResult = await result.Content.ReadAsStringAsync();
 
-            //    JellyfinTvShowResult resultSet = JsonConvert.DeserializeObject<JellyfinTvShowResult>(jsonResult);
+                JellyfinTvShowResult resultSet = JsonConvert.DeserializeObject<JellyfinTvShowResult>(jsonResult);
+                
+                foreach (TvShowItem item in resultSet.Items)
+                {
+                    TvShow tvShow = _tvShowAdapter.Convert(item);
+                    tvShowList.Add(tvShow);
+                    ImageDownloadQueue.EnqueueTask(tvShow);
+                }
+            }
 
-            //    foreach (Item item in resultSet.Items)
-            //    {
-            //        TvShow tvShow = _tvShowAdapter.Convert(item);
-            //        tvShowList.Add(tvShow);
-            //        TvShowImageDownloadQueue.EnqueueTask(tvShow);
-            //    }
-            //}
-
-            //return tvShowList;
-            return null;
+            return tvShowList;
         }
 
         
